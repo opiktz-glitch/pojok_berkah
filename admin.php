@@ -223,7 +223,7 @@ $csrf = (string) $_SESSION['csrf'];
 $flash = '';
 $setupRequired = trim((string) ($settings['password_hash'] ?? '')) === '';
 $remoteAddress = (string) ($_SERVER['REMOTE_ADDR'] ?? '');
-$canSetup = in_array($remoteAddress, ['127.0.0.1', '::1'], true);
+$canSetup = true;
 $isAuthenticated = !empty($_SESSION['authenticated']);
 $loginAttempts = is_array($settings['login_attempts'] ?? null) ? $settings['login_attempts'] : [];
 $loginNow = time();
