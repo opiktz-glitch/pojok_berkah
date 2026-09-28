@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 $storagePath = __DIR__ . '/data/storage.php';
 define('POJOK_BERKAH_BOOTSTRAPPED', true);
-$settings = require $storagePath;
+$settings = is_file($storagePath) ? require $storagePath : [];
 if (!is_array($settings)) {
     $settings = ['wa_number' => '6287724039666', 'password_hash' => ''];
 }

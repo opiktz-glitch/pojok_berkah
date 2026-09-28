@@ -1,0 +1,28 @@
+# Pojok Berkah - Apache configuration for shared hosting (InfinityFree)
+# Request the free SSL certificate in the hosting panel before publishing so
+# that HTTP visitors can be redirected. Requests to localhost are left on HTTP
+# so the site keeps working in a local XAMPP setup.
+
+ErrorDocument 404 /404.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Force HTTPS for real hostnames. The proxy in front of Apache may terminate
+  # TLS, so both the HTTPS variable and the forwarded protocol header are
+  # checked. Local development hostnames are excluded.
+  RewriteCond %{HTTP_HOST} !^localhost(:[0-9]+)?$ [NC]
+  RewriteCond %{HTTP_HOST} !^127\.0\.0\.1(:[0-9]+)?$ [NC]
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+  # Never serve the CMS settings file or uploads folder directly.
+  RewriteRule ^data/ - [R=404,L]
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+  # Without mod_rewrite the data folder is still protected by the guard inside
+  # data/storage.php, and data/uploads/index.php blocks directory listings.
+  ErrorDocument 404 /404.html
+</IfModule>
