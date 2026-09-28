@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="legal.css">
 </head>
 <body>
-<header><div class="wrap top"><a class="brand" href="index.html"><span class="mark">P</span>Pojok Berkah</a><nav aria-label="Menu utama"><a href="index.html">Beranda</a><a href="tentang-kami.html">Tentang kami</a><a href="kebijakan-privasi.html">Kebijakan Privasi</a></nav></div></header>
+<header><div class="wrap top"><a class="brand" href="index.html"><span class="mark" data-logo-fallback>P</span><img class="brand-image" data-image-slot="logo" alt="" hidden>Pojok Berkah</a><nav aria-label="Menu utama"><a href="index.html">Beranda</a><a href="tentang-kami.html">Tentang kami</a><a href="kebijakan-privasi.html">Kebijakan Privasi</a></nav></div></header>
 <main class="wrap">
   <span class="kicker">Ketentuan penggunaan</span>
   <h1>Syarat &amp; Ketentuan</h1>
@@ -35,6 +35,15 @@
   </article>
 </main>
 <footer><div class="wrap"><div class="footer-row"><strong>Pojok Berkah</strong><span>Belajar, urusan keuangan, dan sajian segar.</span></div><nav class="footer-nav" aria-label="Tautan footer"><a href="index.html">Beranda</a><a href="tentang-kami.html">Tentang kami</a><a href="kebijakan-privasi.html">Kebijakan Privasi</a><a href="mailto:admin@pojokberkah.online">Email admin</a></nav><small>&copy; <span id="yr">2026</span> Pojok Berkah</small></div></footer>
-<script>document.getElementById("yr").textContent=new Date().getFullYear();</script>
+<script>
+document.getElementById("yr").textContent=new Date().getFullYear();
+fetch("admin.php?public=1",{cache:"no-store"}).then(function(response){return response.json()}).then(function(settings){
+  var logo=settings.images&&settings.images.logo;
+  if(typeof logo!=="string"||!logo)return;
+  document.querySelectorAll('img[data-image-slot="logo"]').forEach(function(image){image.src=logo;image.hidden=false});
+  document.querySelectorAll("[data-logo-fallback]").forEach(function(mark){mark.hidden=true});
+  var favicon=document.querySelector('link[rel="icon"]');if(favicon)favicon.href=logo;
+}).catch(function(){});
+</script>
 </body>
 </html>

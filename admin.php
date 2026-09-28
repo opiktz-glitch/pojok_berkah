@@ -24,6 +24,19 @@ function normalizeWhatsAppNumber(string $value): ?string
     return $digits;
 }
 
+  function normalizeServiceUrl(string $value): ?string
+  {
+    $value = trim($value);
+    $parts = parse_url($value);
+    if ($value === '' || strlen($value) > 2048 || filter_var($value, FILTER_VALIDATE_URL) === false || !is_array($parts)) {
+      return null;
+    }
+    if (!in_array(strtolower((string) ($parts['scheme'] ?? '')), ['http', 'https'], true) || empty($parts['host']) || isset($parts['user']) || isset($parts['pass'])) {
+      return null;
+    }
+    return $value;
+  }
+
 function saveSettings(string $path, array $settings): bool
 {
   $content = "<?php\nif (!defined('POJOK_BERKAH_BOOTSTRAPPED')) { http_response_code(404); exit; }\nreturn " . var_export($settings, true) . ";\n";
@@ -68,15 +81,88 @@ if ($faqItems === []) {
 }
 
 $imageSlots = [
+  'logo' => 'Logo situs',
   'tryout' => 'Tryout TKA',
   'gadai' => 'Gadai BPKB',
   'kitchen' => 'Alfi Kitchen',
 ];
 $defaultImageUrls = [
+  'logo' => '',
   'tryout' => 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=960&q=80',
   'gadai' => 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=960&q=80',
   'kitchen' => 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=960&q=80',
 ];
+$defaultServiceUrls = [
+  'tryout' => 'https://tryout.pojokberkah.online',
+  'gadai' => 'https://gadai.pojokberkah.online',
+  'kitchen' => 'https://kitchen.pojokberkah.online',
+];
+$serviceUrls = [];
+foreach ($defaultServiceUrls as $slot => $defaultUrl) {
+    $serviceUrls[$slot] = normalizeServiceUrl((string) ($settings['service_urls'][$slot] ?? '')) ?? $defaultUrl;
+}
+$defaultServiceNames = [
+  'tryout' => 'Tryout TKA',
+  'gadai' => 'Gadai BPKB',
+  'kitchen' => 'Alfi Kitchen',
+];
+$serviceNames = [];
+foreach ($defaultServiceNames as $slot => $defaultName) {
+    $name = $settings['service_names'][$slot] ?? null;
+    $serviceNames[$slot] = is_string($name) && trim($name) !== '' && strlen($name) <= 400
+        ? trim($name)
+        : $defaultName;
+}
+$imageSlots['tryout'] = $serviceNames['tryout'];
+$imageSlots['gadai'] = $serviceNames['gadai'];
+$imageSlots['kitchen'] = $serviceNames['kitchen'];
+$defaultServiceDescriptions = [
+  'tryout' => 'Latihan soal TKA online lengkap dengan pembahasan, disusun dengan bantuan AI untuk siswa dan guru.',
+  'gadai' => 'Simulasi pencairan dana dengan jaminan BPKB, tersedia di tiga kota dengan 29 cabang aktif.',
+  'kitchen' => 'Puding berlapis buah, dessert dalam kemasan praktis, dan salad buah bersaus creamy. Buatan rumahan, selalu segar.',
+];
+$serviceDescriptions = [];
+foreach ($defaultServiceDescriptions as $slot => $defaultDescription) {
+    $description = $settings['service_descriptions'][$slot] ?? null;
+    $serviceDescriptions[$slot] = is_string($description) && trim($description) !== '' && strlen($description) <= 2000
+        ? trim($description)
+        : $defaultDescription;
+}
+$defaultStats = [
+  'services' => ['value' => '3', 'label' => 'layanan'],
+  'gadai' => ['value' => '29', 'label' => 'cabang gadai aktif'],
+  'kitchen' => ['value' => 'Always Fresh', 'label' => 'komitmen Alfi Kitchen'],
+];
+$stats = [];
+foreach ($defaultStats as $slot => $defaults) {
+  $stored = $settings['stats'][$slot] ?? [];
+  $value = is_array($stored) ? ($stored['value'] ?? null) : null;
+  $label = is_array($stored) ? ($stored['label'] ?? null) : null;
+  $stats[$slot] = [
+    'value' => is_string($value) && trim($value) !== '' && strlen($value) <= 320 ? trim($value) : $defaults['value'],
+    'label' => is_string($label) && trim($label) !== '' && strlen($label) <= 480 ? trim($label) : $defaults['label'],
+  ];
+}
+$defaultServiceTags = [
+  'tryout' => ['Soal AI', 'Pembahasan', 'Siswa dan guru'],
+  'gadai' => ['Bandung', 'Bekasi', 'Jakarta'],
+  'kitchen' => ['Puding', 'Dessert', 'Salad buah'],
+];
+$storedServiceTags = is_array($settings['service_tags'] ?? null) ? $settings['service_tags'] : [];
+$serviceTags = [];
+foreach ($defaultServiceTags as $slot => $defaultTags) {
+  $storedTags = $storedServiceTags[$slot] ?? null;
+  if (!is_array($storedTags)) {
+    $serviceTags[$slot] = $defaultTags;
+    continue;
+  }
+  $serviceTags[$slot] = [];
+  foreach ($storedTags as $tag) {
+    if (is_string($tag) && trim($tag) !== '' && strlen($tag) <= 240 && count($serviceTags[$slot]) < 8) {
+      $serviceTags[$slot][] = trim($tag);
+    }
+  }
+}
 $uploadDirectory = __DIR__ . '/data/uploads';
 
 if (isset($_GET['image'])) {
@@ -110,10 +196,10 @@ if (isset($_GET['public'])) {
   foreach ($imageSlots as $slot => $label) {
     $filename = (string) ($settings['images'][$slot] ?? '');
     if (preg_match('/\A[a-f0-9]{32}\.(?:jpg|png|webp)\z/', $filename) && is_file($uploadDirectory . '/' . $filename)) {
-      $publicImages[$slot] = 'admin.php?image=' . $slot;
+      $publicImages[$slot] = 'admin.php?image=' . $slot . '&v=' . substr($filename, 0, 12);
     }
   }
-  echo json_encode(['wa_number' => $publicNumber ?? '6287724039666', 'faq' => $faqItems, 'images' => $publicImages], JSON_UNESCAPED_SLASHES);
+  echo json_encode(['wa_number' => $publicNumber ?? '6287724039666', 'faq' => $faqItems, 'images' => $publicImages, 'service_urls' => $serviceUrls, 'service_descriptions' => $serviceDescriptions, 'service_names' => $serviceNames, 'stats' => $stats, 'service_tags' => $serviceTags], JSON_UNESCAPED_SLASHES);
     exit;
 }
 
@@ -216,6 +302,207 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               $flash = 'Percobaan gagal dan pembatas login tidak dapat disimpan. Periksa izin tulis data CMS.';
             }
             }
+        } elseif ($action === 'save_service_urls' && $isAuthenticated) {
+          $submittedUrls = $_POST['service_urls'] ?? [];
+          $normalizedUrls = [];
+          $urlError = '';
+          if (!is_array($submittedUrls)) {
+            $urlError = 'Format URL layanan tidak valid.';
+          } else {
+            foreach ($defaultServiceUrls as $slot => $defaultUrl) {
+              $urlInput = $submittedUrls[$slot] ?? null;
+              $normalized = is_string($urlInput) ? normalizeServiceUrl($urlInput) : null;
+              if ($normalized === null) {
+                $urlError = 'Masukkan URL penuh yang valid dengan awalan http:// atau https:// untuk setiap layanan.';
+                break;
+              }
+              $normalizedUrls[$slot] = $normalized;
+            }
+          }
+          if ($urlError !== '') {
+            $flash = $urlError;
+            if (is_array($submittedUrls)) {
+              foreach ($defaultServiceUrls as $serviceSlot => $defaultUrl) {
+                if (isset($submittedUrls[$serviceSlot]) && is_string($submittedUrls[$serviceSlot])) {
+                  $serviceUrls[$serviceSlot] = $submittedUrls[$serviceSlot];
+                }
+              }
+            }
+          } else {
+            $settings['service_urls'] = $normalizedUrls;
+            if (saveSettings($storagePath, $settings)) {
+              $serviceUrls = $normalizedUrls;
+              $flash = 'Alamat layanan berhasil diperbarui.';
+            } else {
+              $flash = 'Alamat layanan tidak dapat disimpan. Pastikan folder data bisa ditulis oleh PHP.';
+            }
+          }
+            } elseif ($action === 'save_service_names' && $isAuthenticated) {
+              $submittedNames = $_POST['service_names'] ?? [];
+              $normalizedNames = [];
+              $nameError = '';
+              if (!is_array($submittedNames)) {
+                $nameError = 'Format nama layanan tidak valid.';
+              } else {
+                foreach ($defaultServiceNames as $slot => $defaultName) {
+                  $name = $submittedNames[$slot] ?? null;
+                  if (!is_string($name)) {
+                    $nameError = 'Isi nama untuk setiap layanan.';
+                    break;
+                  }
+                  $name = trim($name);
+                  if ($name === '' || strlen($name) > 400) {
+                    $nameError = 'Nama layanan wajib diisi dan maksimal 100 karakter.';
+                    break;
+                  }
+                  $normalizedNames[$slot] = $name;
+                }
+              }
+              if ($nameError !== '') {
+                $flash = $nameError;
+                if (is_array($submittedNames)) {
+                  foreach ($defaultServiceNames as $slot => $defaultName) {
+                    if (isset($submittedNames[$slot]) && is_string($submittedNames[$slot])) {
+                      $serviceNames[$slot] = trim($submittedNames[$slot]);
+                    }
+                  }
+                }
+              } else {
+                $settings['service_names'] = $normalizedNames;
+                if (saveSettings($storagePath, $settings)) {
+                  $serviceNames = $normalizedNames;
+                  $imageSlots['tryout'] = $serviceNames['tryout'];
+                  $imageSlots['gadai'] = $serviceNames['gadai'];
+                  $imageSlots['kitchen'] = $serviceNames['kitchen'];
+                  $flash = 'Nama layanan berhasil diperbarui.';
+                } else {
+                  $flash = 'Nama layanan tidak dapat disimpan. Pastikan folder data bisa ditulis oleh PHP.';
+                }
+              }
+            } elseif ($action === 'save_service_tags' && $isAuthenticated) {
+              $submittedTags = $_POST['service_tags'] ?? [];
+              $normalizedTags = [];
+              $tagsError = '';
+              if (!is_array($submittedTags)) {
+                $tagsError = 'Format tag layanan tidak valid.';
+              } else {
+                foreach ($defaultServiceTags as $slot => $defaults) {
+                  $tagText = $submittedTags[$slot] ?? null;
+                  if (!is_string($tagText) || strlen($tagText) > 2000) {
+                    $tagsError = 'Periksa kembali daftar tag layanan.';
+                    break;
+                  }
+                  $lines = preg_split('/\r\n|\r|\n/', $tagText);
+                  if (!is_array($lines)) {
+                    $tagsError = 'Daftar tag tidak dapat dibaca.';
+                    break;
+                  }
+                  $tags = [];
+                  foreach ($lines as $line) {
+                    $tag = trim($line);
+                    if ($tag === '') {
+                      continue;
+                    }
+                    if (strlen($tag) > 240 || count($tags) >= 8) {
+                      $tagsError = 'Setiap layanan maksimal 8 tag, masing-masing 60 karakter.';
+                      break 2;
+                    }
+                    $tags[] = $tag;
+                  }
+                  $normalizedTags[$slot] = $tags;
+                }
+              }
+              if ($tagsError !== '') {
+                $flash = $tagsError;
+                if (is_array($submittedTags)) {
+                  foreach ($defaultServiceTags as $slot => $defaults) {
+                    if (isset($submittedTags[$slot]) && is_string($submittedTags[$slot])) {
+                      $lines = preg_split('/\r\n|\r|\n/', $submittedTags[$slot]) ?: [];
+                      $serviceTags[$slot] = array_values(array_filter(array_map('trim', $lines), 'strlen'));
+                    }
+                  }
+                }
+              } else {
+                $settings['service_tags'] = $normalizedTags;
+                if (saveSettings($storagePath, $settings)) {
+                  $serviceTags = $normalizedTags;
+                  $flash = 'Tag layanan berhasil diperbarui.';
+                } else {
+                  $flash = 'Tag layanan tidak dapat disimpan. Pastikan folder data bisa ditulis oleh PHP.';
+                }
+              }
+            } elseif ($action === 'save_stats' && $isAuthenticated) {
+              $submittedStats = $_POST['stats'] ?? [];
+              $normalizedStats = [];
+              $statsError = '';
+              if (!is_array($submittedStats)) {
+                $statsError = 'Format statistik tidak valid.';
+              } else {
+                foreach ($defaultStats as $slot => $defaults) {
+                  $entry = $submittedStats[$slot] ?? null;
+                  if (!is_array($entry) || !is_string($entry['value'] ?? null) || !is_string($entry['label'] ?? null)) {
+                    $statsError = 'Isi nilai dan label untuk setiap statistik.';
+                    break;
+                  }
+                  $value = trim($entry['value']);
+                  $label = trim($entry['label']);
+                  if ($value === '' || strlen($value) > 320 || $label === '' || strlen($label) > 480) {
+                    $statsError = 'Nilai dan label statistik wajib diisi dan tidak boleh terlalu panjang.';
+                    break;
+                  }
+                  $normalizedStats[$slot] = ['value' => $value, 'label' => $label];
+                }
+              }
+              if ($statsError !== '') {
+                $flash = $statsError;
+              } else {
+                $settings['stats'] = $normalizedStats;
+                if (saveSettings($storagePath, $settings)) {
+                  $stats = $normalizedStats;
+                  $flash = 'Statistik beranda berhasil diperbarui.';
+                } else {
+                  $flash = 'Statistik tidak dapat disimpan. Pastikan folder data bisa ditulis oleh PHP.';
+                }
+              }
+            } elseif ($action === 'save_service_descriptions' && $isAuthenticated) {
+              $submittedDescriptions = $_POST['service_descriptions'] ?? [];
+              $normalizedDescriptions = [];
+              $descriptionError = '';
+              if (!is_array($submittedDescriptions)) {
+                $descriptionError = 'Format deskripsi layanan tidak valid.';
+              } else {
+                foreach ($defaultServiceDescriptions as $slot => $defaultDescription) {
+                  $description = $submittedDescriptions[$slot] ?? null;
+                  if (!is_string($description)) {
+                    $descriptionError = 'Isi deskripsi untuk setiap layanan.';
+                    break;
+                  }
+                  $description = trim($description);
+                  if ($description === '' || strlen($description) > 2000) {
+                    $descriptionError = 'Deskripsi wajib diisi dan maksimal 500 karakter.';
+                    break;
+                  }
+                  $normalizedDescriptions[$slot] = $description;
+                }
+              }
+              if ($descriptionError !== '') {
+                $flash = $descriptionError;
+                if (is_array($submittedDescriptions)) {
+                  foreach ($defaultServiceDescriptions as $slot => $defaultDescription) {
+                    if (isset($submittedDescriptions[$slot]) && is_string($submittedDescriptions[$slot])) {
+                      $serviceDescriptions[$slot] = trim($submittedDescriptions[$slot]);
+                    }
+                  }
+                }
+              } else {
+                $settings['service_descriptions'] = $normalizedDescriptions;
+                if (saveSettings($storagePath, $settings)) {
+                  $serviceDescriptions = $normalizedDescriptions;
+                  $flash = 'Deskripsi layanan berhasil diperbarui.';
+                } else {
+                  $flash = 'Deskripsi layanan tidak dapat disimpan. Pastikan folder data bisa ditulis oleh PHP.';
+                }
+              }
         } elseif ($action === 'upload_image' && $isAuthenticated) {
           $slot = (string) ($_POST['image_slot'] ?? '');
           $file = $_FILES['service_image'] ?? null;
@@ -383,7 +670,7 @@ $imageSources = $defaultImageUrls;
 foreach ($imageSlots as $slot => $label) {
   $filename = (string) ($settings['images'][$slot] ?? '');
   if (preg_match('/\A[a-f0-9]{32}\.(?:jpg|png|webp)\z/', $filename) && is_file($uploadDirectory . '/' . $filename)) {
-    $imageSources[$slot] = 'admin.php?image=' . $slot;
+    $imageSources[$slot] = 'admin.php?image=' . $slot . '&v=' . substr($filename, 0, 12);
   }
 }
 $csrf = (string) ($_SESSION['csrf'] ?? $csrf);
@@ -396,6 +683,7 @@ $csrf = (string) ($_SESSION['csrf'] ?? $csrf);
 <meta name="theme-color" content="#F4F8FC">
 <meta name="robots" content="noindex,nofollow">
 <title>CMS Situs | Pojok Berkah</title>
+<link rel="icon" href="<?= $imageSources['logo'] !== '' ? escapeHtml($imageSources['logo']) : 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%229%22 fill=%22%230B8277%22/%3E%3Ctext x=%2216%22 y=%2223%22 font-size=%2220%22 font-family=%22Arial%22 font-weight=%22700%22 text-anchor=%22middle%22 fill=%22%23fff%22%3EP%3C/text%3E%3C/svg%3E' ?>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
@@ -408,6 +696,8 @@ a{color:inherit}
 header{height:72px;border-bottom:1px solid var(--line);background:rgba(244,248,252,.84);backdrop-filter:blur(12px)}
 .top{height:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-weight:700}
+.brand-image{width:34px;height:34px;flex:0 0 34px;object-fit:contain}
+.brand-image[hidden]{display:none}
 .mark{width:34px;height:34px;display:grid;place-items:center;border-radius:9px;color:#fff;background:linear-gradient(135deg,var(--teal),var(--blue))}
 .top nav{display:flex;align-items:center;gap:22px;font-size:.92rem}
 .top nav a{text-decoration:none;color:var(--muted)}
@@ -417,11 +707,19 @@ h1{font-family:var(--display);font-size:2.6rem;line-height:1.15;margin-top:10px}
 .lead{color:var(--muted);margin-top:12px;max-width:62ch}
 .panel{margin-top:34px;display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:36px;align-items:start;padding:32px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.78);box-shadow:0 18px 50px -36px rgba(16,32,58,.4)}
 .faq-panel{grid-template-columns:minmax(0,1fr);margin-top:22px}
+.service-content-panel{display:block;margin-top:22px}
+.service-content-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 36px;margin-top:20px}
+.service-content-group{min-width:0;padding-top:16px;border-top:1px solid var(--line)}
+.service-content-group h3{font:600 1rem var(--display)}
+.service-content-group .form-copy{min-height:3em}
 .faq-item{display:grid;grid-template-columns:1fr 1.3fr auto;align-items:end;gap:14px;padding:18px 0;border-bottom:1px solid var(--line)}
 .images-panel{display:block;margin-top:22px}
 .image-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:22px}
 .image-card{min-width:0;padding:15px;border:1px solid var(--line);border-radius:6px;background:rgba(255,255,255,.72)}
 .image-card img{display:block;width:100%;height:148px;object-fit:cover;border-radius:4px;background:#e5edf2}
+.image-card img.image-logo-preview{object-fit:contain;padding:12px;background:#fff}
+.image-placeholder{height:148px;display:grid;place-items:center;border-radius:4px;background:#eef4f5}
+.image-placeholder .mark{width:54px;height:54px;font-size:1.3rem}
 .image-card label{margin-top:14px}
 .image-status{margin-top:8px;color:var(--muted);font-size:.82rem}
 .image-card input[type=file]{height:auto;min-height:44px;padding:8px;font-size:.84rem}
@@ -452,6 +750,7 @@ button,.button{display:inline-flex;align-items:center;justify-content:center;min
 .notice{margin-top:16px;color:var(--muted);font-size:.82rem}
 footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
 @media(max-width:700px){main{padding:48px 0}.panel{grid-template-columns:1fr;padding:22px;gap:24px}.top nav{gap:12px}.top nav a:first-child{display:none}h1{font-size:2.1rem}}
+@media(max-width:700px){.service-content-grid{grid-template-columns:1fr;gap:18px}}
 @media(max-width:700px){.faq-item{grid-template-columns:1fr}.remove-faq{justify-self:start}}
 @media(max-width:700px){.image-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:460px){.image-grid{grid-template-columns:1fr}.image-card img{height:180px}}
@@ -461,14 +760,14 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
 <body>
 <header>
   <div class="wrap top">
-    <a class="brand" href="index.html"><span class="mark">P</span>Pojok Berkah <span style="font-family:var(--body);font-size:.78rem;font-weight:500;color:var(--muted)">/ CMS</span></a>
+    <a class="brand" href="index.html"><?php if (str_starts_with($imageSources['logo'], 'admin.php?image=')): ?><img class="brand-image" src="<?= escapeHtml($imageSources['logo']) ?>" alt=""><?php else: ?><span class="mark">P</span><?php endif; ?>Pojok Berkah <span style="font-family:var(--body);font-size:.78rem;font-weight:500;color:var(--muted)">/ CMS</span></a>
     <nav aria-label="Navigasi"><a href="index.html">Lihat situs</a><a href="tentang-kami.html">Tentang kami</a></nav>
   </div>
 </header>
 <main class="wrap">
   <span class="kicker">Pengaturan situs</span>
   <h1>Pengaturan situs</h1>
-  <p class="lead">Kelola nomor WhatsApp admin, gambar layanan, dan pertanyaan yang sering muncul di situs Pojok Berkah.</p>
+  <p class="lead">Kelola nomor WhatsApp admin, nama, alamat, deskripsi, gambar, statistik, dan pertanyaan layanan.</p>
 
   <?php if ($flash !== ''): ?>
     <p class="flash" role="status"><?= escapeHtml($flash) ?></p>
@@ -543,6 +842,99 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
     </aside>
   </section>
   <?php if ($isAuthenticated): ?>
+    <section class="panel service-content-panel">
+      <h2>Konten layanan</h2>
+      <p class="form-copy">Atur nama, tujuan, ringkasan, dan tag layanan dari satu bagian.</p>
+      <div class="service-content-grid">
+        <div class="service-content-group">
+          <h3>Nama layanan</h3>
+          <p class="form-copy">Nama tampil di kartu, footer, dan halaman Tentang Kami.</p>
+          <form method="post">
+            <input type="hidden" name="csrf" value="<?= escapeHtml($csrf) ?>">
+            <input type="hidden" name="action" value="save_service_names">
+            <label for="service-name-tryout">Tryout</label>
+            <input id="service-name-tryout" name="service_names[tryout]" type="text" maxlength="100" value="<?= escapeHtml($serviceNames['tryout']) ?>" required>
+            <label for="service-name-gadai">Gadai</label>
+            <input id="service-name-gadai" name="service_names[gadai]" type="text" maxlength="100" value="<?= escapeHtml($serviceNames['gadai']) ?>" required>
+            <label for="service-name-kitchen">Kitchen</label>
+            <input id="service-name-kitchen" name="service_names[kitchen]" type="text" maxlength="100" value="<?= escapeHtml($serviceNames['kitchen']) ?>" required>
+            <div class="actions"><button class="primary" type="submit">Simpan nama</button></div>
+          </form>
+        </div>
+        <div class="service-content-group">
+          <h3>Alamat layanan</h3>
+          <p class="form-copy">Masukkan URL lengkap dengan awalan https://.</p>
+          <form method="post">
+            <input type="hidden" name="csrf" value="<?= escapeHtml($csrf) ?>">
+            <input type="hidden" name="action" value="save_service_urls">
+            <label for="service-url-tryout"><?= escapeHtml($serviceNames['tryout']) ?></label>
+            <input id="service-url-tryout" name="service_urls[tryout]" type="url" maxlength="2048" value="<?= escapeHtml($serviceUrls['tryout']) ?>" required>
+            <label for="service-url-gadai"><?= escapeHtml($serviceNames['gadai']) ?></label>
+            <input id="service-url-gadai" name="service_urls[gadai]" type="url" maxlength="2048" value="<?= escapeHtml($serviceUrls['gadai']) ?>" required>
+            <label for="service-url-kitchen"><?= escapeHtml($serviceNames['kitchen']) ?></label>
+            <input id="service-url-kitchen" name="service_urls[kitchen]" type="url" maxlength="2048" value="<?= escapeHtml($serviceUrls['kitchen']) ?>" required>
+            <div class="actions"><button class="primary" type="submit">Simpan URL</button></div>
+          </form>
+        </div>
+        <div class="service-content-group">
+          <h3>Deskripsi</h3>
+          <p class="form-copy">Ringkasan untuk kartu beranda dan halaman Tentang Kami.</p>
+          <form method="post">
+            <input type="hidden" name="csrf" value="<?= escapeHtml($csrf) ?>">
+            <input type="hidden" name="action" value="save_service_descriptions">
+            <label for="description-tryout"><?= escapeHtml($serviceNames['tryout']) ?></label>
+            <textarea id="description-tryout" name="service_descriptions[tryout]" maxlength="500" rows="3" required><?= escapeHtml($serviceDescriptions['tryout']) ?></textarea>
+            <label for="description-gadai"><?= escapeHtml($serviceNames['gadai']) ?></label>
+            <textarea id="description-gadai" name="service_descriptions[gadai]" maxlength="500" rows="3" required><?= escapeHtml($serviceDescriptions['gadai']) ?></textarea>
+            <label for="description-kitchen"><?= escapeHtml($serviceNames['kitchen']) ?></label>
+            <textarea id="description-kitchen" name="service_descriptions[kitchen]" maxlength="500" rows="3" required><?= escapeHtml($serviceDescriptions['kitchen']) ?></textarea>
+            <div class="actions"><button class="primary" type="submit">Simpan deskripsi</button></div>
+          </form>
+        </div>
+        <div class="service-content-group">
+          <h3>Tag</h3>
+          <p class="form-copy">Satu tag per baris; maksimal 8 tag dan 60 karakter per tag. Kosongkan untuk menyembunyikan chip.</p>
+          <form method="post">
+            <input type="hidden" name="csrf" value="<?= escapeHtml($csrf) ?>">
+            <input type="hidden" name="action" value="save_service_tags">
+            <label for="tags-tryout"><?= escapeHtml($serviceNames['tryout']) ?></label>
+            <textarea id="tags-tryout" name="service_tags[tryout]" maxlength="2000" rows="3"><?= escapeHtml(implode("\n", $serviceTags['tryout'])) ?></textarea>
+            <label for="tags-gadai"><?= escapeHtml($serviceNames['gadai']) ?></label>
+            <textarea id="tags-gadai" name="service_tags[gadai]" maxlength="2000" rows="3"><?= escapeHtml(implode("\n", $serviceTags['gadai'])) ?></textarea>
+            <label for="tags-kitchen"><?= escapeHtml($serviceNames['kitchen']) ?></label>
+            <textarea id="tags-kitchen" name="service_tags[kitchen]" maxlength="2000" rows="3"><?= escapeHtml(implode("\n", $serviceTags['kitchen'])) ?></textarea>
+            <div class="actions"><button class="primary" type="submit">Simpan tag</button></div>
+          </form>
+        </div>
+      </div>
+    </section>
+  <?php endif; ?>
+  <?php if ($isAuthenticated): ?>
+    <section class="panel faq-panel">
+      <div>
+        <h2>Statistik beranda</h2>
+        <p class="form-copy">Kelola nilai dan label yang tampil pada tiga statistik di beranda.</p>
+        <form method="post">
+          <input type="hidden" name="csrf" value="<?= escapeHtml($csrf) ?>">
+          <input type="hidden" name="action" value="save_stats">
+          <div class="faq-item">
+            <label for="stat-services-value">Nilai jumlah layanan<input id="stat-services-value" name="stats[services][value]" maxlength="80" value="<?= escapeHtml($stats['services']['value']) ?>" required></label>
+            <label for="stat-services-label">Label<input id="stat-services-label" name="stats[services][label]" maxlength="120" value="<?= escapeHtml($stats['services']['label']) ?>" required></label>
+          </div>
+          <div class="faq-item">
+            <label for="stat-gadai-value">Nilai cabang gadai<input id="stat-gadai-value" name="stats[gadai][value]" maxlength="80" value="<?= escapeHtml($stats['gadai']['value']) ?>" required></label>
+            <label for="stat-gadai-label">Label<input id="stat-gadai-label" name="stats[gadai][label]" maxlength="120" value="<?= escapeHtml($stats['gadai']['label']) ?>" required></label>
+          </div>
+          <div class="faq-item">
+            <label for="stat-kitchen-value">Nilai Alfi Kitchen<input id="stat-kitchen-value" name="stats[kitchen][value]" maxlength="80" value="<?= escapeHtml($stats['kitchen']['value']) ?>" required></label>
+            <label for="stat-kitchen-label">Label<input id="stat-kitchen-label" name="stats[kitchen][label]" maxlength="120" value="<?= escapeHtml($stats['kitchen']['label']) ?>" required></label>
+          </div>
+          <div class="actions"><button class="primary" type="submit">Simpan statistik</button></div>
+        </form>
+      </div>
+    </section>
+  <?php endif; ?>
+  <?php if ($isAuthenticated): ?>
     <section class="panel faq-panel">
       <div>
         <h2>Kelola pertanyaan yang sering muncul</h2>
@@ -570,12 +962,16 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
   <?php if ($isAuthenticated): ?>
     <section class="panel images-panel">
       <h2>Kelola gambar layanan</h2>
-      <p class="form-copy">Gambar ini dipakai di kartu beranda dan halaman Tentang Kami. Format JPEG, PNG, atau WebP, maksimal 5 MB.</p>
+      <p class="form-copy">Logo tampil di header, favicon, dan gambar layanan dipakai di beranda serta Tentang Kami. Format JPEG, PNG, atau WebP, maksimal 5 MB. PNG transparan disarankan untuk logo.</p>
       <div class="image-grid">
         <?php foreach ($imageSlots as $slot => $label): ?>
           <article class="image-card">
-            <img src="<?= escapeHtml($imageSources[$slot]) ?>" alt="Pratinjau gambar <?= escapeHtml($label) ?>">
-            <p class="image-status"><?= str_starts_with($imageSources[$slot], 'admin.php?image=') ? 'Gambar kustom aktif' : 'Gambar bawaan aktif' ?></p>
+            <?php if ($imageSources[$slot] !== ''): ?>
+              <img class="<?= $slot === 'logo' ? 'image-logo-preview' : '' ?>" src="<?= escapeHtml($imageSources[$slot]) ?>" alt="Pratinjau <?= escapeHtml($label) ?>">
+            <?php else: ?>
+              <div class="image-placeholder" aria-label="Monogram logo bawaan"><span class="mark">P</span></div>
+            <?php endif; ?>
+            <p class="image-status"><?= str_starts_with($imageSources[$slot], 'admin.php?image=') ? 'Gambar kustom aktif' : ($slot === 'logo' ? 'Monogram bawaan aktif' : 'Gambar bawaan aktif') ?></p>
             <form method="post" enctype="multipart/form-data">
               <input type="hidden" name="csrf" value="<?= escapeHtml($csrf) ?>">
               <input type="hidden" name="image_slot" value="<?= escapeHtml($slot) ?>">

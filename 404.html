@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="legal.css">
 </head>
 <body>
-<header><div class="wrap top"><a class="brand" href="index.html"><span class="mark">P</span>Pojok Berkah</a><nav aria-label="Menu utama"><a href="index.html">Beranda</a><a href="tentang-kami.html">Tentang kami</a></nav></div></header>
+<header><div class="wrap top"><a class="brand" href="index.html"><span class="mark" data-logo-fallback>P</span><img class="brand-image" data-image-slot="logo" alt="" hidden>Pojok Berkah</a><nav aria-label="Menu utama"><a href="index.html">Beranda</a><a href="tentang-kami.html">Tentang kami</a></nav></div></header>
 <main class="wrap">
   <section class="not-found">
     <div>
@@ -31,8 +31,15 @@
 <script>
 document.getElementById("yr").textContent=new Date().getFullYear();
 fetch("admin.php?public=1",{cache:"no-store"}).then(function(response){return response.json()}).then(function(settings){
-  var image=settings.images&&settings.images.tryout;
-  if(typeof image==="string")document.querySelector('img[data-image-slot="tryout"]').src=image;
+  if(!settings.images)return;
+  document.querySelectorAll("img[data-image-slot]").forEach(function(image){
+    var source=settings.images[image.dataset.imageSlot];
+    if(typeof source==="string"&&source){image.src=source;image.hidden=false;}
+  });
+  if(settings.images.logo){
+    document.querySelectorAll("[data-logo-fallback]").forEach(function(mark){mark.hidden=true});
+    var favicon=document.querySelector('link[rel="icon"]');if(favicon)favicon.href=settings.images.logo;
+  }
 }).catch(function(){});
 </script>
 </body>

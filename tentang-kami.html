@@ -28,6 +28,8 @@ a{color:inherit}
 header.bar{position:sticky;top:0;z-index:10;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(244,248,252,.82);border-bottom:1px solid var(--line)}
 .top{display:flex;align-items:center;justify-content:space-between;min-height:68px;gap:20px}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-weight:700;font-size:1.15rem;white-space:nowrap}
+.brand-image{width:34px;height:34px;flex:0 0 34px;object-fit:contain}
+.brand-image[hidden]{display:none}
 .mark{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;font-weight:800;background:linear-gradient(135deg,var(--teal),var(--blue))}
 .nav{display:flex;align-items:center;gap:24px}
 .nav a{text-decoration:none;color:var(--muted);font-weight:500}
@@ -93,7 +95,7 @@ footer small{display:block;margin-top:18px;max-width:72ch}
 <div class="bg" aria-hidden="true"></div>
 <header class="bar">
   <div class="wrap top">
-    <a class="logo" href="index.html"><span class="mark">P</span>Pojok Berkah</a>
+    <a class="logo" href="index.html"><span class="mark" data-logo-fallback>P</span><img class="brand-image" data-image-slot="logo" alt="" hidden>Pojok Berkah</a>
     <nav class="nav" aria-label="Menu utama">
       <a href="index.html">Beranda</a>
       <a href="index.html#layanan">Layanan</a>
@@ -115,8 +117,8 @@ footer small{display:block;margin-top:18px;max-width:72ch}
     </div>
     <div class="photo-grid" aria-label="Sekilas layanan Pojok Berkah">
       <figure><img data-image-slot="tryout" src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&amp;fit=crop&amp;w=760&amp;q=80" alt="Buku dan catatan belajar" fetchpriority="high"><figcaption>Belajar dengan lebih terarah</figcaption></figure>
-      <figure><img data-image-slot="gadai" src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&amp;fit=crop&amp;w=520&amp;q=80" alt="Mobil untuk ilustrasi layanan BPKB" loading="lazy" decoding="async"><figcaption>Informasi gadai BPKB</figcaption></figure>
-      <figure><img data-image-slot="kitchen" src="https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&amp;fit=crop&amp;w=520&amp;q=80" alt="Dessert buah dalam gelas" loading="lazy" decoding="async"><figcaption>Sajian segar Alfi Kitchen</figcaption></figure>
+      <figure><img data-image-slot="gadai" src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&amp;fit=crop&amp;w=520&amp;q=80" alt="Mobil untuk ilustrasi layanan BPKB" loading="lazy" decoding="async"><figcaption>Informasi <span data-service-name="gadai">Gadai BPKB</span></figcaption></figure>
+      <figure><img data-image-slot="kitchen" src="https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&amp;fit=crop&amp;w=520&amp;q=80" alt="Dessert buah dalam gelas" loading="lazy" decoding="async"><figcaption>Sajian segar <span data-service-name="kitchen">Alfi Kitchen</span></figcaption></figure>
     </div>
   </section>
 
@@ -136,18 +138,18 @@ footer small{display:block;margin-top:18px;max-width:72ch}
     <div class="service-list">
       <article class="service">
         <img data-image-slot="tryout" src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&amp;fit=crop&amp;w=600&amp;q=75" alt="Buku dan catatan untuk belajar" loading="lazy" decoding="async">
-        <div><h3>Tryout TKA</h3><p>Latihan soal online dengan pembahasan untuk siswa, guru, dan sekolah.</p></div>
-        <a href="https://tryout.pojokberkah.online">Kunjungi Tryout TKA</a>
+        <div><h3 data-service-name="tryout">Tryout TKA</h3><p data-service-description="tryout">Latihan soal TKA online lengkap dengan pembahasan, disusun dengan bantuan AI untuk siswa dan guru.</p></div>
+        <a data-service-link="tryout" href="https://tryout.pojokberkah.online">Kunjungi <span data-service-name="tryout">Tryout TKA</span></a>
       </article>
       <article class="service">
         <img data-image-slot="gadai" src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&amp;fit=crop&amp;w=600&amp;q=75" alt="Mobil untuk ilustrasi layanan gadai BPKB" loading="lazy" decoding="async">
-        <div><h3>Gadai BPKB</h3><p>Jelajahi simulasi dan informasi layanan yang tersedia di Bandung, Bekasi, dan Jakarta.</p></div>
-        <a href="https://gadai.pojokberkah.online">Lihat informasi</a>
+        <div><h3 data-service-name="gadai">Gadai BPKB</h3><p data-service-description="gadai">Simulasi pencairan dana dengan jaminan BPKB, tersedia di tiga kota dengan 29 cabang aktif.</p></div>
+        <a data-service-link="gadai" href="https://gadai.pojokberkah.online">Lihat informasi</a>
       </article>
       <article class="service">
         <img data-image-slot="kitchen" src="https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&amp;fit=crop&amp;w=600&amp;q=75" alt="Dessert buah segar" loading="lazy" decoding="async">
-        <div><h3>Alfi Kitchen</h3><p>Puding, dessert, dan salad buah buatan rumahan untuk menemani hari Anda.</p></div>
-        <a href="https://kitchen.pojokberkah.online">Lihat menu</a>
+        <div><h3 data-service-name="kitchen">Alfi Kitchen</h3><p data-service-description="kitchen">Puding berlapis buah, dessert dalam kemasan praktis, dan salad buah bersaus creamy. Buatan rumahan, selalu segar.</p></div>
+        <a data-service-link="kitchen" href="https://kitchen.pojokberkah.online">Lihat menu</a>
       </article>
     </div>
   </section>
@@ -172,11 +174,33 @@ document.getElementById("yr").textContent=new Date().getFullYear();
 fetch("admin.php?public=1",{cache:"no-store"}).then(function(response){return response.json()}).then(function(settings){
   if(!/^\d{8,15}$/.test(settings.wa_number))return;
   document.querySelectorAll('a[href*="wa.me/"]').forEach(function(link){link.href="https://wa.me/"+settings.wa_number});
+  if(settings.service_urls&&typeof settings.service_urls==="object"){
+    ["tryout","gadai","kitchen"].forEach(function(slot){
+      var url=settings.service_urls[slot];
+      if(typeof url==="string")document.querySelectorAll('[data-service-link="'+slot+'"]').forEach(function(link){link.href=url});
+    });
+  }
+  if(settings.service_names&&typeof settings.service_names==="object"){
+    ["tryout","gadai","kitchen"].forEach(function(slot){
+      var name=settings.service_names[slot];
+      if(typeof name==="string")document.querySelectorAll('[data-service-name="'+slot+'"]').forEach(function(node){node.textContent=name});
+    });
+  }
+  if(settings.service_descriptions&&typeof settings.service_descriptions==="object"){
+    ["tryout","gadai","kitchen"].forEach(function(slot){
+      var description=settings.service_descriptions[slot];
+      if(typeof description==="string")document.querySelectorAll('[data-service-description="'+slot+'"]').forEach(function(node){node.textContent=description});
+    });
+  }
   if(settings.images&&typeof settings.images==="object"){
     document.querySelectorAll("img[data-image-slot]").forEach(function(image){
       var source=settings.images[image.dataset.imageSlot];
-      if(typeof source==="string")image.src=source;
+      if(typeof source==="string"&&source){image.src=source;image.hidden=false;}
     });
+    if(settings.images.logo){
+      document.querySelectorAll("[data-logo-fallback]").forEach(function(mark){mark.hidden=true});
+      var favicon=document.querySelector('link[rel="icon"]');if(favicon)favicon.href=settings.images.logo;
+    }
   }
 }).catch(function(){});
 </script>

@@ -48,6 +48,8 @@ a{color:inherit}
 header.bar{position:sticky;top:0;z-index:10;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(244,248,252,.78);border-bottom:1px solid var(--line)}
 .top{display:flex;align-items:center;justify-content:space-between;height:68px}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-weight:700;font-size:1.15rem}
+.brand-image{width:34px;height:34px;flex:0 0 34px;object-fit:contain}
+.brand-image[hidden]{display:none}
 .mark{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;font-weight:800;background:linear-gradient(135deg,var(--teal),var(--blue))}
 .nav{display:flex;align-items:center;gap:26px}
 .nav a{text-decoration:none;color:var(--muted);font-weight:500;transition:color .2s}
@@ -91,6 +93,7 @@ header.bar{position:sticky;top:0;z-index:10;backdrop-filter:blur(14px);-webkit-b
 .host{font-size:.88rem;color:var(--cd);font-weight:600;margin-top:4px}
 .card p{margin-top:14px;color:var(--muted);flex:1}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.chips[hidden]{display:none}
 .chips span{font-size:.85rem;padding:4px 12px;border-radius:999px;border:1px solid var(--line);background:#fff}
 .go{margin-top:24px;display:inline-flex;align-items:center;justify-content:center;min-height:48px;border-radius:14px;font-weight:600;color:var(--on);background:var(--c);transition:filter .2s}
 .card:hover .go{filter:brightness(1.06)}
@@ -151,7 +154,7 @@ footer small{display:block;margin-top:22px;max-width:72ch}
 
 <header class="bar">
   <div class="wrap top">
-    <a class="logo" href="index.html"><span class="mark">P</span>Pojok Berkah</a>
+    <a class="logo" href="index.html"><span class="mark" data-logo-fallback>P</span><img class="brand-image" data-image-slot="logo" alt="" hidden>Pojok Berkah</a>
     <nav class="nav" aria-label="Menu utama">
       <a href="#layanan">Layanan</a>
       <a href="#kenapa">Kenapa kami</a>
@@ -172,41 +175,41 @@ footer small{display:block;margin-top:22px;max-width:72ch}
     </div>
 
     <div class="cards" id="pilih">
-      <a class="card c-tryout" href="https://tryout.pojokberkah.online">
+      <a class="card c-tryout" data-service-link="tryout" href="https://tryout.pojokberkah.online">
         <img class="card-image" data-image-slot="tryout" src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&amp;fit=crop&amp;w=960&amp;q=80" alt="Buku dan catatan untuk belajar" loading="lazy" decoding="async">
         <span class="ico"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M8 7h7M8 11h5"/></svg></span>
-        <h2>Tryout TKA</h2>
-        <span class="host">tryout.pojokberkah.online</span>
-        <p>Latihan soal TKA online lengkap dengan pembahasan, disusun dengan bantuan AI untuk siswa dan guru.</p>
-        <div class="chips"><span>Soal AI</span><span>Pembahasan</span><span>Siswa dan guru</span></div>
+        <h2 data-service-name="tryout">Tryout TKA</h2>
+        <span class="host" data-service-host="tryout">tryout.pojokberkah.online</span>
+        <p data-service-description="tryout">Latihan soal TKA online lengkap dengan pembahasan, disusun dengan bantuan AI untuk siswa dan guru.</p>
+        <div class="chips" data-service-tags="tryout"><span>Soal AI</span><span>Pembahasan</span><span>Siswa dan guru</span></div>
         <span class="go">Mulai tryout</span>
       </a>
 
-      <a class="card c-gadai" href="https://gadai.pojokberkah.online">
+      <a class="card c-gadai" data-service-link="gadai" href="https://gadai.pojokberkah.online">
         <img class="card-image" data-image-slot="gadai" src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&amp;fit=crop&amp;w=960&amp;q=80" alt="Mobil yang menjadi konteks layanan gadai BPKB" loading="lazy" decoding="async">
         <span class="ico"><svg viewBox="0 0 24 24"><path d="M5 16l1.5-5a2 2 0 0 1 1.9-1.4h7.2a2 2 0 0 1 1.9 1.4L19 16"/><rect x="3" y="16" width="18" height="4" rx="1.5"/><circle cx="7.5" cy="18" r=".6"/><circle cx="16.5" cy="18" r=".6"/></svg></span>
-        <h2>Gadai BPKB</h2>
-        <span class="host">gadai.pojokberkah.online</span>
-        <p>Simulasi pencairan dana dengan jaminan BPKB, tersedia di tiga kota dengan 29 cabang aktif.</p>
-        <div class="chips"><span>Bandung</span><span>Bekasi</span><span>Jakarta</span></div>
+        <h2 data-service-name="gadai">Gadai BPKB</h2>
+        <span class="host" data-service-host="gadai">gadai.pojokberkah.online</span>
+        <p data-service-description="gadai">Simulasi pencairan dana dengan jaminan BPKB, tersedia di tiga kota dengan 29 cabang aktif.</p>
+        <div class="chips" data-service-tags="gadai"><span>Bandung</span><span>Bekasi</span><span>Jakarta</span></div>
         <span class="go">Hitung simulasi</span>
       </a>
 
-      <a class="card c-kitchen" href="https://kitchen.pojokberkah.online">
+      <a class="card c-kitchen" data-service-link="kitchen" href="https://kitchen.pojokberkah.online">
         <img class="card-image" data-image-slot="kitchen" src="https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&amp;fit=crop&amp;w=960&amp;q=80" alt="Dessert buah segar dalam gelas" loading="lazy" decoding="async">
         <span class="ico"><svg viewBox="0 0 24 24"><path d="M5 9h14l-1.5 10a2 2 0 0 1-2 1.7h-7a2 2 0 0 1-2-1.7z"/><path d="M8 9a4 4 0 0 1 8 0"/></svg></span>
-        <h2>Alfi Kitchen</h2>
-        <span class="host">kitchen.pojokberkah.online</span>
-        <p>Puding berlapis buah, dessert dalam kemasan praktis, dan salad buah bersaus creamy. Buatan rumahan, selalu segar.</p>
-        <div class="chips"><span>Puding</span><span>Dessert</span><span>Salad buah</span></div>
+        <h2 data-service-name="kitchen">Alfi Kitchen</h2>
+        <span class="host" data-service-host="kitchen">kitchen.pojokberkah.online</span>
+        <p data-service-description="kitchen">Puding berlapis buah, dessert dalam kemasan praktis, dan salad buah bersaus creamy. Buatan rumahan, selalu segar.</p>
+        <div class="chips" data-service-tags="kitchen"><span>Puding</span><span>Dessert</span><span>Salad buah</span></div>
         <span class="go">Lihat menu</span>
       </a>
     </div>
 
     <div class="stats">
-      <div><b>3</b><span>layanan</span></div>
-      <div><b>29</b><span>cabang gadai aktif</span></div>
-      <div><b>Always Fresh</b><span>komitmen Alfi Kitchen</span></div>
+      <div><b data-stat-value="services">3</b><span data-stat-label="services">layanan</span></div>
+      <div><b data-stat-value="gadai">29</b><span data-stat-label="gadai">cabang gadai aktif</span></div>
+      <div><b data-stat-value="kitchen">Always Fresh</b><span data-stat-label="kitchen">komitmen Alfi Kitchen</span></div>
     </div>
   </section>
 
@@ -244,9 +247,9 @@ footer small{display:block;margin-top:22px;max-width:72ch}
   <div class="cols">
     <strong>Pojok Berkah</strong>
     <nav aria-label="Tautan layanan">
-      <a href="https://tryout.pojokberkah.online">Tryout TKA</a>
-      <a href="https://gadai.pojokberkah.online">Gadai BPKB</a>
-      <a href="https://kitchen.pojokberkah.online">Alfi Kitchen</a>
+      <a data-service-link="tryout" href="https://tryout.pojokberkah.online"><span data-service-name="tryout">Tryout TKA</span></a>
+      <a data-service-link="gadai" href="https://gadai.pojokberkah.online"><span data-service-name="gadai">Gadai BPKB</span></a>
+      <a data-service-link="kitchen" href="https://kitchen.pojokberkah.online"><span data-service-name="kitchen">Alfi Kitchen</span></a>
       <a href="tentang-kami.html">Tentang kami</a>
       <a href="kebijakan-privasi.html">Kebijakan Privasi</a>
       <a href="syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
@@ -263,11 +266,58 @@ fetch("admin.php?public=1",{cache:"no-store"}).then(function(response){return re
   if(/^\d{8,15}$/.test(settings.wa_number)){
     document.querySelectorAll('a[href*="wa.me/"]').forEach(function(link){link.href="https://wa.me/"+settings.wa_number});
   }
+  if(settings.service_urls&&typeof settings.service_urls==="object"){
+    ["tryout","gadai","kitchen"].forEach(function(slot){
+      var url=settings.service_urls[slot];
+      if(typeof url!=="string")return;
+      document.querySelectorAll('[data-service-link="'+slot+'"]').forEach(function(link){link.href=url});
+      document.querySelectorAll('[data-service-host="'+slot+'"]').forEach(function(host){host.textContent=new URL(url,location.href).host});
+    });
+  }
+  if(settings.service_names&&typeof settings.service_names==="object"){
+    ["tryout","gadai","kitchen"].forEach(function(slot){
+      var name=settings.service_names[slot];
+      if(typeof name==="string")document.querySelectorAll('[data-service-name="'+slot+'"]').forEach(function(node){node.textContent=name});
+    });
+  }
+  if(settings.service_descriptions&&typeof settings.service_descriptions==="object"){
+    ["tryout","gadai","kitchen"].forEach(function(slot){
+      var description=settings.service_descriptions[slot];
+      if(typeof description==="string")document.querySelectorAll('[data-service-description="'+slot+'"]').forEach(function(node){node.textContent=description});
+    });
+  }
+  if(settings.service_tags&&typeof settings.service_tags==="object"){
+    ["tryout","gadai","kitchen"].forEach(function(slot){
+      var container=document.querySelector('.chips[data-service-tags="'+slot+'"]');
+      var tags=settings.service_tags[slot];
+      if(!container||!Array.isArray(tags))return;
+      container.replaceChildren();
+      tags.forEach(function(tag){
+        if(typeof tag!=="string"||!tag.trim())return;
+        var chip=document.createElement("span");chip.textContent=tag;container.appendChild(chip);
+      });
+      container.hidden=container.children.length===0;
+    });
+  }
+  if(settings.stats&&typeof settings.stats==="object"){
+    ["services","gadai","kitchen"].forEach(function(slot){
+      var stat=settings.stats[slot];
+      if(!stat||typeof stat.value!=="string"||typeof stat.label!=="string")return;
+      var value=document.querySelector('[data-stat-value="'+slot+'"]');
+      var label=document.querySelector('[data-stat-label="'+slot+'"]');
+      if(value)value.textContent=stat.value;
+      if(label)label.textContent=stat.label;
+    });
+  }
   if(settings.images&&typeof settings.images==="object"){
     document.querySelectorAll("img[data-image-slot]").forEach(function(image){
       var source=settings.images[image.dataset.imageSlot];
-      if(typeof source==="string")image.src=source;
+      if(typeof source==="string"&&source){image.src=source;image.hidden=false;}
     });
+    if(settings.images.logo){
+      document.querySelectorAll("[data-logo-fallback]").forEach(function(mark){mark.hidden=true});
+      var favicon=document.querySelector('link[rel="icon"]');if(favicon)favicon.href=settings.images.logo;
+    }
   }
   var faq=document.querySelector(".faq");
   if(!faq||!Array.isArray(settings.faq))return;

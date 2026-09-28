@@ -10,6 +10,8 @@ header{position:sticky;top:0;z-index:5;border-bottom:1px solid var(--line);backg
 .top{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:20px}
 .brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-weight:700;white-space:nowrap}
 .mark{width:34px;height:34px;display:grid;place-items:center;border-radius:9px;color:#fff;background:linear-gradient(135deg,var(--teal),var(--blue))}
+.brand-image{width:34px;height:34px;flex:0 0 34px;object-fit:contain}
+.brand-image[hidden]{display:none}
 .top nav,.footer-nav{display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px}
 .top nav a,.footer-nav a{color:var(--muted);font-size:.92rem;text-decoration:none}
 .top nav a:hover,.footer-nav a:hover{color:var(--ink)}

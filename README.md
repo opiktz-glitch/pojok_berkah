@@ -16,7 +16,7 @@ Landing site and PHP CMS for the Pojok Berkah service directory.
 3. Open `admin.php` from localhost and create the admin password.
 4. Set the WhatsApp number and review the service FAQ and images.
 
-The CMS setup screen is intentionally limited to localhost while no password hash exists.
+The CMS setup screen is intentionally limited to localhost while no password hash exists. After login, the CMS can manage the WhatsApp number, service names, URLs, descriptions and tags, service images, homepage statistics, and FAQ.
 
 ## Production deployment
 
@@ -26,4 +26,4 @@ The CMS setup screen is intentionally limited to localhost while no password has
 4. Enable HTTPS in the hosting panel and use the HTTPS URL for `/admin.php`.
 5. Confirm the custom domain matches the canonical URLs in the HTML and `sitemap.xml`.
 
-The site does not require `.htaccess`. Configure a custom 404 page in the hosting panel if supported. Uploaded service images are limited to JPEG, PNG, or WebP and 5 MB each.
+The site does not require `.htaccess`. Configure a custom 404 page in the hosting panel if supported. The CMS logo and service images are limited to JPEG, PNG, or WebP and 5 MB each. A transparent PNG is recommended for the logo.
