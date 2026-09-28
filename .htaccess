@@ -19,6 +19,9 @@ ErrorDocument 404 /404.html
 
   # Never serve the CMS settings file or uploads folder directly.
   RewriteRule ^data/ - [R=404,L]
+
+  # Hide the state file left behind by the FTP deploy action.
+  RewriteRule ^\.ftp-deploy-sync-state\.json$ - [R=404,L]
 </IfModule>
 
 <IfModule !mod_rewrite.c>

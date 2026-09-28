@@ -45,3 +45,5 @@ The workflow in `.github/workflows/deploy.yml` deploys pushes to `main` through 
 4. Run the workflow manually with `dry_run` disabled for the first actual deploy. Later pushes to `main` deploy automatically.
 
 The workflow excludes `data/storage.php`, its example template, and uploaded image files from publishing and deletion. Keep production settings and images backed up on the hosting account; do not add them to Git or send FTP credentials through chat.
+
+The action keeps a `.ftp-deploy-sync-state.json` file in `htdocs/` to remember what it already uploaded, and `.htaccess` hides that file from visitors. If a deploy claims nothing changed after you edited a file directly on the server, delete that state file and run the workflow again.
