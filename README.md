@@ -35,11 +35,11 @@ The `.htaccess` file in this repository redirects HTTP to HTTPS, serves `404.htm
 
 The workflow in `.github/workflows/deploy.yml` deploys pushes to `main` through explicit FTPS. Push deployment is disabled until the repository variable is enabled; manual dry-runs can be run first.
 
-1. In the GitHub repository, open **Settings > Secrets and variables > Actions > Secrets** and add:
-	- `INFINITYFREE_FTP_SERVER`: the FTP host shown in InfinityFree, commonly `ftpupload.net` (do not use the website domain).
-	- `INFINITYFREE_FTP_USERNAME`: the FTP username from the hosting panel.
-	- `INFINITYFREE_FTP_PASSWORD`: the FTP password.
-	- `INFINITYFREE_FTP_SERVER_DIR`: the site's document root, usually `htdocs/`, with a trailing slash.
+1. In the GitHub repository, open **Settings > Secrets and variables > Actions > Secrets** and add the FTP host, username and password. Either naming scheme is accepted, and the shorter names win when both exist:
+	- `FTP_HOST` (or `INFINITYFREE_FTP_SERVER`): the FTP host shown in InfinityFree, commonly `ftpupload.net` (do not use the website domain).
+	- `FTP_USER` (or `INFINITYFREE_FTP_USERNAME`): the FTP username from the hosting panel.
+	- `FTP_PASS` (or `INFINITYFREE_FTP_PASSWORD`): the FTP password.
+	- Optional `INFINITYFREE_FTP_SERVER_DIR` overrides the document root, which defaults to `htdocs/` and must keep its trailing slash.
 2. Run **Actions > Deploy to InfinityFree > Run workflow** with `dry_run` enabled. Review the log to confirm files target the correct `htdocs/` directory and that the settings file and uploaded images are excluded.
 3. In **Settings > Secrets and variables > Actions > Variables**, add `POJOK_BERKAH_DEPLOY_ENABLED` with value `true` only after the dry-run log is correct.
 4. Run the workflow manually with `dry_run` disabled for the first actual deploy. Later pushes to `main` deploy automatically.

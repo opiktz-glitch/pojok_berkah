@@ -31,25 +31,26 @@ jobs:
 
       - name: Verify deployment secrets
         env:
-          FTP_SERVER: ${{ secrets.INFINITYFREE_FTP_SERVER }}
-          FTP_USERNAME: ${{ secrets.INFINITYFREE_FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.INFINITYFREE_FTP_PASSWORD }}
-          FTP_SERVER_DIR: ${{ secrets.INFINITYFREE_FTP_SERVER_DIR }}
+          # Either naming scheme works; the shorter names win when both exist.
+          FTP_SERVER: ${{ secrets.FTP_HOST || secrets.INFINITYFREE_FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USER || secrets.INFINITYFREE_FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASS || secrets.INFINITYFREE_FTP_PASSWORD }}
+          FTP_SERVER_DIR: ${{ secrets.INFINITYFREE_FTP_SERVER_DIR || 'htdocs/' }}
         run: |
-          if [ -z "$FTP_SERVER" ] || [ -z "$FTP_USERNAME" ] || [ -z "$FTP_PASSWORD" ] || [ -z "$FTP_SERVER_DIR" ]; then
-            echo "::error::Add the four INFINITYFREE_FTP_* repository secrets before enabling deployment."
+          if [ -z "$FTP_SERVER" ] || [ -z "$FTP_USERNAME" ] || [ -z "$FTP_PASSWORD" ]; then
+            echo "::error::Add the FTP host, username and password repository secrets before enabling deployment."
             exit 1
           fi
 
       - name: Deploy with explicit FTPS
         uses: SamKirkland/FTP-Deploy-Action@110f9186c050f71550953127052e77650219c287 # v4.4.0
         with:
-          server: ${{ secrets.INFINITYFREE_FTP_SERVER }}
-          username: ${{ secrets.INFINITYFREE_FTP_USERNAME }}
-          password: ${{ secrets.INFINITYFREE_FTP_PASSWORD }}
+          server: ${{ secrets.FTP_HOST || secrets.INFINITYFREE_FTP_SERVER }}
+          username: ${{ secrets.FTP_USER || secrets.INFINITYFREE_FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASS || secrets.INFINITYFREE_FTP_PASSWORD }}
           protocol: ftps
           port: 21
-          server-dir: ${{ secrets.INFINITYFREE_FTP_SERVER_DIR }}
+          server-dir: ${{ secrets.INFINITYFREE_FTP_SERVER_DIR || 'htdocs/' }}
           # The transfer stays encrypted, but InfinityFree serves TLS on a
           # shared hostname, so the certificate itself is not validated.
           security: loose
