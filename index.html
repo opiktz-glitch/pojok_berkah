@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F4F8FC">
+<title>Pojok Berkah | Tryout TKA, Gadai BPKB, dan Alfi Kitchen</title>
+<meta name="description" content="Pojok Berkah menghadirkan tryout TKA online, simulasi gadai BPKB, dan Alfi Kitchen (puding, dessert, salad buah) dalam satu tempat.">
+<link rel="canonical" href="https://pojokberkah.online/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pojok Berkah | Tryout TKA, Gadai BPKB, dan Alfi Kitchen">
+<meta property="og:description" content="Satu pojok untuk belajar, urusan keuangan, dan dessert segar.">
+<meta property="og:url" content="https://pojokberkah.online/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%230B8277'/%3E%3Ctext x='16' y='23' font-size='20' font-family='Arial' font-weight='700' text-anchor='middle' fill='%23fff'%3EP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Pojok Berkah","url":"https://pojokberkah.online"}</script>
+<style>
+:root{
+  --bg:#F4F8FC; --ink:#10203A; --muted:#51607A; --line:rgba(16,32,58,.10);
+  --teal:#0B8277; --blue:#2F5BEA; --amber:#C97400; --wa:#25D366;
+  --card:rgba(255,255,255,.72);
+  --display:"Sora","Trebuchet MS",system-ui,sans-serif;
+  --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.65;font-size:1.0625rem;overflow-x:hidden}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:8px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+
+/* latar terang: grid halus + cahaya pastel */
+.bg{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(620px 420px at 10% 6%,rgba(62,201,187,.32),transparent 70%),
+    radial-gradient(660px 480px at 90% 14%,rgba(106,147,255,.30),transparent 70%),
+    radial-gradient(580px 440px at 55% 95%,rgba(255,180,84,.28),transparent 70%),
+    var(--bg)}
+.bg::after{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(16,32,58,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(16,32,58,.06) 1px,transparent 1px);
+  background-size:56px 56px;
+  -webkit-mask-image:radial-gradient(ellipse at 50% 18%,#000 25%,transparent 75%);
+  mask-image:radial-gradient(ellipse at 50% 18%,#000 25%,transparent 75%)}
+
+/* header */
+header.bar{position:sticky;top:0;z-index:10;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(244,248,252,.78);border-bottom:1px solid var(--line)}
+.top{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-weight:700;font-size:1.15rem}
+.mark{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;font-weight:800;background:linear-gradient(135deg,var(--teal),var(--blue))}
+.nav{display:flex;align-items:center;gap:26px}
+.nav a{text-decoration:none;color:var(--muted);font-weight:500;transition:color .2s}
+.nav a:hover{color:var(--ink)}
+.nav a.btn-wa{padding:9px 18px;border-radius:999px;font-weight:600;min-height:44px;display:inline-flex;align-items:center}
+
+/* hero */
+.hero{padding:76px 0 34px;text-align:center}
+.hero h1{font-family:var(--display);font-weight:800;font-size:clamp(2.2rem,6.2vw,4.4rem);line-height:1.06;letter-spacing:-.03em;max-width:18ch;margin:0 auto}
+.grad{background:linear-gradient(100deg,var(--teal),var(--blue) 55%,var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin:20px auto 0;max-width:54ch;color:var(--muted);font-size:1.15rem}
+.hero .cta{margin-top:30px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;min-height:48px;padding:0 26px;border-radius:999px;font-weight:600;text-decoration:none;transition:transform .2s,box-shadow .2s,background .2s}
+.btn-main{color:#fff;background:linear-gradient(120deg,var(--teal),var(--blue))}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(47,91,234,.35)}
+.btn-ghost{border:1px solid var(--line);background:#fff}
+.btn-ghost:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(16,32,58,.10)}
+.wa-button{gap:10px;color:#06351B!important;background:var(--wa)!important;border:1px solid rgba(4,54,26,.12);box-shadow:0 5px 14px rgba(37,211,102,.2);transition:transform .2s,box-shadow .2s,filter .2s}
+.wa-button:hover{color:#06351B!important;filter:saturate(1.08);transform:translateY(-2px);box-shadow:0 10px 24px rgba(37,211,102,.34)}
+.wa-icon{width:20px;height:20px;flex:0 0 20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* kartu layanan */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:46px;text-align:left}
+.card{--c:#3EC9BB;--cd:#0B8277;--on:#06231F;--mx:50%;--my:0%;position:relative;display:flex;flex-direction:column;padding:28px;border-radius:26px;text-decoration:none;
+  background:var(--card);border:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:0 10px 30px -14px rgba(16,32,58,.18);
+  overflow:hidden;transition:transform .3s,border-color .3s,box-shadow .3s}
+.card::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:radial-gradient(360px circle at var(--mx) var(--my),color-mix(in srgb,var(--c) 24%,transparent),transparent 65%)}
+.card:hover,.card:focus-visible{transform:translateY(-6px);border-color:color-mix(in srgb,var(--c) 70%,transparent);box-shadow:0 24px 50px -18px color-mix(in srgb,var(--c) 70%,transparent)}
+.card:hover::before,.card:focus-visible::before{opacity:1}
+.card>*{position:relative}
+.card-image{display:block;width:calc(100% + 56px);height:168px;object-fit:cover;margin:-28px -28px 22px;border-radius:25px 25px 0 0;background:#e5edf2}
+.c-tryout{--c:#3EC9BB;--cd:#0B8277;--on:#06231F}
+.c-gadai{--c:#3D6BFF;--cd:#2F5BEA;--on:#fff}
+.c-kitchen{--c:#FFAE42;--cd:#A85F00;--on:#3A2200}
+.ico{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;color:var(--cd);
+  background:color-mix(in srgb,var(--c) 18%,#fff);border:1px solid color-mix(in srgb,var(--c) 45%,transparent)}
+.ico svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.card h2{font-family:var(--display);font-weight:700;font-size:1.6rem;margin-top:22px;line-height:1.15}
+.host{font-size:.88rem;color:var(--cd);font-weight:600;margin-top:4px}
+.card p{margin-top:14px;color:var(--muted);flex:1}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.chips span{font-size:.85rem;padding:4px 12px;border-radius:999px;border:1px solid var(--line);background:#fff}
+.go{margin-top:24px;display:inline-flex;align-items:center;justify-content:center;min-height:48px;border-radius:14px;font-weight:600;color:var(--on);background:var(--c);transition:filter .2s}
+.card:hover .go{filter:brightness(1.06)}
+
+/* statistik */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:26px;border:1px solid var(--line);border-radius:22px;background:var(--card);text-align:center}
+.stats div{padding:22px 10px}
+.stats div+div{border-left:1px solid var(--line)}
+.stats b{display:block;font-family:var(--display);font-size:clamp(1.5rem,3.4vw,2.2rem);line-height:1.2}
+.stats span{color:var(--muted);font-size:.95rem}
+
+/* section umum */
+.section{padding:84px 0 0}
+.title{font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,3.4vw,2.4rem);line-height:1.15;letter-spacing:-.02em;max-width:22ch}
+.values{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
+.val{padding:26px;border-radius:22px;border:1px solid var(--line);background:var(--card)}
+.val h3{font-family:var(--display);font-weight:600;font-size:1.15rem;margin-bottom:8px}
+.val p{color:var(--muted)}
+
+/* faq */
+.faq{max-width:780px;margin-top:26px;display:grid;gap:10px}
+.faq details{border:1px solid var(--line);border-radius:18px;background:var(--card);padding:0 22px;transition:border-color .2s}
+.faq details[open]{border-color:rgba(11,130,119,.5)}
+.faq summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:60px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:1.5rem;color:var(--teal);line-height:1}
+.faq details[open] summary::after{content:"\2212"}
+.faq details p{color:var(--muted);padding-bottom:18px}
+
+/* kontak */
+.contact{margin-top:84px;border-radius:30px;padding:48px 34px;display:flex;flex-wrap:wrap;gap:22px;align-items:center;justify-content:space-between;
+  background:linear-gradient(135deg,rgba(62,201,187,.28),rgba(106,147,255,.26));border:1px solid rgba(16,32,58,.10)}
+.contact h2{font-family:var(--display);font-weight:800;font-size:clamp(1.5rem,3vw,2.1rem);line-height:1.15;max-width:20ch}
+.contact p{margin-top:10px;color:var(--muted);max-width:44ch}
+.btn-wa2{white-space:nowrap}
+
+footer{padding:54px 0 40px;color:var(--muted);font-size:.95rem}
+footer .cols{display:flex;flex-wrap:wrap;gap:16px 40px;justify-content:space-between;align-items:center}
+footer strong{color:var(--ink);font-family:var(--display)}
+footer nav{display:flex;flex-wrap:wrap;gap:8px 24px}
+footer nav a{text-decoration:none}footer nav a:hover{color:var(--ink)}
+footer small{display:block;margin-top:22px;max-width:72ch}
+
+@media (max-width:860px){
+  .nav a:not(.btn-wa){display:none}
+  .hero{padding-top:52px}
+  .cards,.values{grid-template-columns:1fr}
+  .contact{padding:34px 24px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<header class="bar">
+  <div class="wrap top">
+    <a class="logo" href="index.html"><span class="mark">P</span>Pojok Berkah</a>
+    <nav class="nav" aria-label="Menu utama">
+      <a href="#layanan">Layanan</a>
+      <a href="#kenapa">Kenapa kami</a>
+      <a href="#faq">Tanya jawab</a>
+      <a href="tentang-kami.html">Tentang kami</a>
+      <a class="btn-wa wa-button" href="https://wa.me/6287724039666"><svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 11.7a8.2 8.2 0 0 1-12.1 7.2L4 20l1.1-4A8.2 8.2 0 1 1 20.2 11.7Z"/><path d="M9 8.5c.3-.5.6-.5.9-.5l.6 1.5-.7.9c.6 1.2 1.5 2.1 2.7 2.7l.9-.7 1.5.6c0 .3 0 .7-.5.9-.5.3-1.1.4-1.7.2-2-.6-4.2-2.8-4.8-4.8-.2-.6-.1-1.2.2-1.7Z"/></svg>Chat WhatsApp</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="wrap hero" id="layanan">
+    <h1><span class="grad">Satu pojok</span> untuk belajar, urusan keuangan, dan dessert segar.</h1>
+    <p>Pilih layanan yang Anda butuhkan. Setiap layanan punya alamat sendiri, jadi Anda langsung sampai ke tujuan.</p>
+    <div class="cta">
+      <a class="btn btn-main" href="#pilih">Pilih layanan</a>
+      <a class="btn wa-button" href="https://wa.me/6287724039666"><svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 11.7a8.2 8.2 0 0 1-12.1 7.2L4 20l1.1-4A8.2 8.2 0 1 1 20.2 11.7Z"/><path d="M9 8.5c.3-.5.6-.5.9-.5l.6 1.5-.7.9c.6 1.2 1.5 2.1 2.7 2.7l.9-.7 1.5.6c0 .3 0 .7-.5.9-.5.3-1.1.4-1.7.2-2-.6-4.2-2.8-4.8-4.8-.2-.6-.1-1.2.2-1.7Z"/></svg>Tanya admin</a>
+    </div>
+
+    <div class="cards" id="pilih">
+      <a class="card c-tryout" href="https://tryout.pojokberkah.online">
+        <img class="card-image" data-image-slot="tryout" src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&amp;fit=crop&amp;w=960&amp;q=80" alt="Buku dan catatan untuk belajar" loading="lazy" decoding="async">
+        <span class="ico"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M8 7h7M8 11h5"/></svg></span>
+        <h2>Tryout TKA</h2>
+        <span class="host">tryout.pojokberkah.online</span>
+        <p>Latihan soal TKA online lengkap dengan pembahasan, disusun dengan bantuan AI untuk siswa dan guru.</p>
+        <div class="chips"><span>Soal AI</span><span>Pembahasan</span><span>Siswa dan guru</span></div>
+        <span class="go">Mulai tryout</span>
+      </a>
+
+      <a class="card c-gadai" href="https://gadai.pojokberkah.online">
+        <img class="card-image" data-image-slot="gadai" src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&amp;fit=crop&amp;w=960&amp;q=80" alt="Mobil yang menjadi konteks layanan gadai BPKB" loading="lazy" decoding="async">
+        <span class="ico"><svg viewBox="0 0 24 24"><path d="M5 16l1.5-5a2 2 0 0 1 1.9-1.4h7.2a2 2 0 0 1 1.9 1.4L19 16"/><rect x="3" y="16" width="18" height="4" rx="1.5"/><circle cx="7.5" cy="18" r=".6"/><circle cx="16.5" cy="18" r=".6"/></svg></span>
+        <h2>Gadai BPKB</h2>
+        <span class="host">gadai.pojokberkah.online</span>
+        <p>Simulasi pencairan dana dengan jaminan BPKB, tersedia di tiga kota dengan 29 cabang aktif.</p>
+        <div class="chips"><span>Bandung</span><span>Bekasi</span><span>Jakarta</span></div>
+        <span class="go">Hitung simulasi</span>
+      </a>
+
+      <a class="card c-kitchen" href="https://kitchen.pojokberkah.online">
+        <img class="card-image" data-image-slot="kitchen" src="https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&amp;fit=crop&amp;w=960&amp;q=80" alt="Dessert buah segar dalam gelas" loading="lazy" decoding="async">
+        <span class="ico"><svg viewBox="0 0 24 24"><path d="M5 9h14l-1.5 10a2 2 0 0 1-2 1.7h-7a2 2 0 0 1-2-1.7z"/><path d="M8 9a4 4 0 0 1 8 0"/></svg></span>
+        <h2>Alfi Kitchen</h2>
+        <span class="host">kitchen.pojokberkah.online</span>
+        <p>Puding berlapis buah, dessert dalam kemasan praktis, dan salad buah bersaus creamy. Buatan rumahan, selalu segar.</p>
+        <div class="chips"><span>Puding</span><span>Dessert</span><span>Salad buah</span></div>
+        <span class="go">Lihat menu</span>
+      </a>
+    </div>
+
+    <div class="stats">
+      <div><b>3</b><span>layanan</span></div>
+      <div><b>29</b><span>cabang gadai aktif</span></div>
+      <div><b>Always Fresh</b><span>komitmen Alfi Kitchen</span></div>
+    </div>
+  </section>
+
+  <section class="wrap section" id="kenapa">
+    <h2 class="title">Dibuat supaya urusan sehari-hari lebih mudah</h2>
+    <div class="values">
+      <div class="val"><h3>Langsung ke inti</h3><p>Tidak perlu mencari-cari. Satu klik dari halaman ini membawa Anda ke layanan yang dituju.</p></div>
+      <div class="val"><h3>Jelas dan terbuka</h3><p>Simulasi dan informasi disajikan apa adanya, sehingga Anda bisa memutuskan dengan tenang.</p></div>
+      <div class="val"><h3>Mudah dihubungi</h3><p>Ada pertanyaan? Admin kami siap membantu lewat WhatsApp.</p></div>
+    </div>
+  </section>
+
+  <section class="wrap section" id="faq">
+    <h2 class="title">Pertanyaan yang sering muncul</h2>
+    <div class="faq">
+      <details><summary>Apakah semua layanan memakai satu akun?</summary><p>Tidak. Tiap layanan berjalan di alamatnya sendiri dan punya aturannya sendiri. Halaman ini hanya pintu masuknya.</p></details>
+      <details><summary>Apakah hasil simulasi gadai sama dengan pencairan final?</summary><p>Belum tentu. Simulasi adalah perkiraan. Nilai final ditentukan setelah verifikasi dan survei oleh lembaga pembiayaan.</p></details>
+      <details><summary>Siapa yang bisa memakai Tryout TKA?</summary><p>Siswa yang ingin berlatih soal, serta guru atau sekolah yang ingin mengelola soal dan paket tryout.</p></details>
+      <details><summary>Bagaimana cara memesan di Alfi Kitchen?</summary><p>Buka halaman Alfi Kitchen, pilih produk, lalu pesan lewat tombol WhatsApp.</p></details>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="contact">
+      <div>
+        <h2>Belum yakin harus mulai dari mana?</h2>
+        <p>Ceritakan kebutuhan Anda ke admin, kami arahkan ke layanan yang tepat.</p>
+      </div>
+      <a class="btn btn-wa2 wa-button" href="https://wa.me/6287724039666"><svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 11.7a8.2 8.2 0 0 1-12.1 7.2L4 20l1.1-4A8.2 8.2 0 1 1 20.2 11.7Z"/><path d="M9 8.5c.3-.5.6-.5.9-.5l.6 1.5-.7.9c.6 1.2 1.5 2.1 2.7 2.7l.9-.7 1.5.6c0 .3 0 .7-.5.9-.5.3-1.1.4-1.7.2-2-.6-4.2-2.8-4.8-4.8-.2-.6-.1-1.2.2-1.7Z"/></svg>Tanya admin lewat WhatsApp</a>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <div class="cols">
+    <strong>Pojok Berkah</strong>
+    <nav aria-label="Tautan layanan">
+      <a href="https://tryout.pojokberkah.online">Tryout TKA</a>
+      <a href="https://gadai.pojokberkah.online">Gadai BPKB</a>
+      <a href="https://kitchen.pojokberkah.online">Alfi Kitchen</a>
+      <a href="tentang-kami.html">Tentang kami</a>
+      <a href="kebijakan-privasi.html">Kebijakan Privasi</a>
+      <a href="syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
+      <a href="mailto:admin@pojokberkah.online">Email admin</a>
+    </nav>
+  </div>
+  <small>Simulasi gadai bersifat estimasi. Pilih lembaga pembiayaan yang terdaftar dan diawasi OJK, dan baca perjanjian dengan teliti sebelum menyetujui.</small>
+  <small>&copy; <span id="yr">2026</span> Pojok Berkah</small>
+</footer>
+
+<script>
+document.getElementById("yr").textContent=new Date().getFullYear();
+fetch("admin.php?public=1",{cache:"no-store"}).then(function(response){return response.json()}).then(function(settings){
+  if(/^\d{8,15}$/.test(settings.wa_number)){
+    document.querySelectorAll('a[href*="wa.me/"]').forEach(function(link){link.href="https://wa.me/"+settings.wa_number});
+  }
+  if(settings.images&&typeof settings.images==="object"){
+    document.querySelectorAll("img[data-image-slot]").forEach(function(image){
+      var source=settings.images[image.dataset.imageSlot];
+      if(typeof source==="string")image.src=source;
+    });
+  }
+  var faq=document.querySelector(".faq");
+  if(!faq||!Array.isArray(settings.faq))return;
+  faq.replaceChildren();
+  settings.faq.forEach(function(item){
+    if(typeof item.question!=="string"||typeof item.answer!=="string")return;
+    var details=document.createElement("details");
+    var question=document.createElement("summary");question.textContent=item.question;
+    var answer=document.createElement("p");answer.textContent=item.answer;
+    details.append(question,answer);faq.appendChild(details);
+  });
+}).catch(function(){});
+document.querySelectorAll(".card").forEach(function(c){
+  c.addEventListener("pointermove",function(e){
+    var r=c.getBoundingClientRect();
+    c.style.setProperty("--mx",(e.clientX-r.left)+"px");
+    c.style.setProperty("--my",(e.clientY-r.top)+"px");
+  });
+});
+</script>
+</body>
+</html>
