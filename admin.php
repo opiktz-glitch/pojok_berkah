@@ -206,6 +206,7 @@ if (isset($_GET['public'])) {
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');
 header('Referrer-Policy: same-origin');
+header('X-Robots-Tag: noindex, nofollow, noarchive');
 $usingHttps = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
 ini_set('session.use_strict_mode', '1');
 ini_set('session.use_only_cookies', '1');
@@ -681,7 +682,7 @@ $csrf = (string) ($_SESSION['csrf'] ?? $csrf);
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#F4F8FC">
-<meta name="robots" content="noindex,nofollow">
+<meta name="robots" content="noindex,nofollow,noarchive">
 <title>CMS Situs | Pojok Berkah</title>
 <link rel="icon" href="<?= $imageSources['logo'] !== '' ? escapeHtml($imageSources['logo']) : 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%229%22 fill=%22%230B8277%22/%3E%3Ctext x=%2216%22 y=%2223%22 font-size=%2220%22 font-family=%22Arial%22 font-weight=%22700%22 text-anchor=%22middle%22 fill=%22%23fff%22%3EP%3C/text%3E%3C/svg%3E' ?>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
