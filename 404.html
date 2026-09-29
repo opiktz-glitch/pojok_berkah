@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="legal.css">
 </head>
 <body>
-<header><div class="wrap top"><a class="brand" href="index.html"><span class="mark" data-logo-fallback>P</span><img class="brand-image" data-image-slot="logo" alt="" hidden>Pojok Berkah</a><nav aria-label="Menu utama"><a href="index.html">Beranda</a><a href="tentang-kami.html">Tentang kami</a></nav></div></header>
+<header><div class="wrap top"><a class="brand" href="/"><span class="mark" data-logo-fallback>P</span><img class="brand-image" data-image-slot="logo" alt="" hidden>Pojok Berkah</a><nav aria-label="Menu utama"><a href="/">Beranda</a><a href="tentang-kami.html">Tentang kami</a></nav></div></header>
 <main class="wrap">
   <section class="not-found">
     <div>
@@ -22,12 +22,12 @@
       <h1>404</h1>
       <h2>Halaman ini belum tersedia.</h2>
       <p>Tautannya mungkin sudah berubah atau alamatnya salah. Kembali ke beranda untuk memilih layanan yang Anda cari.</p>
-      <div class="actions"><a class="button button-main" href="index.html">Kembali ke beranda</a><a class="button button-plain" href="mailto:admin@pojokberkah.online">Hubungi kami</a></div>
+      <div class="actions"><a class="button button-main" href="/">Kembali ke beranda</a><a class="button button-plain" href="mailto:admin@pojokberkah.online">Hubungi kami</a></div>
     </div>
-    <img data-image-slot="tryout" src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Buku dan catatan belajar" loading="lazy" decoding="async">
+    <img data-image-slot="tryout" src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&amp;fit=crop&amp;w=900&amp;q=80" width="900" height="600" alt="Buku dan catatan belajar tryout TKA" loading="lazy" decoding="async">
   </section>
 </main>
-<footer><div class="wrap"><div class="footer-row"><strong>Pojok Berkah</strong><span>Belajar, urusan keuangan, dan sajian segar.</span></div><nav class="footer-nav" aria-label="Tautan footer"><a href="index.html">Beranda</a><a href="tentang-kami.html">Tentang kami</a><a href="kebijakan-privasi.html">Kebijakan Privasi</a><a href="syarat-ketentuan.html">Syarat &amp; Ketentuan</a></nav><small>&copy; <span id="yr">2026</span> Pojok Berkah</small></div></footer>
+<footer><div class="wrap"><div class="footer-row"><strong>Pojok Berkah</strong><span>Belajar, urusan keuangan, dan sajian segar.</span></div><nav class="footer-nav" aria-label="Tautan footer"><a href="/">Beranda</a><a href="tentang-kami.html">Tentang kami</a><a href="kebijakan-privasi.html">Kebijakan Privasi</a><a href="syarat-ketentuan.html">Syarat &amp; Ketentuan</a></nav><small>&copy; <span id="yr">2026</span> Pojok Berkah</small></div></footer>
 <script>
 document.getElementById("yr").textContent=new Date().getFullYear();
 fetch("admin.php?public=1",{cache:"no-store"}).then(function(response){return response.json()}).then(function(settings){
