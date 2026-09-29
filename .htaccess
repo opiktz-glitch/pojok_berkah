@@ -8,6 +8,12 @@ ErrorDocument 404 /404.html
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  # Redirect www to non-www first, straight to HTTPS non-www (single hop).
+  # Placed before the HTTPS rule so http://www goes directly to
+  # https://non-www instead of http-www -> https-www -> https-non-www.
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
   # Force HTTPS for real hostnames. The proxy in front of Apache may terminate
   # TLS, so both the HTTPS variable and the forwarded protocol header are
   # checked. Local development hostnames are excluded.
@@ -15,11 +21,7 @@ ErrorDocument 404 /404.html
   RewriteCond %{HTTP_HOST} !^127\.0\.0\.1(:[0-9]+)?$ [NC]
   RewriteCond %{HTTPS} off
   RewriteCond %{HTTP:X-Forwarded-Proto} !https
-  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
-
-  # Redirect www to non-www
-  RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-  RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
   # Never serve the CMS settings file or uploads folder directly.
   RewriteRule ^data/ - [R=404,L]
