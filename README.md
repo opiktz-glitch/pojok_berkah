@@ -2,6 +2,12 @@
 
 Landing site and PHP CMS for the Pojok Berkah service directory.
 
+> Dokumentasi lengkap (Bahasa Indonesia) ada di [`docs/`](docs/README.md):
+> - [Panduan Pengguna & Instalasi](docs/01-panduan-pengguna.md)
+> - [Dokumentasi API](docs/02-dokumentasi-api.md)
+> - [Spesifikasi Teknis](docs/03-spesifikasi-teknis.md)
+> - [Panduan Kontribusi](docs/04-panduan-kontribusi.md)
+
 ## Requirements
 
 - PHP 8.0 or newer
