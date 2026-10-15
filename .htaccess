@@ -26,6 +26,16 @@ ErrorDocument 404 /404.html
   # Never serve the CMS settings file or uploads folder directly.
   RewriteRule ^data/ - [R=404,L]
 
+  # Hide the local archive folder.
+  RewriteRule ^_arsip(/|$) - [R=404,L]
+
+  # Redirect lama -> lokasi baru assets/ (favicon & og-image pindah folder).
+  RewriteRule ^favicon\.ico$ assets/icons/favicon.ico [R=301,L]
+  RewriteRule ^favicon-32x32\.png$ assets/icons/favicon-32x32.png [R=301,L]
+  RewriteRule ^apple-touch-icon\.png$ assets/icons/apple-touch-icon.png [R=301,L]
+  RewriteRule ^og-image\.jpg$ assets/img/og-image.jpg [R=301,L]
+  RewriteRule ^legal\.css$ assets/css/legal.css [R=301,L]
+
   # Hide the state file left behind by the FTP deploy action.
   RewriteRule ^\.ftp-deploy-sync-state\.json$ - [R=404,L]
 </IfModule>

@@ -11,5 +11,6 @@ Kumpulan dokumen resmi aplikasi (landing + CMS PHP tanpa database).
 | [05 — Rekomendasi Landing Profesional (Opsi A)](05-rekomendasi-landing-profesional.md) | Rencana: sembunyikan Tryout/Gadai/Alfi Kitchen, menu profesional (SUDAH dieksekusi di index.html, lokal) |
 | [06 — Rekomendasi Lanjutan Korporat](06-rekomendasi-lanjutan-korporat.md) | Tindak lanjut selaras Opsi A: logo, trust bar, testimoni, cara kerja, mobile, SEO (Tahap 1–3 selesai kode; menunggu aset pemilik) |
 | [07 — Log Progres](07-log-progres.md) | Catatan status eksekusi Opsi A, navigasi, Tahap 1, dan daftar tunda (15 Okt 2026) |
+| [08 — Struktur Folder](08-struktur-folder.md) | Peta folder `assets/`, `data/`, `_arsip/` + aturan taruh file baru |
 
 Kontak: admin@pojokberkah.online

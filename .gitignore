@@ -3,3 +3,5 @@
 !/data/uploads/index.php
 # Local asset generator, not part of the deployed site
 /make_icons.py
+# Folder arsip lokal — jangan commit & jangan deploy
+/_arsip/
