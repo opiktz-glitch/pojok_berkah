@@ -12,5 +12,6 @@ Kumpulan dokumen resmi aplikasi (landing + CMS PHP tanpa database).
 | [06 — Rekomendasi Lanjutan Korporat](06-rekomendasi-lanjutan-korporat.md) | Tindak lanjut selaras Opsi A: logo, trust bar, testimoni, cara kerja, mobile, SEO (Tahap 1–3 selesai kode; menunggu aset pemilik) |
 | [07 — Log Progres](07-log-progres.md) | Catatan status eksekusi Opsi A, navigasi, Tahap 1, dan daftar tunda (15 Okt 2026) |
 | [08 — Struktur Folder](08-struktur-folder.md) | Peta folder `assets/`, `data/`, `_arsip/` + aturan taruh file baru |
+| [09 — Rekomendasi Rapikan Admin](09-rekomendasi-rapikan-admin.md) | Selaraskan CMS dengan landing korporat (Paket A SELESAI 16 Okt 2026: default FAQ + copy + badge; Paket B/C opsional) |
 
 Kontak: admin@pojokberkah.online

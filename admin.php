@@ -57,10 +57,10 @@ function isValidAdminPassword(string $password): bool
 }
 
 $defaultFaq = [
-  ['question' => 'Apakah semua layanan memakai satu akun?', 'answer' => 'Tidak. Tiap layanan berjalan di alamatnya sendiri dan punya aturannya sendiri. Halaman ini hanya pintu masuknya.'],
-  ['question' => 'Apakah hasil simulasi gadai sama dengan pencairan final?', 'answer' => 'Belum tentu. Simulasi adalah perkiraan. Nilai final ditentukan setelah verifikasi dan survei oleh lembaga pembiayaan.'],
-  ['question' => 'Siapa yang bisa memakai Tryout TKA?', 'answer' => 'Siswa yang ingin berlatih soal, serta guru atau sekolah yang ingin mengelola soal dan paket tryout.'],
-  ['question' => 'Bagaimana cara memesan di Alfi Kitchen?', 'answer' => 'Buka halaman Alfi Kitchen, pilih produk, lalu pesan lewat tombol WhatsApp.'],
+  ['question' => 'Apa itu Pojok Berkah?', 'answer' => 'Pojok Berkah adalah ruang tumbuh untuk belajar dan usaha. Kami mengelola beberapa inisiatif melalui unit-unit khusus dengan standar yang sama.'],
+  ['question' => 'Bagaimana cara menghubungi admin?', 'answer' => 'Hubungi kami melalui tombol WhatsApp di halaman ini atau email admin@pojokberkah.online.'],
+  ['question' => 'Apakah saya perlu membuat akun untuk melihat informasi?', 'answer' => 'Tidak. Informasi di halaman ini dapat dibaca langsung tanpa membuat akun.'],
+  ['question' => 'Di mana saya bisa membaca informasi resmi?', 'answer' => 'Lihat halaman Tentang Kami, Kebijakan Privasi, serta Syarat dan Ketentuan yang tertaut di footer.'],
 ];
 $faqItems = [];
 $storedFaq = $settings['faq'] ?? $defaultFaq;
@@ -732,6 +732,9 @@ textarea{display:block;width:100%;min-height:96px;margin-top:8px;padding:12px 14
 textarea:focus{outline:3px solid rgba(47,91,234,.2);border-color:var(--blue)}
 .remove-faq{min-height:42px;margin-bottom:4px;color:#8f2929;background:#fceeee}
 h2{font-family:var(--display);font-size:1.2rem}
+.badge{display:inline-block;vertical-align:middle;margin-left:8px;padding:2px 10px;border-radius:999px;font-family:var(--body);font-size:.72rem;font-weight:600}
+.badge-live{color:#0B8277;background:rgba(11,130,119,.12);border:1px solid rgba(11,130,119,.35)}
+.badge-archive{color:var(--muted);background:rgba(81,96,122,.1);border:1px solid var(--line)}
 .form-copy{color:var(--muted);font-size:.94rem;margin-top:7px}
 .password-form{margin-top:28px;padding-top:24px;border-top:1px solid var(--line)}
 label{display:block;font-size:.9rem;font-weight:600;margin-top:23px}
@@ -768,7 +771,7 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
 <main class="wrap">
   <span class="kicker">Pengaturan situs</span>
   <h1>Pengaturan situs</h1>
-  <p class="lead">Kelola nomor WhatsApp admin, nama, alamat, deskripsi, gambar, statistik, dan pertanyaan layanan.</p>
+  <p class="lead">Kelola nomor WhatsApp, logo, dan pertanyaan umum. Panel arsip di bawah tetap tersimpan untuk halaman Tentang Kami.</p>
 
   <?php if ($flash !== ''): ?>
     <p class="flash" role="status"><?= escapeHtml($flash) ?></p>
@@ -803,7 +806,7 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
           <div class="actions"><button class="primary" type="submit">Masuk</button></div>
         </form>
       <?php else: ?>
-        <h2>Ubah nomor admin</h2>
+        <h2>Nomor admin <span class="badge badge-live">Dipakai landing</span></h2>
         <p class="form-copy">Gunakan kode negara tanpa tanda plus. Format nomor Indonesia yang diawali 08 akan otomatis menjadi 62.</p>
         <form method="post">
           <input type="hidden" name="csrf" value="<?= escapeHtml($csrf) ?>">
@@ -844,12 +847,12 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
   </section>
   <?php if ($isAuthenticated): ?>
     <section class="panel service-content-panel">
-      <h2>Konten layanan</h2>
-      <p class="form-copy">Atur nama, tujuan, ringkasan, dan tag layanan dari satu bagian.</p>
+      <h2>Konten layanan <span class="badge badge-archive">Arsip — tidak tampil di landing</span></h2>
+      <p class="form-copy">Atur nama, tujuan, ringkasan, dan tag layanan dari satu bagian. Tersimpan untuk halaman Tentang Kami dan subdomain; tidak tampil di beranda korporat.</p>
       <div class="service-content-grid">
         <div class="service-content-group">
           <h3>Nama layanan</h3>
-          <p class="form-copy">Nama tampil di kartu, footer, dan halaman Tentang Kami.</p>
+          <p class="form-copy">Nama tampil di halaman Tentang Kami (tidak tampil di beranda).</p>
           <form method="post">
             <input type="hidden" name="csrf" value="<?= escapeHtml($csrf) ?>">
             <input type="hidden" name="action" value="save_service_names">
@@ -879,7 +882,7 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
         </div>
         <div class="service-content-group">
           <h3>Deskripsi</h3>
-          <p class="form-copy">Ringkasan untuk kartu beranda dan halaman Tentang Kami.</p>
+          <p class="form-copy">Ringkasan untuk halaman Tentang Kami (tidak tampil di beranda).</p>
           <form method="post">
             <input type="hidden" name="csrf" value="<?= escapeHtml($csrf) ?>">
             <input type="hidden" name="action" value="save_service_descriptions">
@@ -913,8 +916,8 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
   <?php if ($isAuthenticated): ?>
     <section class="panel faq-panel">
       <div>
-        <h2>Statistik beranda</h2>
-        <p class="form-copy">Kelola nilai dan label yang tampil pada tiga statistik di beranda.</p>
+        <h2>Statistik beranda <span class="badge badge-archive">Arsip — tidak tampil di landing</span></h2>
+        <p class="form-copy">Beranda korporat sudah menghapus blok statistik. Nilai tetap tersimpan bila dibutuhkan lagi.</p>
         <form method="post">
           <input type="hidden" name="csrf" value="<?= escapeHtml($csrf) ?>">
           <input type="hidden" name="action" value="save_stats">
@@ -938,8 +941,8 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
   <?php if ($isAuthenticated): ?>
     <section class="panel faq-panel">
       <div>
-        <h2>Kelola pertanyaan yang sering muncul</h2>
-        <p class="form-copy">Edit isi, hapus item, atau tambahkan pertanyaan baru. Perubahan akan tampil di bagian Tanya jawab pada beranda.</p>
+        <h2>Pertanyaan umum <span class="badge badge-live">Dipakai landing</span></h2>
+        <p class="form-copy">Edit isi, hapus item, atau tambahkan pertanyaan baru. Perubahan tampil di bagian Tanya jawab beranda. Gunakan bahasa umum korporat, bukan nama produk.</p>
         <form method="post" id="faq-form">
           <input type="hidden" name="csrf" value="<?= escapeHtml($csrf) ?>">
           <input type="hidden" name="action" value="save_faq">
@@ -962,8 +965,8 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
   <?php endif; ?>
   <?php if ($isAuthenticated): ?>
     <section class="panel images-panel">
-      <h2>Kelola gambar layanan</h2>
-      <p class="form-copy">Logo tampil di header, favicon, dan gambar layanan dipakai di beranda serta Tentang Kami. Format JPEG, PNG, atau WebP, maksimal 5 MB. PNG transparan disarankan untuk logo.</p>
+      <h2>Gambar situs <span class="badge badge-live">Logo dipakai</span> <span class="badge badge-archive">3 lainnya arsip</span></h2>
+      <p class="form-copy">Logo tampil di header dan favicon beranda. Tiga gambar lain tidak dipakai beranda; tersimpan untuk halaman Tentang Kami dan gambar hias 404. Format JPEG, PNG, atau WebP, maksimal 5 MB. PNG transparan disarankan untuk logo.</p>
       <div class="image-grid">
         <?php foreach ($imageSlots as $slot => $label): ?>
           <article class="image-card">
