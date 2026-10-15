@@ -4,6 +4,7 @@
 
 - Tipe: static landing (HTML+CSS+JS inline) + 1 file backend `admin.php` (PHP 8.0+, tanpa framework, tanpa database, tanpa composer).
 - Alur baca: browser `fetch admin.php?public=1` → PHP baca `data/storage.php` → JSON → JS menimpa `wa.me`, `[data-service-link/name/description]`, `.chips`, `[data-stat-value/label]`, `img[data-image-slot]`, `.faq`.
+- Catatan pasca-korporat (16 Okt 2026): `index.html` hanya membaca `wa_number`, `images.logo`, `faq`. Sisa kunci (`service_*`, `stats`, 3 gambar) adalah ARSIP untuk `tentang-kami.html` + `404.html`, bukan landing.
 - Alur tulis: form POST ke `admin.php` → validasi → `saveSettings()` tulis `data/storage.php` via `var_export` + `LOCK_EX`.
 - Proteksi server: `.htaccess` (HTTPS redirect kecuali localhost, www→non-www, blok `^data/` → 404, sembunyikan `.ftp-deploy-sync-state.json`, `ErrorDocument 404 /404.html`).
 

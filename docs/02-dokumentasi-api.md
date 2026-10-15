@@ -16,30 +16,30 @@ fetch("admin.php?public=1", { cache: "no-store" })
   .then(console.log);
 ```
 
-Contoh response (dipersingkat):
+Contoh response (dipersingkat). Kolom status = dipakai `index.html` korporat atau arsip:
 
 ```json
 {
-  "wa_number": "628159501935",
-  "faq": [{ "question": "...", "answer": "..." }],
+  "wa_number": "628159501935",          // LIVE — semua tombol WA landing
+  "faq": [{ "question": "...", "answer": "..." }],  // LIVE — FAQ korporat
   "images": {
-    "logo": "",
-    "tryout": "https://images.unsplash.com/photo-...?w=960&q=80",
-    "gadai": "https://images.unsplash.com/photo-...?w=960&q=80",
-    "kitchen": "https://images.unsplash.com/photo-...?w=960&q=80"
+    "logo": "",                          // LIVE — header + favicon
+    "tryout": "https://images.unsplash.com/photo-...?w=960&q=80",   // ARSIP — Tentang Kami + 404
+    "gadai": "https://images.unsplash.com/photo-...?w=960&q=80",    // ARSIP — Tentang Kami
+    "kitchen": "https://images.unsplash.com/photo-...?w=960&q=80"   // ARSIP — Tentang Kami
   },
-  "service_urls": {
+  "service_urls": {                     // ARSIP — Tentang Kami + subdomain, tak dipakai landing
     "tryout": "https://tryout.pojokberkah.online",
     "gadai": "https://gadai.pojokberkah.online",
     "kitchen": "https://kitchen.pojokberkah.online"
   },
-  "service_names": { "tryout": "Tryout TKA", "gadai": "Gadai BPKB", "kitchen": "Alfi Kitchen" },
-  "stats": {
+  "service_names": { "tryout": "Tryout TKA", "gadai": "Gadai BPKB", "kitchen": "Alfi Kitchen" },  // ARSIP
+  "stats": {                            // ARSIP — blok stats sudah dihapus dari landing
     "services": { "value": "3", "label": "layanan" },
     "gadai": { "value": "29", "label": "cabang gadai aktif" },
     "kitchen": { "value": "Always Fresh", "label": "komitmen Alfi Kitchen" }
   },
-  "service_tags": { "tryout": ["Soal AI"], "gadai": ["Bandung"], "kitchen": ["Puding"] }
+  "service_tags": { "tryout": ["Soal AI"], "gadai": ["Bandung"], "kitchen": ["Puding"] }  // ARSIP
 }
 ```
 

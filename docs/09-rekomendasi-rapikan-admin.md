@@ -1,7 +1,7 @@
 # 09 — Rekomendasi Rapikan CMS Admin pasca Landing Korporat
 
-> Update 16 Okt 2026: Paket A SELESAI — `$defaultFaq` korporat, copy 8 string dibetulkan,
-> badge live/arsip terpasang. Teruji: `php -l` bersih + `?public=1` mengembalikan FAQ korporat.
+> Update 16 Okt 2026: Paket A + Paket B SELESAI — urutan panel WA/FAQ/Logo di atas,
+> arsip dalam `<details>` lipat, logo kartu tunggal, docs 02/03 ditandai. Teruji `php -l` + `?public=1`.
 > Tanggal: 16 Okt 2026. Status: REKOMENDASI — belum dieksekusi.
 > Konteks: `index.html` sudah Opsi A (korporat, tanpa produk). `admin.php` belum selaras.
 

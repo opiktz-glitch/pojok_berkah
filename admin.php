@@ -735,6 +735,18 @@ h2{font-family:var(--display);font-size:1.2rem}
 .badge{display:inline-block;vertical-align:middle;margin-left:8px;padding:2px 10px;border-radius:999px;font-family:var(--body);font-size:.72rem;font-weight:600}
 .badge-live{color:#0B8277;background:rgba(11,130,119,.12);border:1px solid rgba(11,130,119,.35)}
 .badge-archive{color:var(--muted);background:rgba(81,96,122,.1);border:1px solid var(--line)}
+.archive{margin-top:22px;border:1px dashed rgba(16,32,58,.25);border-radius:8px;background:rgba(255,255,255,.5)}
+.archive summary{cursor:pointer;list-style:none;display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:18px 22px;font-family:var(--display);font-weight:600}
+.archive summary::-webkit-details-marker{display:none}
+.archive summary::before{content:"+";display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:rgba(16,32,58,.08);font-weight:700}
+.archive[open] summary::before{content:"–"}
+.archive .archive-body{padding:0 22px 22px}
+.archive .panel{margin-top:0;border:0;box-shadow:none;background:transparent;padding:0 0 22px}
+.archive .panel:last-child{padding-bottom:0}
+.logo-panel{display:block;margin-top:22px}
+.logo-card{display:grid;grid-template-columns:220px minmax(0,1fr);gap:24px;align-items:start;margin-top:20px;padding:18px;border:1px solid var(--line);border-radius:6px;background:rgba(255,255,255,.72)}
+.logo-card img{width:100%;height:180px;object-fit:contain;padding:12px;background:#fff;border-radius:4px}
+@media(max-width:700px){.logo-card{grid-template-columns:1fr}}
 .form-copy{color:var(--muted);font-size:.94rem;margin-top:7px}
 .password-form{margin-top:28px;padding-top:24px;border-top:1px solid var(--line)}
 label{display:block;font-size:.9rem;font-weight:600;margin-top:23px}
@@ -846,6 +858,62 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
     </aside>
   </section>
   <?php if ($isAuthenticated): ?>
+    <section class="panel faq-panel">
+      <div>
+        <h2>Pertanyaan umum <span class="badge badge-live">Dipakai landing</span></h2>
+        <p class="form-copy">Edit isi, hapus item, atau tambahkan pertanyaan baru. Perubahan tampil di bagian Tanya jawab beranda. Gunakan bahasa umum korporat, bukan nama produk.</p>
+        <form method="post" id="faq-form">
+          <input type="hidden" name="csrf" value="<?= escapeHtml($csrf) ?>">
+          <input type="hidden" name="action" value="save_faq">
+          <div id="faq-items">
+            <?php foreach ($faqItems as $item): ?>
+              <div class="faq-item">
+                <label>Pertanyaan<input name="faq_questions[]" maxlength="160" value="<?= escapeHtml($item['question']) ?>" required></label>
+                <label>Jawaban<textarea name="faq_answers[]" maxlength="2000" required><?= escapeHtml($item['answer']) ?></textarea></label>
+                <button class="remove-faq" type="button">Hapus</button>
+              </div>
+            <?php endforeach; ?>
+          </div>
+          <div class="actions">
+            <button class="secondary" id="add-faq" type="button">Tambah pertanyaan</button>
+            <button class="primary" type="submit">Simpan FAQ</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  <?php endif; ?>
+  <?php if ($isAuthenticated): ?>
+    <section class="panel logo-panel">
+      <div>
+        <h2>Logo situs <span class="badge badge-live">Dipakai landing</span></h2>
+        <p class="form-copy">Logo tampil di header dan favicon beranda. Format JPEG, PNG, atau WebP, maksimal 5 MB. PNG transparan disarankan.</p>
+        <div class="logo-card">
+          <div>
+            <?php if ($imageSources['logo'] !== ''): ?>
+              <img src="<?= escapeHtml($imageSources['logo']) ?>" alt="Pratinjau Logo situs">
+            <?php else: ?>
+              <div class="image-placeholder" aria-label="Monogram logo bawaan"><span class="mark">P</span></div>
+            <?php endif; ?>
+            <p class="image-status"><?= str_starts_with($imageSources['logo'], 'admin.php?image=') ? 'Gambar kustom aktif' : 'Monogram bawaan aktif' ?></p>
+          </div>
+          <form method="post" enctype="multipart/form-data">
+            <input type="hidden" name="csrf" value="<?= escapeHtml($csrf) ?>">
+            <input type="hidden" name="image_slot" value="logo">
+            <label for="image-logo">Logo situs</label>
+            <input id="image-logo" type="file" name="service_image" accept="image/jpeg,image/png,image/webp">
+            <div class="image-actions">
+              <button class="primary" type="submit" name="action" value="upload_image">Unggah gambar</button>
+              <button class="image-reset" type="submit" name="action" value="remove_image">Gambar bawaan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  <?php endif; ?>
+  <?php if ($isAuthenticated): ?>
+    <details class="archive">
+      <summary>Arsip layanan &amp; statistik <span class="badge badge-archive">Tidak tampil di landing</span></summary>
+      <div class="archive-body">
     <section class="panel service-content-panel">
       <h2>Konten layanan <span class="badge badge-archive">Arsip — tidak tampil di landing</span></h2>
       <p class="form-copy">Atur nama, tujuan, ringkasan, dan tag layanan dari satu bagian. Tersimpan untuk halaman Tentang Kami dan subdomain; tidak tampil di beranda korporat.</p>
@@ -937,45 +1005,25 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
         </form>
       </div>
     </section>
-  <?php endif; ?>
-  <?php if ($isAuthenticated): ?>
-    <section class="panel faq-panel">
-      <div>
-        <h2>Pertanyaan umum <span class="badge badge-live">Dipakai landing</span></h2>
-        <p class="form-copy">Edit isi, hapus item, atau tambahkan pertanyaan baru. Perubahan tampil di bagian Tanya jawab beranda. Gunakan bahasa umum korporat, bukan nama produk.</p>
-        <form method="post" id="faq-form">
-          <input type="hidden" name="csrf" value="<?= escapeHtml($csrf) ?>">
-          <input type="hidden" name="action" value="save_faq">
-          <div id="faq-items">
-            <?php foreach ($faqItems as $item): ?>
-              <div class="faq-item">
-                <label>Pertanyaan<input name="faq_questions[]" maxlength="160" value="<?= escapeHtml($item['question']) ?>" required></label>
-                <label>Jawaban<textarea name="faq_answers[]" maxlength="2000" required><?= escapeHtml($item['answer']) ?></textarea></label>
-                <button class="remove-faq" type="button">Hapus</button>
-              </div>
-            <?php endforeach; ?>
-          </div>
-          <div class="actions">
-            <button class="secondary" id="add-faq" type="button">Tambah pertanyaan</button>
-            <button class="primary" type="submit">Simpan FAQ</button>
-          </div>
-        </form>
       </div>
-    </section>
+    </details>
   <?php endif; ?>
   <?php if ($isAuthenticated): ?>
+    <details class="archive">
+      <summary>Arsip gambar layanan <span class="badge badge-archive">Dipakai Tentang Kami &amp; 404</span></summary>
+      <div class="archive-body">
     <section class="panel images-panel">
-      <h2>Gambar situs <span class="badge badge-live">Logo dipakai</span> <span class="badge badge-archive">3 lainnya arsip</span></h2>
-      <p class="form-copy">Logo tampil di header dan favicon beranda. Tiga gambar lain tidak dipakai beranda; tersimpan untuk halaman Tentang Kami dan gambar hias 404. Format JPEG, PNG, atau WebP, maksimal 5 MB. PNG transparan disarankan untuk logo.</p>
+      <p class="form-copy">Tiga gambar ini tidak dipakai beranda; tersimpan untuk halaman Tentang Kami dan gambar hias 404. Format JPEG, PNG, atau WebP, maksimal 5 MB.</p>
       <div class="image-grid">
         <?php foreach ($imageSlots as $slot => $label): ?>
+          <?php if ($slot === 'logo') continue; ?>
           <article class="image-card">
             <?php if ($imageSources[$slot] !== ''): ?>
-              <img class="<?= $slot === 'logo' ? 'image-logo-preview' : '' ?>" src="<?= escapeHtml($imageSources[$slot]) ?>" alt="Pratinjau <?= escapeHtml($label) ?>">
+              <img src="<?= escapeHtml($imageSources[$slot]) ?>" alt="Pratinjau <?= escapeHtml($label) ?>">
             <?php else: ?>
-              <div class="image-placeholder" aria-label="Monogram logo bawaan"><span class="mark">P</span></div>
+              <div class="image-placeholder" aria-label="Gambar bawaan"><span class="mark">P</span></div>
             <?php endif; ?>
-            <p class="image-status"><?= str_starts_with($imageSources[$slot], 'admin.php?image=') ? 'Gambar kustom aktif' : ($slot === 'logo' ? 'Monogram bawaan aktif' : 'Gambar bawaan aktif') ?></p>
+            <p class="image-status"><?= str_starts_with($imageSources[$slot], 'admin.php?image=') ? 'Gambar kustom aktif' : 'Gambar bawaan aktif' ?></p>
             <form method="post" enctype="multipart/form-data">
               <input type="hidden" name="csrf" value="<?= escapeHtml($csrf) ?>">
               <input type="hidden" name="image_slot" value="<?= escapeHtml($slot) ?>">
@@ -990,6 +1038,8 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
         <?php endforeach; ?>
       </div>
     </section>
+      </div>
+    </details>
   <?php endif; ?>
 </main>
 <footer class="wrap">CMS Pojok Berkah</footer>
