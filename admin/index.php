@@ -202,14 +202,13 @@ if ((isset($_GET['public']) && $_GET['public'] === '1')
       </section>
     </div>
 
-    <details class="archive" open>
-      <summary>Password</summary>
+    <div class="archive" style="border:none;background:transparent;margin-top:0;">
       <div class="archive-body">
         <section id="tab-password" class="tab-panel">
           <div><?php include __DIR__ . '/views/tab-password.php'; ?></div>
         </section>
       </div>
-    </details>
+    </div>
 
     <details class="archive">
       <summary>Layanan — Arsip — tidak tampil di landing, tetap tersimpan untuk Tentang Kami/subdomain</summary>
