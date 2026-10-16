@@ -49,3 +49,47 @@
 - Push ke git (semua perubahan di atas masih uncommitted/unpushed).
 - Upload file logo asli via CMS (R1 sisa) + foto asli pengganti Unsplash (R6 sisa).
 - Penyelarasan sisa konten produk di `tentang-kami.html`, `404.html`, default FAQ `admin.php`.
+
+### 16 Okt 2026 — Peningkatan tampilan landing (poin 1–3)
+
+- **Poin 1 — CSS eksternal**: seluruh blok `<style>` `index.html` (9.540 karakter) dipindahkan verbatim ke `assets/css/landing.css`; `<style>` di `index.html` diganti `<link rel="stylesheet" href="assets/css/landing.css">` + fallback `<noscript><style>.reveal{opacity:1;transform:none}</style></noscript>`.
+- **Poin 2 — dark mode**: `@media (prefers-color-scheme:dark)` di `landing.css` (token `--bg/--ink/--muted/--line/--card`, latar `.bg`, header, nav-toggle, aksen teal `#3FD8C6`) + `<meta theme-color>` terpisah light/dark di `index.html`.
+- **Poin 3 — reveal-on-scroll**: class `.reveal` pada `.about-short`, 3 `.val`, 3 `.step`, 3 `.testi`, `.faq`, `.contact`; stagger `nth-child` 0.08s/0.16s; IIFE `IntersectionObserver` (threshold .1) di `index.html`, fallback: tanpa IO → tampil semua, reduced-motion → tampil tanpa animasi, no-JS → `<noscript>`.
+- Tidak ada perubahan `admin.php`, `data/storage.php`, `.htaccess`, `sitemap.xml`, maupun endpoint `?public=1`.
+
+### 16 Okt 2026 — FAQ accordion (poin 4)
+
+- `assets/css/landing.css`: animasi buka/tutup FAQ via `.faq details::details-content` (height 0 → `auto` dengan `interpolate-size:allow-keywords` + transisi `content-visibility allow-discrete`); rule otomatis gugur di browser tanpa dukungan pseudo-element. Override `transition:none` pada `prefers-reduced-motion`.
+- `index.html`: fallback JS Web Animations API — satu delegated listener di container `.faq` (selamat dari `faq.replaceChildren()` CMS), deteksi fitur `CSS.supports("selector(::details-content)")` + `interpolate-size`; jika didukung → jalur CSS murni, jika tidak → animasi fade+slide pada konten `<p>` (buka 240ms, tutup 180ms lalu `open=false`). `preventDefault` pada klik `summary` saat fallback aktif.
+- Struktur tidak berubah: class `.faq`, tag `<details>/<summary>/<p>` (statis & buatan CMS), dan selector `a[href*="wa.me/"]` tidak disentuh; tanpa elemen wrapper baru.
+
+### 16 Okt 2026 — Sticky WA mobile (poin 5)
+
+- `index.html`: anchor `<a class="wa-sticky wa-button" href="https://wa.me/...">` di setelah `</footer>` (href mengandung `wa.me` → otomatis di-update JS CMS `a[href*="wa.me/"]`); IIFE baru `IntersectionObserver` pada `#kontak` (threshold .35) menambah class `hide` saat section kontak terlihat supaya tidak dobel dengan tombol WA kontak.
+- `landing.css`: sticky hanya `<860px`; `position:fixed` full-width `left/right:16px` + `bottom:16px` dengan fallback `env(safe-area-inset-bottom)` (dua deklarasi bertingkat); `z-index:20` (di atas header 10); `body{padding-bottom:96px}` di mobile agar footer tidak tertutup; transisi masuk/keluar opacity+transform (reduced-motion global otomatis mematikan).
+- Desktop (>860px) tidak berubah; `admin.php`, `data/`, `.htaccess` tidak disentuh.
+
+### 16 Okt 2026 — Hero decor geometris (poin 6, varian B)
+
+- `index.html`: `<div class="hero-deco" aria-hidden="true"></div>` sebagai anak pertama `section#beranda` — dekorasi murni CSS, tanpa gambar eksternal (konsisten keputusan R6: landing nol-gambar).
+- `landing.css`: `.hero{position:relative}`; `.hero-deco` absolute (left/right −8%, height 420px, `z-index:-1` — di atas layer `.bg`, di bawah semua konten termasuk tombol) berisi 3 radial-gradient dari token warna situs + dua cincin lingkaran via `::before/::after`; override alpha khusus dark mode; `@media (prefers-reduced-motion:no-preference)` mengaktifkan animasi `deco-float` (translateY ±14px, 9s & 11s) — otomatis mati saat reduced-motion; `<860px` → height 300px + opacity .75.
+- Heading, tombol, trustbar tetap center seperti semula; sentuhan PHP nol.
+
+### 16 Okt 2026 — Redesain hero Varian A (dua kolom) — MENGGANTIKAN Varian B
+
+> Status: SELESAI. Permintaan: design baru untuk landing **tanpa mengganti atribut SEO**. Varian B (`.hero-deco`) dihapus dan digantikan.
+
+- **Kontrak SEO dipertahankan 100%**: blok `<head>` (title, meta description, canonical, OG/Twitter, JSON-LD ×3, fonts), satu `<h1>`, hierarki `<h2>/<h3>`, ID section (`#beranda/#keunggulan/#cara-kerja/#testimoni/#faq/#kontak`), isi FAQ `<details>/<summary>`, link footer — tidak disentuh sama sekali.
+- `index.html`: hero kini `.hero-grid` 2 kolom — `.hero-copy` (H1, sub, CTA, trustbar — teks identik semula, rata kiri) + `.hero-visual aria-hidden="true"` berisi panel mockup CSS (`.hp-bar` titik jendela, `.hp-card` avatar+baris teks, 3 `.hp-chip` label melayang di tepi panel, `.hp-graph` 5 bar naik, `.hp-status` titik hijau "Admin online") + 2 `.hero-blob` blur. Div `.hero-deco` Varian B dihapus. `.about-short reveal` tetap di bawah grid.
+- `landing.css`: blok hero lama (center) → `.hero-grid{grid-template-columns:1.05fr .95fr;gap:56px}`; panel styling + animasi `hp-grow` (bar tumbuh bersirkat), `hp-pulse` (titik status), `deco-float` (blob) — semua di bawah guard `prefers-reduced-motion:no-preference`; `.title::after` aksen bar gradien; hover `.val/.step/.testi` (translateY + shadow + border biru); override dark mode khusus komponen panel/chip/blob; `<860px>` → 1 kolom, chip dikurangi negatifnya.
+- Tidak ada gambar eksternal (konsisten R6); sentuhan `admin.php`/`data/` nol.
+
+### 16 Okt 2026 — Palet warna baru (pro/modern/dinamis) — SEO TIDAK diubah
+
+> Permintaan: kombinasi warna lebih pro, modern, dinamis, eyecatch; **atribut SEO tidak boleh diubah**. Eksekusi 100% di `landing.css` — `index.html` (termasuk seluruh blok `<head>`) tidak disentuh sama sekali.
+
+- **Palet baru (light)**: `--bg:#F7F9FD` `--ink:#0E1526` `--muted:#566783` `--teal:#0E7490` (cyan-700, lolos 4.5:1 utk teks kecil) `--blue:#4F46E5` (indigo) `--amber:#D97706` + token baru `--violet:#7C3AED` & `--cyan:#06B6D4`; `--wa` hijau WhatsApp tidak diubah.
+- **Gradient tricolor** cyan→indigo→violet di `.btn-main` (semua stop ≥4.5 vs teks putih), `.grad` H1 (`#0891B2→indigo→amber`, lolos 3:1 utk display), `.title::after`; grafik panel hero `violet→cyan`; glow latar `cyan/indigo/amber`; blob `#818CF8/#22D3EE`.
+- **Chip hero**: light `#0E7490/#4F46E5/#B45309` (≥4.5:1), dark `#67E8F9/#A5B4FC/#FCD34D`.
+- **Dark mode**: token slate `#0B1220/#E8ECF7/#97A5C0`, gradient bright `#22D3EE/#818CF8/#FBBF24`, aksen `#67E8F9` (trustbar, step, FAQ), glow cyan/indigo/amber.
+- Aksen lama (`rgba(11,130,119,…)`, `rgba(47,91,234,…)`, hex `#0B8277/#2F5BEA/#C97400`) diganti di titik yang membawa warna; bayangan netral rgba(16,32,58,…) dibiarkan (visual identik dengan ink baru).
