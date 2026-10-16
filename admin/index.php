@@ -108,6 +108,23 @@ foreach ($imageSlots as $slot => $label) {
     }
 }
 
+// Public JSON endpoint untuk halaman frontend (contoh: tentang-kami.html)
+if ((isset($_GET['public']) && $_GET['public'] === '1')
+    || (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] === 'public=1')) {
+    header('Content-Type: application/json; charset=utf-8');
+    header('Cache-Control: no-store');
+    echo json_encode([
+        'wa_number' => $waNumber,
+        'service_names' => $serviceNames,
+        'service_urls' => $serviceUrls,
+        'service_descriptions' => $serviceDescriptions,
+        'service_tags' => $serviceTags,
+        'images' => $imageSources,
+        'stats' => $stats,
+    ]);
+    exit;
+}
+
 ?><!DOCTYPE html>
 <html lang="id">
 <head>
