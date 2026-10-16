@@ -2,8 +2,11 @@
 
 > Update 16 Okt 2026: Paket A + Paket B SELESAI — urutan panel WA/FAQ/Logo di atas,
 > arsip dalam `<details>` lipat, logo kartu tunggal, docs 02/03 ditandai. Teruji `php -l` + `?public=1`.
-> Tanggal: 16 Okt 2026. Status: REKOMENDASI — belum dieksekusi.
-> Konteks: `index.html` sudah Opsi A (korporat, tanpa produk). `admin.php` belum selaras.
+> Update 16 Okt 2026 (revisi): CMS modularisasi ke folder `admin/` — `admin.php` thin wrapper,
+> `admin/index.php` router, `admin/lib/`, `admin/actions/`, `admin/views/`. Session `session_start()`
+> dipindah ke `admin/index.php` sebelum cek `$_SESSION`.
+> Tanggal: 16 Okt 2026. Status: EKSEKUSI — modularisasi selesai, sisa rekomendasi UI opsional.
+> Konteks: `index.html` sudah Opsi A (korporat, tanpa produk). CMS admin sudah modular.
 
 ## 1. Temuan audit (kenapa admin terasa berantakan)
 
@@ -17,9 +20,9 @@ Landing baru HANYA memakai 3 kunci dari `GET admin.php?public=1`:
 
 Masalah turunan:
 
-1. **BUG KRITIS — default FAQ menimpa FAQ korporat.** `$defaultFaq` di `admin.php:59-64` masih 4 item produk (satu akun layanan, simulasi gadai, Tryout TKA, pesan Alfi Kitchen). Fallback statis `index.html:251-254` + JSON-LD sudah korporat. Bila storage kosong, API mengembalikan FAQ produk lalu JS (`index.html:296-305`) menghapus FAQ korporat dan menggantinya dengan FAQ produk.
-2. **4 panel yatim:** `Konten layanan` (nama+URL+deskripsi+tag, `846-911`), `Statistik beranda` (`913-936`, default `3 layanan / 29 cabang / Always Fresh`), 3 slot gambar non-logo (`964-989`) — tidak dirender landing tapi tampil paling menonjol.
-3. **Copy basi:** lead `771` menyebut "nama, alamat, deskripsi, gambar, statistik" (tak ada field alamat); copy `852/882` menyebut "tampil di kartu, footer, Tentang Kami" (kartu sudah dihapus); copy `966` menyebut "dipakai di beranda serta Tentang Kami" (beranda tak pakai lagi).
+1. **BUG KRITIS — default FAQ menimpa FAQ korporat.** `$defaultFaq` di `admin/index.php:62-67` masih 4 item produk. Fallback statis `index.html` + JSON-LD sudah korporat. Bila storage kosong, API mengembalikan FAQ produk lalu JS (`index.html`) menghapus FAQ korporat dan menggantinya dengan FAQ produk.
+2. **4 panel yatim:** `Konten layanan` (`admin/views/tab-layanan.php`), `Statistik beranda` (`admin/views/tab-statistik.php`), 3 slot gambar non-logo (`admin/views/tab-gambar.php`) — tidak dirender landing tapi tampil paling menonjol di admin.
+3. **Copy basi:** lead di `admin/index.php` menyebut "nama, alamat, deskripsi, gambar, statistik" (tak ada field alamat); copy di views menyebut "tampil di kartu, footer, Tentang Kami" (kartu sudah dihapus).
 4. **Pengecualian:** `tentang-kami.html:142-175,197-219` MASIH memakai `service_*` + 3 gambar + `wa_number` + `logo`. `404.html:29,37` masih memakai `img[data-image-slot]` tryout. Jadi backend TIDAK boleh dihapus total.
 
 ## 2. Prinsip

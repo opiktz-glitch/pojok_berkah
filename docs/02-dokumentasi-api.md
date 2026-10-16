@@ -16,30 +16,30 @@ fetch("admin.php?public=1", { cache: "no-store" })
   .then(console.log);
 ```
 
-Contoh response (dipersingkat). Kolom status = dipakai `index.html` korporat atau arsip:
+Contoh response (dipersingkat). Setiap kolom ditandai **[LIVE]** (masih dipakai landing korporat `index.html`) atau **[ARSIP]** (hanya dipakai `tentang-kami.html` / `404.html`, tidak dipakai landing).
 
 ```json
 {
-  "wa_number": "628159501935",          // LIVE — semua tombol WA landing
-  "faq": [{ "question": "...", "answer": "..." }],  // LIVE — FAQ korporat
+  "wa_number": "628159501935",          // [LIVE] — semua tombol WA landing
+  "faq": [{ "question": "...", "answer": "..." }],  // [LIVE] — FAQ korporat
   "images": {
-    "logo": "",                          // LIVE — header + favicon
-    "tryout": "https://images.unsplash.com/photo-...?w=960&q=80",   // ARSIP — Tentang Kami + 404
-    "gadai": "https://images.unsplash.com/photo-...?w=960&q=80",    // ARSIP — Tentang Kami
-    "kitchen": "https://images.unsplash.com/photo-...?w=960&q=80"   // ARSIP — Tentang Kami
+    "logo": "",                          // [LIVE] — header + favicon
+    "tryout": "https://images.unsplash.com/photo-...?w=960&q=80",   // [ARSIP] — Tentang Kami + 404
+    "gadai": "https://images.unsplash.com/photo-...?w=960&q=80",    // [ARSIP] — Tentang Kami
+    "kitchen": "https://images.unsplash.com/photo-...?w=960&q=80"   // [ARSIP] — Tentang Kami
   },
-  "service_urls": {                     // ARSIP — Tentang Kami + subdomain, tak dipakai landing
+  "service_urls": {                     // [ARSIP] — Tentang Kami + subdomain, tak dipakai landing
     "tryout": "https://tryout.pojokberkah.online",
     "gadai": "https://gadai.pojokberkah.online",
     "kitchen": "https://kitchen.pojokberkah.online"
   },
-  "service_names": { "tryout": "Tryout TKA", "gadai": "Gadai BPKB", "kitchen": "Alfi Kitchen" },  // ARSIP
-  "stats": {                            // ARSIP — blok stats sudah dihapus dari landing
+  "service_names": { "tryout": "Tryout TKA", "gadai": "Gadai BPKB", "kitchen": "Alfi Kitchen" },  // [ARSIP]
+  "stats": {                            // [ARSIP] — blok stats sudah dihapus dari landing
     "services": { "value": "3", "label": "layanan" },
     "gadai": { "value": "29", "label": "cabang gadai aktif" },
     "kitchen": { "value": "Always Fresh", "label": "komitmen Alfi Kitchen" }
   },
-  "service_tags": { "tryout": ["Soal AI"], "gadai": ["Bandung"], "kitchen": ["Puding"] }  // ARSIP
+  "service_tags": { "tryout": ["Soal AI"], "gadai": ["Bandung"], "kitchen": ["Puding"] }  // [ARSIP]
 }
 ```
 
@@ -59,21 +59,21 @@ Contoh: `GET admin.php?image=kitchen` → binary `image/jpeg`.
 
 Semua POST wajib menyertakan `csrf` (dari session) dan `action`. Jika CSRF salah → pesan "Sesi keamanan tidak valid".
 
-| action | Auth | Field | Validasi |
-|---|---|---|---|
-| `setup` | belum ada `password_hash` | `password`, `password_confirmation` | 6–72 char, ada huruf+angka |
-| `login` | belum login | `password` | max 5x salah / 15 mnt → lock 15 mnt |
-| `save` | login | `wa_number` | 8–15 digit, `0...` → `62...` |
-| `save_service_urls` | login | `service_urls[tryout|gadai|kitchen]` | URL penuh http/https, ≤2048 |
-| `save_service_names` | login | `service_names[...]` | wajib isi, ≤400 byte |
-| `save_service_descriptions` | login | `service_descriptions[...]` | wajib isi, ≤2000 byte |
-| `save_service_tags` | login | `service_tags[slot]` (textarea, 1 tag/baris) | ≤8 tag/slot, tiap ≤240 byte |
-| `save_stats` | login | `stats[slot][value]`, `stats[slot][label]` | wajib isi, value ≤320, label ≤480 |
-| `save_faq` | login | `faq_questions[]`, `faq_answers[]` | 1–20 item, Q ≤320, A ≤4000 |
-| `upload_image` | login | `image_slot`, `service_image` (file) | jpg/png/webp, ≤5MB, ≤12000px |
-| `remove_image` | login | `image_slot` | kembali ke default |
-| `change_password` | login | `current_password`, `new_password`, `new_password_confirmation` | aturan password + harus beda |
-| `logout` | login | — | hapus session |
+| action | Auth | Field | Validasi | Status data |
+|---|---|---|---|---|
+| `setup` | belum ada `password_hash` | `password`, `password_confirmation` | 6–72 char, ada huruf+angka | Sistem CMS |
+| `login` | belum login | `password` | max 5x salah / 15 mnt → lock 15 mnt | Sistem CMS |
+| `save` | login | `wa_number` | 8–15 digit, `0...` → `62...` | **[LIVE]** |
+| `save_service_urls` | login | `service_urls[tryout|gadai|kitchen]` | URL penuh http/https, ≤2048 | **[ARSIP]** |
+| `save_service_names` | login | `service_names[...]` | wajib isi, ≤400 byte | **[ARSIP]** |
+| `save_service_descriptions` | login | `service_descriptions[...]` | wajib isi, ≤2000 byte | **[ARSIP]** |
+| `save_service_tags` | login | `service_tags[slot]` (textarea, 1 tag/baris) | ≤8 tag/slot, tiap ≤240 byte | **[ARSIP]** |
+| `save_stats` | login | `stats[slot][value]`, `stats[slot][label]` | wajib isi, value ≤320, label ≤480 | **[ARSIP]** |
+| `save_faq` | login | `faq_questions[]`, `faq_answers[]` | 1–20 item, Q ≤320, A ≤4000 | **[LIVE]** |
+| `upload_image` | login | `image_slot`, `service_image` (file) | jpg/png/webp, ≤5MB, ≤12000px | `logo`=[LIVE], slot lain=[ARSIP] |
+| `remove_image` | login | `image_slot` | kembali ke default | `logo`=[LIVE], slot lain=[ARSIP] |
+| `change_password` | login | `current_password`, `new_password`, `new_password_confirmation` | aturan password + harus beda | Sistem CMS |
+| `logout` | login | — | hapus session | Sistem CMS |
 
 Contoh cURL login + simpan nomor (perlu cookie session dari GET dulu):
 

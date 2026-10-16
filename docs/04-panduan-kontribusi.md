@@ -15,9 +15,10 @@
 
 ## 3. Menambah slot layanan / field CMS
 
-1. Tambah default di `admin.php` + fallback di JS `index.html`/`tentang-kami.html`.
-2. Tambah validasi + action POST baru (ikuti pola `save_*` + CSRF + cek `$isAuthenticated`).
-3. Update `docs/02-dokumentasi-api.md` dan `docs/03-spesifikasi-teknis.md`.
+1. Tambah default di `admin/index.php` dan/atau `admin/actions/save_service.php` + fallback di JS `index.html`/`tentang-kami.html`.
+2. Tambah validasi + action POST baru di `admin/actions/` (ikuti pola `save_*` + CSRF + cek `$isAuthenticated`).
+3. Buat view baru di `admin/views/` bila diperlukan.
+4. Update `docs/02-dokumentasi-api.md` dan `docs/03-spesifikasi-teknis.md`.
 
 ## 4. Testing lokal (wajib sebelum PR)
 

@@ -10,7 +10,12 @@ pojok_berkah/
 ├── kebijakan-privasi.html      # Halaman legal
 ├── syarat-ketentuan.html       # Halaman legal
 ├── 404.html                    # Halaman error (ErrorDocument di .htaccess)
-├── admin.php                   # CMS (tetap di root — fetch("admin.php?public=1"))
+├── admin.php                   # CMS thin wrapper (require admin/index.php)
+├── admin/                      # CMS modular (backend)
+│   ├── index.php               # router utama + handler + HTML output
+│   ├── lib/                    # security, normalize, storage
+│   ├── actions/                # login, save, save_service, upload, save_faq
+│   └── views/                  # setup, login-form, tab-*
 ├── README.md                   # Panduan proyek (tetap di root)
 │
 ├── docs/                       # DOKUMEN PANDUAN & INFORMASI (tetap, bukan arsip)

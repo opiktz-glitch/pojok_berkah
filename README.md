@@ -1,8 +1,9 @@
-# Pojok Berkah
+# Pojok Berkah — README Utama (Root)
 
 Landing site and PHP CMS for the Pojok Berkah service directory.
 
-> Dokumentasi lengkap (Bahasa Indonesia) ada di [`docs/`](docs/README.md):
+> ⚠️ **INI ADALAH README ROOT** — untuk pengguna & admin (Bahasa Inggris).
+> Dokumentasi lengkap (Bahasa Indonesia) ada di [`docs/INDEX-DOKUMEN.md`](docs/INDEX-DOKUMEN.md):
 > - [Panduan Pengguna & Instalasi](docs/01-panduan-pengguna.md)
 > - [Dokumentasi API](docs/02-dokumentasi-api.md)
 > - [Spesifikasi Teknis](docs/03-spesifikasi-teknis.md)

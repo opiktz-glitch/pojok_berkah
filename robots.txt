@@ -1,7 +1,8 @@
 User-agent: *
 Allow: /
-Disallow: /data/
+Disallow: /admin/
 Disallow: /admin.php
+Disallow: /data/
 Disallow: /_arsip/
 
 Sitemap: https://pojokberkah.online/sitemap.xml

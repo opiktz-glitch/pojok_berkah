@@ -17,7 +17,7 @@
 
 ### 1. Opsi A — landing korporat tanpa produk (SELESAI, lokal)
 - `index.html`: hapus 3 kartu Tryout/Gadai/Kitchen + stats + host + tags + tombol produk; menu baru `Beranda | Tentang | Keunggulan | FAQ | Kontak`; hero/FAQ/footer/SEO ditulis ulang brand umum; JS `service_*` + CSS `.cards/.card/.chips/.stats` dibersihkan (diganti `.about-short`).
-- CMS `admin.php` + `data/storage.php` TIDAK diubah (field layanan tetap disimpan agar subdomain tidak rusak).
+- CMS `admin.php` → thin wrapper, `admin/index.php` router + `admin/lib/`, `admin/actions/`, `admin/views/`. `data/storage.php` TIDAK diubah (field layanan tetap disimpan agar subdomain tidak rusak).
 - Belum selaras penuh: `tentang-kami.html`, `404.html`, default FAQ `admin.php` masih menyebut produk.
 
 ### 2. Perbaikan navigasi lokal (SELESAI, lokal)
@@ -106,3 +106,16 @@
 - **`admin.php`**: slot `parkir` ditambah ke `$imageSlots`, `$defaultImageUrls` (default `''` → monogram), `$defaultServiceNames` (`Aplikasi Parkir`), `$defaultServiceDescriptions`, `$defaultServiceTags` — loop upload/validasi/form nama+deskripsi+tag otomatis ikut; **`$defaultServiceUrls` TIDAK diisi** (validasi URL baris-316 menolak string kosong → field URL parkir sengaja tidak dibuat; link kartu = WhatsApp). Badge/copy panel: "Arsip…tidak tampil di landing" → "Dipakai Karya, Tentang Kami & 404".
 - **`landing.css`**: `.val-ico/.tags/.card-link/.section-cta`, grid `.works` 4→2→1 kolom, monogram `.work-img` gradien cyan→indigo, hover kartu, stagger `nth-child(4)`, override dark mode.
 - Kontrak lama utuh: ID section lama, H1, `<details>` FAQ, `wa.me`, `admin.php?public=1`; `?public=1` kini memuat kunci `parkir`.
+
+### 16 Okt 2026 — Modularisasi CMS admin + perbaikan bug session
+
+- **`admin.php`** → thin wrapper 4 baris (`require admin/index.php`).
+- **`admin/index.php`** → router utama + semua handler POST + HTML output dengan layout tab (6 tab: WhatsApp, Password, Layanan, Statistik, Gambar, FAQ).
+- **`admin/lib/`** → `security.php` (CSRF, escapeHtml, isValidAdminPassword, verifyCsrf), `normalize.php` (normalizeWhatsAppNumber, normalizeServiceUrl), `storage.php` (saveSettings).
+- **`admin/actions/`** → `login.php` (setup/login/change_password/logout), `save.php` (WhatsApp/stats), `save_service.php` (nama/URL/deskripsi/tag), `upload.php` (upload/remove image), `save_faq.php`.
+- **`admin/views/`** → setup, login-form, tab-whatsapp, tab-password, tab-layanan, tab-statistik, tab-gambar, tab-faq.
+- **BUG FIX:** `session_start()` dipindah ke `admin/index.php` sebelum cek `$_SESSION` — sebelumnya `$isAuthenticated` selalu `false` karena `$_SESSION` diakses sebelum `session_start()`.
+- **BUG FIX:** `handleChangePassword()` menggunakan parameter `$storagePath` bukan path hardcoded.
+- **CSS** diekstrak ke `assets/css/admin.css` (90 baris), tidak lagi inline di `admin.php`.
+- PHP syntax check: semua 13 file lulus tanpa error.
+- SEO: `admin.php` dan `admin/index.php` tetap `noindex,nofollow,noarchive`; `robots.txt` `Disallow: /admin.php` utuh; `sitemap.xml` tidak berubah.

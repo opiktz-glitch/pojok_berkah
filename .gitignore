@@ -5,3 +5,5 @@
 /make_icons.py
 # Folder arsip lokal — jangan commit & jangan deploy
 /_arsip/
+# Editor / IDE settings
+.vscode/

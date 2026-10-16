@@ -26,8 +26,10 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://images.unsplash.com">
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" as="style">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Pojok Berkah","url":"https://pojokberkah.online/tentang-kami.html","logo":"https://pojokberkah.online/assets/img/og-image.jpg","email":"admin@pojokberkah.online"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Pojok Berkah","url":"https://pojokberkah.online/tentang-kami.html","inLanguage":"id"}</script>
 <style>
 :root{--bg:#F4F8FC;--ink:#10203A;--muted:#51607A;--line:rgba(16,32,58,.12);--teal:#0B8277;--blue:#2F5BEA;--amber:#C97400;--wa:#25D366;--display:"Sora","Trebuchet MS",system-ui,sans-serif;--body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif}
 *{box-sizing:border-box;margin:0}
@@ -104,11 +106,25 @@ footer{padding:50px 0 36px;color:var(--muted);font-size:.95rem}
 footer strong{color:var(--ink);font-family:var(--display)}
 footer nav{display:flex;flex-wrap:wrap;gap:10px 22px}
 footer nav a{text-decoration:none}
-footer nav a:hover{color:var(--ink)}
+footer nav a:hover{color:var(--ink);text-decoration:underline}
 footer small{display:block;margin-top:18px;max-width:72ch}
 @media(max-width:800px){.hero{grid-template-columns:1fr;gap:32px;padding-top:48px}.photo-grid{grid-template-rows:180px 140px}.nav{gap:14px}.values{gap:18px}.service{grid-template-columns:170px 1fr;gap:18px}.service img{width:170px;height:124px}.service>a{grid-column:2}}
 @media(max-width:560px){.top{align-items:center;padding-top:14px;padding-bottom:12px;flex-direction:row;gap:10px;flex-wrap:wrap}.nav{gap:10px;font-size:.88rem}.nav a:not(.btn-wa):not(.nav-toggle):not([aria-current]){display:none}.nav-toggle{display:inline-flex}.nav.open{flex-wrap:wrap}.nav.open a:not(.btn-wa):not(.nav-toggle){display:inline-flex;flex:1 1 100%;padding:10px 4px;border-top:1px solid var(--line)}.nav .btn-wa{min-height:40px;padding:7px 11px}.hero{padding-top:38px}.hero h1{font-size:2.2rem}.photo-grid{grid-template-rows:142px 112px;gap:7px}.intro h2,.section-title{font-size:1.65rem}.values{grid-template-columns:1fr;gap:20px}.services{padding-top:52px}.service{grid-template-columns:1fr;gap:13px}.service img{width:100%;height:190px}.service>a{grid-column:auto}.contact{margin-top:58px;padding:28px 22px;align-items:flex-start;flex-direction:column}.contact h2{font-size:1.4rem}footer nav{gap:8px 16px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+
+/* sticky WA mobile (konsisten dengan index.html) */
+.wa-sticky{display:none}
+@media(max-width:860px){
+  .wa-sticky{
+    position:fixed;left:16px;right:16px;bottom:16px;z-index:25;
+    bottom:calc(16px + env(safe-area-inset-bottom));
+    display:inline-flex;justify-content:center;
+    box-shadow:0 10px 30px rgba(37,211,102,.35);
+    transition:opacity .25s ease,transform .25s ease,box-shadow .2s,filter .2s;
+  }
+  .wa-sticky.hide{opacity:0;transform:translateY(14px);pointer-events:none}
+  body{padding-bottom:96px}
+}
 </style>
 </head>
 <body>
@@ -120,6 +136,7 @@ footer small{display:block;margin-top:18px;max-width:72ch}
       <a href="index.html#beranda">Beranda</a>
       <a href="tentang-kami.html" aria-current="page">Tentang</a>
       <a href="index.html#keunggulan">Keunggulan</a>
+      <a href="index.html#layanan">Layanan</a>
       <a href="index.html#faq">FAQ</a>
       <a href="index.html#kontak">Kontak</a>
       <a class="btn-wa wa-button" href="https://wa.me/6287724039666"><svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 11.7a8.2 8.2 0 0 1-12.1 7.2L4 20l1.1-4A8.2 8.2 0 1 1 20.2 11.7Z"/><path d="M9 8.5c.3-.5.6-.5.9-.5l.6 1.5-.7.9c.6 1.2 1.5 2.1 2.7 2.7l.9-.7 1.5.6c0 .3 0 .7-.5.9-.5.3-1.1.4-1.7.2-2-.6-4.2-2.8-4.8-4.8-.2-.6-.1-1.2.2-1.7Z"/></svg>Chat WhatsApp</a>
@@ -192,6 +209,9 @@ footer small{display:block;margin-top:18px;max-width:72ch}
   <small>Simulasi gadai bersifat estimasi. Pilih lembaga pembiayaan yang terdaftar dan diawasi OJK, dan baca perjanjian dengan teliti sebelum menyetujui.</small>
   <small>&copy; <span id="yr">2026</span> Pojok Berkah</small>
 </footer>
+
+<a class="wa-sticky wa-button" href="https://wa.me/6287724039666"><svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 11.7a8.2 8.2 0 0 1-12.1 7.2L4 20l1.1-4A8.2 8.2 0 1 1 20.2 11.7Z"/><path d="M9 8.5c.3-.5.6-.5.9-.5l.6 1.5-.7.9c.6 1.2 1.5 2.1 2.7 2.7l.9-.7 1.5.6c0 .3 0 .7-.5.9-.5.3-1.1.4-1.7.2-2-.6-4.2-2.8-4.8-4.8-.2-.6-.1-1.2.2-1.7Z"/></svg>Chat admin via WhatsApp</a>
+
 <script>
 document.getElementById("yr").textContent=new Date().getFullYear();
 fetch("admin.php?public=1",{cache:"no-store"}).then(function(response){return response.json()}).then(function(settings){
@@ -240,6 +260,17 @@ fetch("admin.php?public=1",{cache:"no-store"}).then(function(response){return re
   var reduceMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   function onScroll(){if(header)header.classList.toggle("scrolled",window.scrollY>8);}
   if(reduceMotion){onScroll();}else{window.addEventListener("scroll",onScroll,{passive:true});onScroll();}
+})();
+(function(){
+  var sticky=document.querySelector(".wa-sticky");
+  var kontak=document.querySelector(".contact");
+  if(!sticky||!kontak||!("IntersectionObserver" in window))return;
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      sticky.classList.toggle("hide",entry.isIntersecting);
+    });
+  },{threshold:.35});
+  io.observe(kontak);
 })();
 </script>
 </body>

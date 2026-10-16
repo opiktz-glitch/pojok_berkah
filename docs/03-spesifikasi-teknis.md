@@ -2,9 +2,14 @@
 
 ## 1. Arsitektur
 
-- Tipe: static landing (HTML+CSS+JS inline) + 1 file backend `admin.php` (PHP 8.0+, tanpa framework, tanpa database, tanpa composer).
+- Tipe: static landing (HTML+CSS+JS inline) + backend CMS modular di folder `admin/` (PHP 8.0+, tanpa framework, tanpa database, tanpa composer).
+  - `admin.php` (root) → thin wrapper, `require admin/index.php`
+  - `admin/index.php` → router utama + semua handler + HTML output
+  - `admin/lib/` → security, normalize, storage
+  - `admin/actions/` → login, save, save_service, upload, save_faq
+  - `admin/views/` → setup, login-form, tab-whatsapp, tab-password, tab-layanan, tab-statistik, tab-gambar, tab-faq
 - Alur baca: browser `fetch admin.php?public=1` → PHP baca `data/storage.php` → JSON → JS menimpa `wa.me`, `[data-service-link/name/description]`, `.chips`, `[data-stat-value/label]`, `img[data-image-slot]`, `.faq`.
-- Catatan pasca-korporat (16 Okt 2026): `index.html` hanya membaca `wa_number`, `images.logo`, `faq`. Sisa kunci (`service_*`, `stats`, 3 gambar) adalah ARSIP untuk `tentang-kami.html` + `404.html`, bukan landing.
+- Catatan pasca-korporat (16 Okt 2026): `index.html` hanya membaca kunci **[LIVE]** `wa_number`, `images.logo`, `faq`. Sisa kunci **[ARSIP]** (`service_*`, `stats`, 3 gambar `images`) hanya dipakai `tentang-kami.html` + `404.html`, bukan landing.
 - Alur tulis: form POST ke `admin.php` → validasi → `saveSettings()` tulis `data/storage.php` via `var_export` + `LOCK_EX`.
 - Proteksi server: `.htaccess` (HTTPS redirect kecuali localhost, www→non-www, blok `^data/` → 404, sembunyikan `.ftp-deploy-sync-state.json`, `ErrorDocument 404 /404.html`).
 
@@ -12,7 +17,23 @@
 
 ```
 index.html, tentang-kami.html, kebijakan-privasi.html, syarat-ketentuan.html, 404.html
-admin.php                  # CMS + API publik + serve gambar
+admin.php                  # CMS thin wrapper (require admin/index.php)
+admin/
+  index.php                # router utama + handler + HTML output
+  lib/
+    security.php           # CSRF, escapeHtml, isValidAdminPassword, verifyCsrf
+    normalize.php          # normalizeWhatsAppNumber, normalizeServiceUrl
+    storage.php            # saveSettings
+  actions/
+    login.php              # setup, login, change_password, logout
+    save.php               # save WhatsApp, save_stats
+    save_service.php       # save_service_names/urls/descriptions/tags
+    upload.php             # upload_image, remove_image
+    save_faq.php           # save_faq
+  views/
+    setup.php, login-form.php,
+    tab-whatsapp.php, tab-password.php, tab-layanan.php,
+    tab-statistik.php, tab-gambar.php, tab-faq.php
 data/storage.example.php   # template (boleh di-Git)
 data/storage.php           # live settings + password_hash (JANGAN di-Git)
 data/uploads/*.jpg|png|webp# upload CMS (JANGAN di-Git)
@@ -26,19 +47,19 @@ File me-return array PHP. Kunci yang dipakai:
 
 ```php
 [
-  'wa_number' => '628159501935',      // string digit
-  'password_hash' => '$2y$10$...',    // password_hash(PASSWORD_DEFAULT)
-  'service_urls' => ['tryout'=>..., 'gadai'=>..., 'kitchen'=>...],
-  'service_names' => [...], 'service_descriptions' => [...],
-  'service_tags' => ['tryout'=>[...max 8], ...],
-  'stats' => ['services'=>['value','label'], 'gadai'=>[...], 'kitchen'=>[...]],
-  'faq' => [['question','answer'], ...max 20],
-  'images' => ['logo'=>'<32hex>.png', ...],  // nama file di data/uploads/
-  'login_attempts' => [ hash_hmac_ip => ['count','window_start','locked_until'] ],
+  'wa_number' => '628159501935',      // [LIVE] string digit — dipakai landing
+  'password_hash' => '$2y$10$...',    // password_hash(PASSWORD_DEFAULT) — sistem CMS
+  'service_urls' => ['tryout'=>..., 'gadai'=>..., 'kitchen'=>...],   // [ARSIP] — Tentang Kami + subdomain
+  'service_names' => [...], 'service_descriptions' => [...],         // [ARSIP] — Tentang Kami
+  'service_tags' => ['tryout'=>[...max 8], ...],                     // [ARSIP] — Tentang Kami
+  'stats' => ['services'=>['value','label'], 'gadai'=>[...], 'kitchen'=>[...]],  // [ARSIP] — dihapus dari landing
+  'faq' => [['question','answer'], ...max 20],                       // [LIVE] — FAQ korporat
+  'images' => ['logo'=>'<32hex>.png', ...],  // [LIVE] logo / [ARSIP] tryout,gadai,kitchen — nama file di data/uploads/
+  'login_attempts' => [ hash_hmac_ip => ['count','window_start','locked_until'] ], // sistem CMS
 ]
 ```
 
-Default fallback didefinisikan di `admin.php` (`$defaultFaq`, `$defaultServiceUrls`, `$defaultStats`, `$defaultImageUrls` Unsplash) bila kunci kosong.
+Default fallback didefinisikan di `admin/index.php` (`$defaultFaq`, `$defaultServiceUrls`, `$defaultStats`, `$defaultImageUrls` Unsplash) dan `admin/actions/save_service.php` (`$defaultServiceNames`, `$defaultServiceDescriptions`, `$defaultServiceTags`) bila kunci kosong.
 
 Upload: nama acak `bin2hex(random_bytes(16)).ext`, file lama di-`unlink` bila tak dipakai slot lain.
 

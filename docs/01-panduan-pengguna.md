@@ -14,7 +14,7 @@ Pojok Berkah adalah **landing site + CMS mini** untuk direktori 3 layanan:
 | `kitchen` | Alfi Kitchen | https://kitchen.pojokberkah.online |
 
 Halaman publik: `index.html`, `tentang-kami.html`, `kebijakan-privasi.html`, `syarat-ketentuan.html`, `404.html`.
-Halaman admin: `admin.php` (satu file: frontend CMS + backend + API publik).
+Halaman admin: `admin.php` (thin wrapper → `admin/index.php` router + `admin/lib/`, `admin/actions/`, `admin/views/`).
 
 Semua konten dinamis (nomor WA, nama/URL/deskripsi/tag layanan, statistik, FAQ, gambar) disimpan di `data/storage.php` dan dibaca halaman publik via `fetch("admin.php?public=1")`.
 

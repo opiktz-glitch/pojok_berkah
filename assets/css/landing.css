@@ -117,7 +117,7 @@ footer{padding:54px 0 40px;color:var(--muted);font-size:.95rem}
 footer .cols{display:flex;flex-wrap:wrap;gap:16px 40px;justify-content:space-between;align-items:center}
 footer strong{color:var(--ink);font-family:var(--display)}
 footer nav{display:flex;flex-wrap:wrap;gap:8px 24px}
-footer nav a{text-decoration:none}footer nav a:hover{color:var(--ink)}
+footer nav a{text-decoration:none}footer nav a:hover{color:var(--ink);text-decoration:underline}
 footer small{display:block;margin-top:22px;max-width:72ch}
 
 @media (max-width:860px){
