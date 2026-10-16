@@ -137,11 +137,11 @@ if ((isset($_GET['public']) && $_GET['public'] === '1')
 <title>CMS | Pojok Berkah</title>
 <link rel="canonical" href="https://pojokberkah.online/admin.php">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
-<link rel="icon" href="/assets/icons/favicon.ico" sizes="any">
-<link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
+<link rel="icon" href="assets/icons/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/pojok_berkah/assets/css/admin.css">
+<link rel="stylesheet" href="assets/css/admin.css">
 <style>
 @media(max-width:420px){.wrap{width:min(100% - 28px,1040px)}.top nav{font-size:.84rem}.panel{padding:18px}}
 </style>
