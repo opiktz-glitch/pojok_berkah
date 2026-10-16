@@ -85,12 +85,14 @@ $imageSlots = [
   'tryout' => 'Tryout TKA',
   'gadai' => 'Gadai BPKB',
   'kitchen' => 'Alfi Kitchen',
+  'parkir' => 'Aplikasi Parkir',
 ];
 $defaultImageUrls = [
   'logo' => '',
   'tryout' => 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=960&q=80',
   'gadai' => 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=960&q=80',
   'kitchen' => 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=960&q=80',
+  'parkir' => '',
 ];
 $defaultServiceUrls = [
   'tryout' => 'https://tryout.pojokberkah.online',
@@ -105,6 +107,7 @@ $defaultServiceNames = [
   'tryout' => 'Tryout TKA',
   'gadai' => 'Gadai BPKB',
   'kitchen' => 'Alfi Kitchen',
+  'parkir' => 'Aplikasi Parkir',
 ];
 $serviceNames = [];
 foreach ($defaultServiceNames as $slot => $defaultName) {
@@ -116,10 +119,12 @@ foreach ($defaultServiceNames as $slot => $defaultName) {
 $imageSlots['tryout'] = $serviceNames['tryout'];
 $imageSlots['gadai'] = $serviceNames['gadai'];
 $imageSlots['kitchen'] = $serviceNames['kitchen'];
+$imageSlots['parkir'] = $serviceNames['parkir'];
 $defaultServiceDescriptions = [
   'tryout' => 'Latihan soal TKA online lengkap dengan pembahasan, disusun dengan bantuan AI untuk siswa dan guru.',
   'gadai' => 'Simulasi pencairan dana dengan jaminan BPKB, tersedia di tiga kota dengan 29 cabang aktif.',
   'kitchen' => 'Puding berlapis buah, dessert dalam kemasan praktis, dan salad buah bersaus creamy. Buatan rumahan, selalu segar.',
+  'parkir' => 'Aplikasi parkir digital untuk pencatatan kendaraan, pengelolaan slot, dan laporan harian — dibangun dan dirawat sendiri oleh Pojok Berkah.',
 ];
 $serviceDescriptions = [];
 foreach ($defaultServiceDescriptions as $slot => $defaultDescription) {
@@ -147,6 +152,7 @@ $defaultServiceTags = [
   'tryout' => ['Soal AI', 'Pembahasan', 'Siswa dan guru'],
   'gadai' => ['Bandung', 'Bekasi', 'Jakarta'],
   'kitchen' => ['Puding', 'Dessert', 'Salad buah'],
+  'parkir' => ['Web & Desktop', 'Laporan harian'],
 ];
 $storedServiceTags = is_array($settings['service_tags'] ?? null) ? $settings['service_tags'] : [];
 $serviceTags = [];
@@ -375,6 +381,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   $imageSlots['tryout'] = $serviceNames['tryout'];
                   $imageSlots['gadai'] = $serviceNames['gadai'];
                   $imageSlots['kitchen'] = $serviceNames['kitchen'];
+                  $imageSlots['parkir'] = $serviceNames['parkir'];
                   $flash = 'Nama layanan berhasil diperbarui.';
                 } else {
                   $flash = 'Nama layanan tidak dapat disimpan. Pastikan folder data bisa ditulis oleh PHP.';
@@ -783,7 +790,7 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
 <main class="wrap">
   <span class="kicker">Pengaturan situs</span>
   <h1>Pengaturan situs</h1>
-  <p class="lead">Kelola nomor WhatsApp, logo, dan pertanyaan umum. Panel arsip di bawah tetap tersimpan untuk halaman Tentang Kami.</p>
+  <p class="lead">Kelola nomor WhatsApp, logo, dan pertanyaan umum. Konten &amp; gambar layanan di bawah tampil di halaman Karya, Tentang Kami, dan subdomain.</p>
 
   <?php if ($flash !== ''): ?>
     <p class="flash" role="status"><?= escapeHtml($flash) ?></p>
@@ -912,15 +919,15 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
   <?php endif; ?>
   <?php if ($isAuthenticated): ?>
     <details class="archive">
-      <summary>Arsip layanan &amp; statistik <span class="badge badge-archive">Tidak tampil di landing</span></summary>
+      <summary>Konten layanan &amp; statistik <span class="badge badge-live">Nama/deskripsi/tag: Dipakai Karya</span></summary>
       <div class="archive-body">
     <section class="panel service-content-panel">
-      <h2>Konten layanan <span class="badge badge-archive">Arsip — tidak tampil di landing</span></h2>
-      <p class="form-copy">Atur nama, tujuan, ringkasan, dan tag layanan dari satu bagian. Tersimpan untuk halaman Tentang Kami dan subdomain; tidak tampil di beranda korporat.</p>
+      <h2>Konten layanan <span class="badge badge-live">Dipakai halaman Karya &amp; Tentang Kami</span></h2>
+      <p class="form-copy">Atur nama, ringkasan, dan tag layanan dari satu bagian. Tampil di halaman Karya, Tentang Kami, dan subdomain.</p>
       <div class="service-content-grid">
         <div class="service-content-group">
           <h3>Nama layanan</h3>
-          <p class="form-copy">Nama tampil di halaman Tentang Kami (tidak tampil di beranda).</p>
+          <p class="form-copy">Nama tampil di halaman Karya dan Tentang Kami.</p>
           <form method="post">
             <input type="hidden" name="csrf" value="<?= escapeHtml($csrf) ?>">
             <input type="hidden" name="action" value="save_service_names">
@@ -930,6 +937,8 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
             <input id="service-name-gadai" name="service_names[gadai]" type="text" maxlength="100" value="<?= escapeHtml($serviceNames['gadai']) ?>" required>
             <label for="service-name-kitchen">Kitchen</label>
             <input id="service-name-kitchen" name="service_names[kitchen]" type="text" maxlength="100" value="<?= escapeHtml($serviceNames['kitchen']) ?>" required>
+            <label for="service-name-parkir">Parkir</label>
+            <input id="service-name-parkir" name="service_names[parkir]" type="text" maxlength="100" value="<?= escapeHtml($serviceNames['parkir']) ?>" required>
             <div class="actions"><button class="primary" type="submit">Simpan nama</button></div>
           </form>
         </div>
@@ -950,7 +959,7 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
         </div>
         <div class="service-content-group">
           <h3>Deskripsi</h3>
-          <p class="form-copy">Ringkasan untuk halaman Tentang Kami (tidak tampil di beranda).</p>
+          <p class="form-copy">Ringkasan untuk halaman Karya dan Tentang Kami.</p>
           <form method="post">
             <input type="hidden" name="csrf" value="<?= escapeHtml($csrf) ?>">
             <input type="hidden" name="action" value="save_service_descriptions">
@@ -960,6 +969,8 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
             <textarea id="description-gadai" name="service_descriptions[gadai]" maxlength="500" rows="3" required><?= escapeHtml($serviceDescriptions['gadai']) ?></textarea>
             <label for="description-kitchen"><?= escapeHtml($serviceNames['kitchen']) ?></label>
             <textarea id="description-kitchen" name="service_descriptions[kitchen]" maxlength="500" rows="3" required><?= escapeHtml($serviceDescriptions['kitchen']) ?></textarea>
+            <label for="description-parkir"><?= escapeHtml($serviceNames['parkir']) ?></label>
+            <textarea id="description-parkir" name="service_descriptions[parkir]" maxlength="500" rows="3" required><?= escapeHtml($serviceDescriptions['parkir']) ?></textarea>
             <div class="actions"><button class="primary" type="submit">Simpan deskripsi</button></div>
           </form>
         </div>
@@ -975,6 +986,8 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
             <textarea id="tags-gadai" name="service_tags[gadai]" maxlength="2000" rows="3"><?= escapeHtml(implode("\n", $serviceTags['gadai'])) ?></textarea>
             <label for="tags-kitchen"><?= escapeHtml($serviceNames['kitchen']) ?></label>
             <textarea id="tags-kitchen" name="service_tags[kitchen]" maxlength="2000" rows="3"><?= escapeHtml(implode("\n", $serviceTags['kitchen'])) ?></textarea>
+            <label for="tags-parkir"><?= escapeHtml($serviceNames['parkir']) ?></label>
+            <textarea id="tags-parkir" name="service_tags[parkir]" maxlength="2000" rows="3"><?= escapeHtml(implode("\n", $serviceTags['parkir'])) ?></textarea>
             <div class="actions"><button class="primary" type="submit">Simpan tag</button></div>
           </form>
         </div>
@@ -1010,10 +1023,10 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
   <?php endif; ?>
   <?php if ($isAuthenticated): ?>
     <details class="archive">
-      <summary>Arsip gambar layanan <span class="badge badge-archive">Dipakai Tentang Kami &amp; 404</span></summary>
+      <summary>Gambar layanan <span class="badge badge-live">Dipakai Karya, Tentang Kami &amp; 404</span></summary>
       <div class="archive-body">
     <section class="panel images-panel">
-      <p class="form-copy">Tiga gambar ini tidak dipakai beranda; tersimpan untuk halaman Tentang Kami dan gambar hias 404. Format JPEG, PNG, atau WebP, maksimal 5 MB.</p>
+      <p class="form-copy">Gambar-gambar ini tampil di halaman Karya, Tentang Kami, dan sebagai gambar hias 404 — termasuk Aplikasi Parkir. Format JPEG, PNG, atau WebP, maksimal 5 MB.</p>
       <div class="image-grid">
         <?php foreach ($imageSlots as $slot => $label): ?>
           <?php if ($slot === 'logo') continue; ?>

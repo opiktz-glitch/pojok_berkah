@@ -93,3 +93,16 @@
 - **Chip hero**: light `#0E7490/#4F46E5/#B45309` (≥4.5:1), dark `#67E8F9/#A5B4FC/#FCD34D`.
 - **Dark mode**: token slate `#0B1220/#E8ECF7/#97A5C0`, gradient bright `#22D3EE/#818CF8/#FBBF24`, aksen `#67E8F9` (trustbar, step, FAQ), glow cyan/indigo/amber.
 - Aksen lama (`rgba(11,130,119,…)`, `rgba(47,91,234,…)`, hex `#0B8277/#2F5BEA/#C97400`) diganti di titik yang membawa warna; bayangan netral rgba(16,32,58,…) dibiarkan (visual identik dengan ink baru).
+
+### 16 Okt 2026 — Section layanan dev + karya (4 kartu,含 Parkir) + alur + slot admin Parkir
+
+> Permintaan: Pojok Berkah juga melayani pembuatan aplikasi desktop & web; 3 produk (tryout/gadai/kitchen) = contoh karya; tambah Aplikasi Parkir; gambar diedit via admin. **Atribut SEO `<head>` tetap 100% tidak diubah.** Membalik sebagian Opsi A (produk kembali tampil, tapi framing = portofolio, bukan direktori).
+
+- **`index.html`**: menu `Layanan` (→ `#layanan`); 3 section baru sebelum `#cara-kerja`:
+  - `#layanan` — kartu Aplikasi Web / Aplikasi Desktop / Integrasi & Otomasi (ikon SVG inline, tag teknologi PHP/MySQL/JS, Windows/Offline/Laporan, Midtrans/API/WhatsApp) + CTA WhatsApp.
+  - `#karya` — 4 kartu `<article class="work">`: Tryout/Gadai/Kitchen (`data-service-*` dari CMS) + **Aplikasi Parkir** (link WA; belum ada subdomain); gambar `data-image-slot` (monogram T/G/K/P sampai admin unggah — 3 bawaan masih Unsplash sampai diganti).
+  - `#alur` — 4 langkah Brief→Desain→Bangun→Serah terima (counter `01–04` bawaan `.steps`).
+  - JS fetch diperluas: loop generik `img[data-image-slot]` (sekaligus memperbaiki logo header yang tak pernah di-set) + override `service_urls/names/descriptions` untuk 4 slot (guard non-kosong).
+- **`admin.php`**: slot `parkir` ditambah ke `$imageSlots`, `$defaultImageUrls` (default `''` → monogram), `$defaultServiceNames` (`Aplikasi Parkir`), `$defaultServiceDescriptions`, `$defaultServiceTags` — loop upload/validasi/form nama+deskripsi+tag otomatis ikut; **`$defaultServiceUrls` TIDAK diisi** (validasi URL baris-316 menolak string kosong → field URL parkir sengaja tidak dibuat; link kartu = WhatsApp). Badge/copy panel: "Arsip…tidak tampil di landing" → "Dipakai Karya, Tentang Kami & 404".
+- **`landing.css`**: `.val-ico/.tags/.card-link/.section-cta`, grid `.works` 4→2→1 kolom, monogram `.work-img` gradien cyan→indigo, hover kartu, stagger `nth-child(4)`, override dark mode.
+- Kontrak lama utuh: ID section lama, H1, `<details>` FAQ, `wa.me`, `admin.php?public=1`; `?public=1` kini memuat kunci `parkir`.
