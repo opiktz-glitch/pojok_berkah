@@ -5,7 +5,7 @@ define('POJOK_BERKAH_BOOTSTRAPPED', true);
 
 session_start();
 
-$storagePath = __DIR__ . '/../../data/storage.php';
+$storagePath = __DIR__ . '/../data/storage.php';
 $settings = is_file($storagePath) ? require $storagePath : [];
 if (!is_array($settings)) {
     $settings = ['wa_number' => '6287724039666', 'password_hash' => ''];
@@ -32,7 +32,7 @@ $isAuthenticated = !empty($_SESSION['pojok_berkah_admin'] ?? false);
 
 $settings = handleSetup($settings, $storagePath, $csrf, $setupRequired, $canSetup, $flash);
 $settings = handleLogin($settings, $csrf, $isAuthenticated, $flash);
-$settings = handleChangePassword($settings, $csrf, $isAuthenticated, $flash);
+$settings = handleChangePassword($settings, $storagePath, $csrf, $isAuthenticated, $flash);
 $settings = handleSaveWhatsApp($settings, $storagePath, $csrf, $isAuthenticated, $flash);
 $settings = handleSaveStats($settings, $storagePath, $csrf, $isAuthenticated, $flash);
 $settings = handleSaveServiceNames($settings, $storagePath, $csrf, $isAuthenticated, $flash);

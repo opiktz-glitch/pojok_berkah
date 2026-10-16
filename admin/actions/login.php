@@ -91,7 +91,7 @@ function handleLogin(array $settings, string $csrf, bool $isAuthenticated, strin
     return $settings;
 }
 
-function handleChangePassword(array $settings, string $csrf, bool $isAuthenticated, string &$flash): array
+function handleChangePassword(array $settings, string $storagePath, string $csrf, bool $isAuthenticated, string &$flash): array
 {
     if (!$isAuthenticated) {
         return $settings;
