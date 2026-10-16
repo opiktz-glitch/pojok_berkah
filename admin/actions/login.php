@@ -84,7 +84,9 @@ function handleLogin(array $settings, string $csrf, bool $isAuthenticated, strin
         return $settings;
     }
 
-    session_start();
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
     $_SESSION['pojok_berkah_admin'] = true;
     session_regenerate_id(true);
 
@@ -160,7 +162,9 @@ function handleLogout(bool $isAuthenticated): bool
         return false;
     }
 
-    session_start();
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
     $_SESSION = [];
     session_destroy();
 
