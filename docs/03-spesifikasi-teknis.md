@@ -49,17 +49,17 @@ File me-return array PHP. Kunci yang dipakai:
 [
   'wa_number' => '628159501935',      // [LIVE] string digit — dipakai landing
   'password_hash' => '$2y$10$...',    // password_hash(PASSWORD_DEFAULT) — sistem CMS
-  'service_urls' => ['tryout'=>..., 'gadai'=>..., 'kitchen'=>...],   // [ARSIP] — Tentang Kami + subdomain
-  'service_names' => [...], 'service_descriptions' => [...],         // [ARSIP] — Tentang Kami
+  'service_urls' => ['tryout'=>..., 'gadai'=>..., 'kitchen'=>..., 'parkir'=>...],   // [ARSIP] — Karya + Tentang Kami + subdomain
+  'service_names' => [...], 'service_descriptions' => [...],         // [ARSIP + KARYA] — Karya (#karya) + Tentang Kami
   'service_tags' => ['tryout'=>[...max 8], ...],                     // [ARSIP] — Tentang Kami
   'stats' => ['services'=>['value','label'], 'gadai'=>[...], 'kitchen'=>[...]],  // [ARSIP] — dihapus dari landing
   'faq' => [['question','answer'], ...max 20],                       // [LIVE] — FAQ korporat
-  'images' => ['logo'=>'<32hex>.png', ...],  // [LIVE] logo / [ARSIP] tryout,gadai,kitchen — nama file di data/uploads/
+  'images' => ['logo'=>'<32hex>.png', ...],  // [LIVE] logo / [ARSIP+KARYA] tryout,gadai,kitchen,parkir — nama file di data/uploads/
   'login_attempts' => [ hash_hmac_ip => ['count','window_start','locked_until'] ], // sistem CMS
 ]
 ```
 
-Default fallback didefinisikan di `admin/index.php` (`$defaultFaq`, `$defaultServiceUrls`, `$defaultStats`, `$defaultImageUrls` Unsplash) dan `admin/actions/save_service.php` (`$defaultServiceNames`, `$defaultServiceDescriptions`, `$defaultServiceTags`) bila kunci kosong.
+Default fallback didefinisikan di `admin/index.php` (`$faqItems`, `$defaultServiceUrls` + `$defaultStats` + `$defaultImageUrls` Unsplash termasuk slot `parkir`) dan `admin/actions/save_service.php` (`$defaultServiceNames`, `$defaultServiceDescriptions`, `$defaultServiceTags`) bila kunci kosong.
 
 Upload: nama acak `bin2hex(random_bytes(16)).ext`, file lama di-`unlink` bila tak dipakai slot lain.
 

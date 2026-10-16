@@ -2,6 +2,24 @@
 
 Semua perubahan tercatat dalam file ini. Format berdasarkan [Keep a Changelog](https://keepachangelog.com/id/1.0.0/).
 
+## [1.0.10] — 16 Oktober 2026
+
+### 🔍 Audit Penuh Fase 2 + 🐛 Fix FAQ Publik (SEO Tidak Diubah)
+
+- `admin/index.php`: endpoint `?public=1` kini mengirim `'faq' => $faqItems` (sebelumnya hanya `wa_number`, `service_*`, `images`, `stats`) — edit FAQ di CMS kini tampil di landing via `faq.replaceChildren()` di `index.html`.
+- `admin/index.php`: `$faqItems` diberi guard `is_array` + cast `question/answer` ke string agar data lama tak fatal; komentar endpoint diluruskan (semua halaman publik, bukan contoh saja).
+- Docs selaras kode: `ROADMAP-FASE2.md` (R0 catatan fix FAQ, R1/R2/R3 + tabel prioritas diluruskan tab-arsip bukan `<details>`, R3 4 slot incl. `parkir`), `docs/02` (slot `parkir` + label Karya), `docs/03` (Karya + `$faqItems` + `parkir`), `docs/09` (header + R3 4 slot + catatan `<details>` = proposal awal).
+- SEO 100% tidak diubah: `<head>` `index.html`/`tentang-kami.html`, `robots.txt`, `sitemap.xml`, `noindex` admin utuh; hanya `admin/index.php` (JSON) + 6 docs berubah.
+- Verifikasi: `php -l admin/index.php` lolos; `?public=1` teruji kirim 4 FAQ korporat sama persis JSON-LD `index.html`.
+
+## [1.0.9] — 16 Oktober 2026
+
+### ✅ R5 Badge Status Selesai (Docs Saja, Tanpa Ubah Kode/SEO)
+
+- Verifikasi: `.badge-live` hijau "Dipakai landing" sudah ada di `admin/views/tab-whatsapp.php`, `tab-logo.php`, `tab-faq.php`; `.badge-archive` abu "Arsip — tidak tampil di landing" sudah ada di `tab-layanan.php`, `tab-statistik.php`, `tab-gambar.php`; CSS di `assets/css/admin.css` baris 44-46.
+- Hanya update docs: `docs/ROADMAP-FASE2.md` (R5 → SELESAI + tabel prioritas), `docs/07-log-progres.md`, `docs/09-rekomendasi-rapikan-admin.md`.
+- SEO tidak disentuh: `noindex` admin, `robots.txt`, `sitemap.xml`, dan file publik (`index.html`, `tentang-kami.html`) tidak diubah.
+
 ## [1.0.8] — 18 Oktober 2026
 
 ### 🐛 Perbaikan Panel Statistik & Gambar Kosong di Live

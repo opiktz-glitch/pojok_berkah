@@ -24,16 +24,18 @@ Contoh response (dipersingkat). Setiap kolom ditandai **[LIVE]** (masih dipakai 
   "faq": [{ "question": "...", "answer": "..." }],  // [LIVE] — FAQ korporat
   "images": {
     "logo": "",                          // [LIVE] — header + favicon
-    "tryout": "https://images.unsplash.com/photo-...?w=960&q=80",   // [ARSIP] — Tentang Kami + 404
-    "gadai": "https://images.unsplash.com/photo-...?w=960&q=80",    // [ARSIP] — Tentang Kami
-    "kitchen": "https://images.unsplash.com/photo-...?w=960&q=80"   // [ARSIP] — Tentang Kami
+    "tryout": "https://images.unsplash.com/photo-...?w=960&q=80",   // [ARSIP] — Karya + Tentang Kami + 404
+    "gadai": "https://images.unsplash.com/photo-...?w=960&q=80",    // [ARSIP] — Karya + Tentang Kami
+    "kitchen": "https://images.unsplash.com/photo-...?w=960&q=80",  // [ARSIP] — Karya + Tentang Kami
+    "parkir": ""                          // [ARSIP] — Karya + Tentang Kami (monogram sampai diunggah; default Unsplash di $defaultImageUrls)
   },
-  "service_urls": {                     // [ARSIP] — Tentang Kami + subdomain, tak dipakai landing
+  "service_urls": {                     // [ARSIP] — Karya + Tentang Kami + subdomain, tak dipakai landing
     "tryout": "https://tryout.pojokberkah.online",
     "gadai": "https://gadai.pojokberkah.online",
-    "kitchen": "https://kitchen.pojokberkah.online"
+    "kitchen": "https://kitchen.pojokberkah.online",
+    "parkir": "https://parkir.pojokberkah.online"
   },
-  "service_names": { "tryout": "Tryout TKA", "gadai": "Gadai BPKB", "kitchen": "Alfi Kitchen" },  // [ARSIP]
+  "service_names": { "tryout": "Tryout TKA", "gadai": "Gadai BPKB", "kitchen": "Alfi Kitchen", "parkir": "Aplikasi Parkir" },  // [ARSIP]
   "stats": {                            // [ARSIP] — blok stats sudah dihapus dari landing
     "services": { "value": "3", "label": "layanan" },
     "gadai": { "value": "29", "label": "cabang gadai aktif" },
@@ -48,7 +50,7 @@ Fallback: jika nomor tidak valid, homepage tetap memakai default `6287724039666`
 
 ## 2. GET gambar upload — `GET admin.php?image={slot}`
 
-- `slot`: `logo | tryout | gadai | kitchen`
+- `slot`: `logo | tryout | gadai | kitchen | parkir`
 - Syarat: nama file di storage cocok pola `[a-f0-9]{32}.(jpg|png|webp)` dan file ada di `data/uploads/`.
 - Header: `Content-Type` sesuai ekstensi, `Cache-Control: public, max-age=86400`, `X-Robots-Tag: noindex, nofollow`.
 - Error: `404` jika slot salah / file hilang.

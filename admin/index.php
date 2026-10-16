@@ -105,6 +105,21 @@ $faqItems = $settings['faq'] ?? [
     ['question' => 'Apakah saya perlu membuat akun untuk melihat informasi?', 'answer' => 'Tidak. Informasi di halaman ini dapat dibaca langsung tanpa membuat akun.'],
     ['question' => 'Di mana saya bisa membaca informasi resmi?', 'answer' => 'Lihat halaman Tentang Kami, Kebijakan Privasi, serta Syarat dan Ketentuan yang tertaut di footer.'],
 ];
+if (!is_array($faqItems)) {
+    $faqItems = [];
+} else {
+    $cleanFaq = [];
+    foreach ($faqItems as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+        $cleanFaq[] = [
+            'question' => isset($item['question']) ? (string)$item['question'] : '',
+            'answer' => isset($item['answer']) ? (string)$item['answer'] : '',
+        ];
+    }
+    $faqItems = $cleanFaq;
+}
 $imageSlots = [
     'logo' => 'Logo situs',
     'tryout' => 'Tryout TKA',
@@ -168,13 +183,25 @@ if ($faqExtra > 0) {
     }
 }
 
-// Public JSON endpoint untuk halaman frontend (contoh: tentang-kami.html)
+// Public JSON endpoint untuk semua halaman publik (index.html, tentang-kami.html, 404.html)
 if ((isset($_GET['public']) && $_GET['public'] === '1')
     || (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] === 'public=1')) {
     header('Content-Type: application/json; charset=utf-8');
     header('Cache-Control: no-store');
+    $publicFaq = [];
+    foreach ($faqItems as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+        $q = trim((string)($item['question'] ?? ''));
+        $a = trim((string)($item['answer'] ?? ''));
+        if ($q !== '' && $a !== '') {
+            $publicFaq[] = ['question' => (string)($item['question'] ?? ''), 'answer' => (string)($item['answer'] ?? '')];
+        }
+    }
     echo json_encode([
         'wa_number' => $waNumber,
+        'faq' => $publicFaq,
         'service_names' => $serviceNames,
         'service_urls' => $serviceUrls,
         'service_descriptions' => $serviceDescriptions,

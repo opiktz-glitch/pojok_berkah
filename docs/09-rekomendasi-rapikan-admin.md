@@ -1,7 +1,11 @@
 # 09 — Rekomendasi Rapikan CMS Admin pasca Landing Korporat
 
-> Update 16 Okt 2026: Paket A + Paket B SELESAI — urutan panel WA/FAQ/Logo di atas,
-> arsip dalam `<details>` lipat, logo kartu tunggal, docs 02/03 ditandai. Teruji `php -l` + `?public=1`.
+> Update 16 Okt 2026: Paket A + Paket B SELESAI — urutan panel WA/Logo/FAQ di atas,
+> arsip sebagai tab arsip (`tab-archive`) + badge, logo kartu tunggal, docs 02/03 ditandai. Teruji `php -l` + `?public=1`.
+> Catatan audit 16 Okt 2026: teks rekomendasi R1–R3 di bawah masih menyebut `<details>` lipat (proposal awal) —
+> implementasi aktual memakai tab tanpa-JS via `?tab=` + class `tab-archive` (lihat `admin/index.php` baris 241-278). Hasil sama.
+> Update 16 Okt 2026 (R5 badge): `.badge-live`/`.badge-archive` terverifikasi sudah ada di
+> semua `admin/views/tab-*.php` + CSS `assets/css/admin.css` — hanya update docs, tanpa ubah kode/SEO.
 > Update 16 Okt 2026 (revisi): CMS modularisasi ke folder `admin/` — `admin.php` thin wrapper,
 > `admin/index.php` router, `admin/lib/`, `admin/actions/`, `admin/views/`. Session `session_start()`
 > dipindah ke `admin/index.php` sebelum cek `$_SESSION`.
@@ -46,16 +50,17 @@ Urutan baru: 1) Nomor WA, 2) Logo situs, 3) FAQ, 4) sisanya masuk `<details>` ar
 Handler POST (`save_service_*`, `save_stats`) TIDAK diubah, tetap jalan.
 
 ### R3 — Gambar: pecah logo vs arsip
-Slot `logo` jadi kartu tunggal paling atas. 3 slot lain tetap di grid tapi dalam
-`<details>` "Gambar arsip (dipakai Tentang Kami dan 404)".
+Slot `logo` jadi kartu tunggal paling atas (`admin/views/tab-logo.php`). 4 slot lain (tryout/gadai/kitchen/parkir) tetap di grid dalam
+tab "Gambar arsip (dipakai Karya, Tentang Kami dan 404)".
 
 ### R4 — Perbaiki copy basi
 Lead `771` dan copy `848/852/882/917/966` ditulis ulang agar tak menyebut
 kartu beranda atau 3 layanan.
 
-### R5 — Badge status per panel (CSS sekitar 10 baris)
-`.badge-live` hijau (Dipakai landing) untuk WA/Logo/FAQ;
-`.badge-archive` abu (Arsip) untuk 4 panel yatim.
+### R5 — Badge status per panel (CSS sekitar 10 baris) ✅ SELESAI (16 Okt 2026, verifikasi docs)
+`.badge-live` hijau (Dipakai landing) untuk WA/Logo/FAQ — terverifikasi di `tab-whatsapp.php`, `tab-logo.php`, `tab-faq.php`;
+`.badge-archive` abu (Arsip) untuk 3 panel arsip — terverifikasi di `tab-layanan.php`, `tab-statistik.php`, `tab-gambar.php`.
+CSS di `assets/css/admin.css` baris 44-46. Hanya update docs, tanpa ubah kode/SEO.
 
 ### R6 — Dok API ditandai aktif vs arsip
 Update `docs/02` pasal 1 dan `docs/03` pasal 2-3: alur baca baru hanya
