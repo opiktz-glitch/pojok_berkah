@@ -27,15 +27,45 @@
 <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" as="style">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet"></noscript>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Pojok Berkah","url":"https://pojokberkah.online/","logo":"https://pojokberkah.online/assets/img/og-image.jpg","email":"admin@pojokberkah.online"}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Pojok Berkah","url":"https://pojokberkah.online/","inLanguage":"id"}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Apa itu Pojok Berkah?","acceptedAnswer":{"@type":"Answer","text":"Pojok Berkah adalah ruang tumbuh untuk belajar dan usaha. Kami mengelola beberapa inisiatif melalui unit-unit khusus dengan standar yang sama."}},{"@type":"Question","name":"Bagaimana cara menghubungi admin?","acceptedAnswer":{"@type":"Answer","text":"Hubungi kami melalui tombol WhatsApp di halaman ini atau email admin@pojokberkah.online."}},{"@type":"Question","name":"Apakah saya perlu membuat akun untuk melihat informasi?","acceptedAnswer":{"@type":"Answer","text":"Tidak. Informasi di halaman ini dapat dibaca langsung tanpa membuat akun."}},{"@type":"Question","name":"Di mana saya bisa membaca informasi resmi?","acceptedAnswer":{"@type":"Answer","text":"Lihat halaman Tentang Kami, Kebijakan Privasi, serta Syarat dan Ketentuan yang tertaut di footer."}}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Layanan pembuatan aplikasi Pojok Berkah","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"Service","name":"Aplikasi Web","description":"Company profile, dashboard, sistem informasi, dan toko online yang responsif di semua perangkat.","provider":{"@type":"Organization","name":"Pojok Berkah","url":"https://pojokberkah.online/"},"areaServed":"ID","url":"https://pojokberkah.online/#layanan"}},{"@type":"ListItem","position":2,"item":{"@type":"Service","name":"Aplikasi Desktop","description":"Aplikasi kantor dan kasir yang stabil untuk operasional harian, tetap jalan walau tanpa internet.","provider":{"@type":"Organization","name":"Pojok Berkah","url":"https://pojokberkah.online/"},"areaServed":"ID","url":"https://pojokberkah.online/#layanan"}},{"@type":"ListItem","position":3,"item":{"@type":"Service","name":"Integrasi dan Otomasi","description":"Integrasi pembayaran, API, dan notifikasi otomatis supaya proses bisnis berjalan tanpa input manual.","provider":{"@type":"Organization","name":"Pojok Berkah","url":"https://pojokberkah.online/"},"areaServed":"ID","url":"https://pojokberkah.online/#layanan"}}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Karya dan produk Pojok Berkah","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"CreativeWork","name":"Tryout TKA","description":"Latihan soal TKA online lengkap dengan pembahasan untuk siswa dan guru.","url":"https://tryout.pojokberkah.online","creator":{"@type":"Organization","name":"Pojok Berkah","url":"https://pojokberkah.online/"}}},{"@type":"ListItem","position":2,"item":{"@type":"CreativeWork","name":"Gadai BPKB","description":"Simulasi pencairan dana dengan jaminan BPKB di tiga kota.","url":"https://gadai.pojokberkah.online","creator":{"@type":"Organization","name":"Pojok Berkah","url":"https://pojokberkah.online/"}}},{"@type":"ListItem","position":3,"item":{"@type":"CreativeWork","name":"Alfi Kitchen","description":"Dessert dan salad buah buatan rumahan, selalu segar.","url":"https://kitchen.pojokberkah.online","creator":{"@type":"Organization","name":"Pojok Berkah","url":"https://pojokberkah.online/"}}},{"@type":"ListItem","position":4,"item":{"@type":"CreativeWork","name":"Aplikasi Parkir","description":"Pencatatan kendaraan, pengelolaan slot, dan laporan harian.","url":"https://pojokberkah.online/#karya","creator":{"@type":"Organization","name":"Pojok Berkah","url":"https://pojokberkah.online/"}}}]}</script>
-<link rel="stylesheet" href="assets/css/landing.css">
-<noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
+<style>/* criticalCSS-v1: header+hero agar LCP mobile tidak tunggu landing.css */
+:root{--bg:#F7F9FD;--ink:#0E1526;--muted:#566783;--line:rgba(14,21,38,.10);--teal:#0E7490;--blue:#4F46E5;--amber:#D97706;--wa:#25D366;--violet:#7C3AED;--cyan:#06B6D4;--card:rgba(255,255,255,.72);--display:"Sora","Trebuchet MS",system-ui,sans-serif;--body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif}
+*{box-sizing:border-box;margin:0}html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.65;font-size:1.0625rem;overflow-x:hidden}
+a{color:inherit}.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.bg{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(620px 420px at 10% 6%,rgba(34,211,238,.30),transparent 70%),radial-gradient(660px 480px at 90% 14%,rgba(99,102,241,.28),transparent 70%),radial-gradient(580px 440px at 55% 95%,rgba(251,191,36,.22),transparent 70%),var(--bg)}
+header.bar{position:sticky;top:0;z-index:10;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(247,249,253,.78);border-bottom:1px solid var(--line)}
+.top{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-weight:700;font-size:1.15rem}
+.logo-text{display:flex;flex-direction:column;line-height:1.15}.logo-tagline{font-family:var(--body);font-size:.72rem;font-weight:500;color:var(--muted);letter-spacing:.01em}
+.brand-image{width:34px;height:34px;flex:0 0 34px;object-fit:contain}.brand-image[hidden]{display:none}
+.mark{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;font-weight:800;background:linear-gradient(135deg,var(--teal),var(--blue))}
+.nav{display:flex;align-items:center;gap:26px}.nav a{text-decoration:none;color:var(--muted);font-weight:500}
+.nav a.btn-wa{padding:9px 18px;border-radius:999px;font-weight:600;min-height:44px;display:inline-flex;align-items:center}
+.nav-toggle{display:none;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.hero{padding:72px 0 70px;text-align:left}.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.hero h1{font-family:var(--display);font-weight:800;font-size:clamp(2.2rem,4.6vw,3.6rem);line-height:1.05;letter-spacing:-.03em;max-width:16ch}
+.grad{background:linear-gradient(100deg,#0891B2,var(--blue) 52%,var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin:20px 0 0;max-width:52ch;color:var(--muted);font-size:1.15rem}
+.hero .cta{margin-top:30px;display:flex;gap:12px;justify-content:flex-start;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;min-height:48px;padding:0 26px;border-radius:999px;font-weight:600;text-decoration:none}
+.btn-main{color:#fff;background:linear-gradient(120deg,var(--teal),var(--blue) 55%,var(--violet))}
+.wa-button{gap:10px;color:#06351B!important;background:var(--wa)!important;border:1px solid rgba(4,54,26,.12)}
+.wa-icon{width:20px;height:20px;flex:0 0 20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.trustbar{margin:28px 0 0;display:flex;gap:10px 22px;justify-content:flex-start;flex-wrap:wrap;max-width:640px;list-style:none;padding:0}
+.trustbar li{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:.95rem;font-weight:500}
+.reveal{opacity:0;transform:translateY(18px)}
+@media (max-width:860px){.nav a:not(.btn-wa):not(.nav-toggle){display:none}.nav-toggle{display:inline-flex}.hero{padding:56px 0 60px}.hero-grid{grid-template-columns:1fr;gap:36px}.hero h1{font-size:2.5rem;max-width:none}}
+@media (max-width:480px){.hero h1{font-size:2.2rem}}
+</style>
+<link rel="stylesheet" href="assets/css/landing.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/css/landing.css"><style>.reveal{opacity:1;transform:none}</style></noscript>
 </head>
 <body>
 <div class="bg" aria-hidden="true"></div>

@@ -40,6 +40,30 @@ ErrorDocument 404 /404.html
   RewriteRule ^\.ftp-deploy-sync-state\.json$ - [R=404,L]
 </IfModule>
 
+# Cache statis 30 hari (CSS/JS/gambar/ikon/font) — mempercepat kunjungan ulang.
+# Dibungkus IfModule agar aman bila modul nonaktif di shared hosting.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 30 days"
+  ExpiresByType application/javascript "access plus 30 days"
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType image/svg+xml "access plus 30 days"
+  ExpiresByType image/x-icon "access plus 30 days"
+  ExpiresByType font/woff2 "access plus 30 days"
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|js|jpg|jpeg|png|webp|svg|ico|woff2)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>
+
+# Kompresi teks (HTML/CSS/JS/SVG/JSON) bila mod_deflate tersedia.
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml application/ld+json
+</IfModule>
+
 <IfModule !mod_rewrite.c>
   # Without mod_rewrite the data folder is still protected by the guard inside
   # data/storage.php, and data/uploads/index.php blocks directory listings.
