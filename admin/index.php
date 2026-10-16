@@ -20,7 +20,10 @@ require_once __DIR__ . '/actions/save_service.php';
 require_once __DIR__ . '/actions/upload.php';
 require_once __DIR__ . '/actions/save_faq.php';
 
-$csrf = bin2hex(random_bytes(16));
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(16));
+}
+$csrf = $_SESSION['csrf_token'];
 $flash = '';
 
 $setupRequired = empty($settings['password_hash']);
