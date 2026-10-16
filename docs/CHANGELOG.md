@@ -2,6 +2,16 @@
 
 Semua perubahan tercatat dalam file ini. Format berdasarkan [Keep a Changelog](https://keepachangelog.com/id/1.0.0/).
 
+## [1.0.6] — 17 Oktober 2026
+
+### 🐛 Perbaikan Tab Admin Macet di Live (PHP 7 di Hosting)
+
+- `admin/lib/normalize.php`: `str_starts_with($digits, '0')` → `strpos($digits, '0') === 0`.
+- `admin/views/tab-logo.php`, `admin/views/tab-gambar.php`: `str_starts_with(...)` → `strpos(...) === 0`.
+  Penyebab: fungsi `str_*` hanya ada di PHP 8+. PHP di hosting lebih lama sehingga render berhenti (fatal error) tepat setelah tab WhatsApp — panel Logo/FAQ/Password/Layanan/Statistik/Gambar tidak ikut ter-render dan `<script>` tab tidak sampai ke browser. Gejala: CSS tampil, URL hash berubah, tapi panel tetap WhatsApp.
+- `admin/index.php`: JS tab ditulis ulang jadi fungsi `activate(target, pushHash)` + deep-link hash saat load (`#tab-gambar` langsung membuka panel Gambar) + `history.replaceState` saat klik. Mencegah tab macet bila hash tidak cocok.
+- Verifikasi: `php -l` lolos 12 file admin; render 7 view lokal OK (tab-whatsapp 1271 B, tab-logo 1169 B, tab-faq 1093 B, tab-password 1304 B, tab-layanan 5045 B, tab-statistik 1602 B, tab-gambar 4560 B); `normalizeWhatsAppNumber('081234567890')` → `6281234567890`.
+
 ## [1.0.5] — 16 Oktober 2026
 
 ### 🐛 Perbaikan Tampilan Admin di Live (CSS 404)

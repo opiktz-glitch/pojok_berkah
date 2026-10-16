@@ -226,20 +226,29 @@ if ((isset($_GET['public']) && $_GET['public'] === '1')
     (function() {
       var links = document.querySelectorAll('.tab-link');
       var panels = document.querySelectorAll('.tab-panel');
+      function activate(target, pushHash) {
+        var found = false;
+        panels.forEach(function(p) {
+          var on = (p.id === target);
+          if (on) { found = true; }
+          p.classList.toggle('tab-active', on);
+        });
+        if (!found) { return; }
+        links.forEach(function(l) {
+          l.classList.toggle('tab-active', l.getAttribute('href') === '#' + target);
+        });
+        if (pushHash && ('#' + target) !== window.location.hash) {
+          try { history.replaceState(null, '', '#' + target); } catch (e) { window.location.hash = target; }
+        }
+      }
       links.forEach(function(link) {
         link.addEventListener('click', function(e) {
           e.preventDefault();
-          var target = this.getAttribute('href').slice(1);
-          links.forEach(function(l) { l.classList.remove('tab-active'); });
-          panels.forEach(function(p) {
-            p.classList.remove('tab-active');
-            if (p.id === target) {
-              p.classList.add('tab-active');
-            }
-          });
-          this.classList.add('tab-active');
+          activate(this.getAttribute('href').slice(1), true);
         });
       });
+      var initial = (window.location.hash || '#tab-whatsapp').slice(1);
+      activate(initial, false);
     })();
 
     var faqList = document.getElementById("faq-items");

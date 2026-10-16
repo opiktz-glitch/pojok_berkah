@@ -10,7 +10,7 @@
                 <?php else: ?>
                     <div class="image-placeholder" aria-label="Gambar bawaan"><span class="mark">P</span></div>
                 <?php endif; ?>
-                <p class="image-status"><?= str_starts_with($imageSources[$slot], 'admin.php?image=') ? 'Gambar kustom aktif' : 'Gambar bawaan aktif' ?></p>
+                <p class="image-status"><?= strpos($imageSources[$slot], 'admin.php?image=') === 0 ? 'Gambar kustom aktif' : 'Gambar bawaan aktif' ?></p>
                 <form method="post" enctype="multipart/form-data">
                     <input type="hidden" name="csrf" value="<?= escapeHtml($csrf) ?>">
                     <input type="hidden" name="image_slot" value="<?= escapeHtml($slot) ?>">

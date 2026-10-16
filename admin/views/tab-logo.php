@@ -8,7 +8,7 @@
             <?php else: ?>
                 <div class="image-placeholder" aria-label="Monogram logo bawaan"><span class="mark">P</span></div>
             <?php endif; ?>
-            <p class="image-status"><?= str_starts_with($imageSources['logo'], 'admin.php?image=') ? 'Gambar kustom aktif' : 'Monogram bawaan aktif' ?></p>
+            <p class="image-status"><?= strpos($imageSources['logo'], 'admin.php?image=') === 0 ? 'Gambar kustom aktif' : 'Monogram bawaan aktif' ?></p>
         </div>
         <form method="post" enctype="multipart/form-data">
             <input type="hidden" name="csrf" value="<?= escapeHtml($csrf) ?>">

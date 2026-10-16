@@ -55,6 +55,13 @@ function normalizeServiceUrl(string $value): ?string
 - Gunakan `?string`, `?int`, dll. untuk nullable.
 - Hindari `mixed` jika bisa.
 
+### 1.4b Kompatibilitas Versi PHP (Wajib — Pelajaran 17 Okt 2026)
+- Hosting production bisa memakai PHP lebih lama dari lokal (XAMPP 8.2). Semua kode `admin/` **wajib kompatibel PHP 7.4+**:
+  - Jangan pakai `str_starts_with()` / `str_contains()` / `str_ends_with()` (baru ada di PHP 8.0). Ganti dengan `strpos($s, $prefix) === 0`.
+  - Jangan pakai `match()`, arrow function `fn()`, nullsafe `?->`, `readonly`, `enum`.
+- Sebelum push, cari sisa fungsi PHP 8: `Select-String -Pattern 'str_starts_with|str_contains|str_ends_with' admin/`.
+- Verifikasi render semua 7 view tab via skrip CLI sebelum push (pernah: render berhenti setelah tab WhatsApp sehingga `<script>` tab tidak terkirim).
+
 ### 1.5 Keamanan (Wajib)
 Seluruh input dari `$_POST`, `$_GET`, `$_FILES` harus difilter dan divalidasi:
 
@@ -196,6 +203,7 @@ Tulis style desktop di awal, lalu override di bawahnya dengan media query.
 ```
 
 - Deklarasikan variabel dengan `var` (untuk kompatibilitas browser lama di shared hosting) atau `const`/`let` jika target modern.
+- JS tab admin memakai pola `activate(target, pushHash)`: satu fungsi untuk klik + deep-link hash saat load (`#tab-gambar` langsung membuka panel Gambar) + `history.replaceState` saat klik. Jangan tulis handler klik tanpa inisialisasi hash.
 
 ### 4.2 Event Handling
 - Gunakan `addEventListener`, hindari atribut inline `onclick`.
@@ -237,6 +245,7 @@ pojok_berkah/
 │       ├── setup.php
 │       ├── login-form.php
 │       ├── tab-whatsapp.php
+│       ├── tab-logo.php
 │       ├── tab-password.php
 │       ├── tab-layanan.php
 │       ├── tab-statistik.php
@@ -245,6 +254,7 @@ pojok_berkah/
 ├── assets/
 │   ├── css/
 │   │   ├── admin.css          # diekstrak dari inline
+│   │   ├── landing.css        # beranda index.html
 │   │   └── legal.css          # halaman legal
 │   ├── icons/
 │   └── img/

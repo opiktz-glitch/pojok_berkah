@@ -15,7 +15,9 @@ pojok_berkah/
 │   ├── index.php               # router utama + handler + HTML output
 │   ├── lib/                    # security, normalize, storage
 │   ├── actions/                # login, save, save_service, upload, save_faq
-│   └── views/                  # setup, login-form, tab-*
+│   └── views/                  # setup, login-form, tab-whatsapp, tab-logo,
+│                               # tab-faq, tab-password, tab-layanan,
+│                               # tab-statistik, tab-gambar
 ├── README.md                   # Panduan proyek (tetap di root)
 │
 ├── docs/                       # DOKUMEN PANDUAN & INFORMASI (tetap, bukan arsip)
@@ -25,6 +27,8 @@ pojok_berkah/
 │
 ├── assets/                     # SEMUA aset tampilan
 │   ├── css/
+│   │   ├── admin.css           # CMS admin (link relatif dari admin/index.php)
+│   │   ├── landing.css         # beranda index.html
 │   │   └── legal.css           # dipakai 404 + 2 halaman legal
 │   ├── icons/
 │   │   ├── favicon-32x32.png

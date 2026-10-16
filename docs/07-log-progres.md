@@ -123,5 +123,6 @@
 - **16 Okt 2026:** encoding 4 file dinormalisasi UTF-16 → UTF-8 tanpa BOM (sebelumnya terdeteksi binary oleh git).
 - Tab archive (Password, Layanan, Statistik, Gambar arsip) diberi class `tab-archive` di `admin/index.php` + CSS di `admin.css` agar terlihat beda dari tab utama (WhatsApp, Logo, FAQ).
 - Duplikasi `<script>` tab switching dan duplikasi `<section id="tab-password">` di `admin/index.php` dibersihkan — satu script tunggal, satu panel per tab.
+- **17 Okt 2026 (live): BUG FIX tab macet** — hanya tab WhatsApp yang bisa dibuka, klik Logo/FAQ/Password/Layanan/Statistik/Gambar arsip hanya ganti hash tapi panel tetap WhatsApp. Penyebab: `str_starts_with()` (PHP 8+) di `admin/lib/normalize.php`, `admin/views/tab-logo.php`, `admin/views/tab-gambar.php` fatal di PHP hosting yang lebih lama → render berhenti setelah tab WhatsApp, `<script>` tab tidak terkirim. Perbaikan: ganti ke `strpos(...) === 0`; JS tab jadi `activate(target, pushHash)` + deep-link hash saat load + `history.replaceState`. Render 7 view lokal OK, `php -l` 12 file lolos.
 - PHP syntax check: semua file lulus tanpa error.
 - SEO: `admin.php` dan `admin/index.php` tetap `noindex,nofollow,noarchive`; `robots.txt` `Disallow: /admin.php` utuh; `sitemap.xml` tidak berubah.

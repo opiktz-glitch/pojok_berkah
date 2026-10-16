@@ -12,7 +12,7 @@ function normalizeWhatsAppNumber(string $value): ?string
     if ($digits === null || $digits === '') {
         return null;
     }
-    if (str_starts_with($digits, '0')) {
+    if (strpos($digits, '0') === 0) {
         $digits = '62' . substr($digits, 1);
     }
     if (strlen($digits) < 8 || strlen($digits) > 15) {
