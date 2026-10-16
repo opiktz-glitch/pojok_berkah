@@ -52,35 +52,53 @@ if ($logout) {
 $isAuthenticated = !empty($_SESSION['pojok_berkah_admin'] ?? false);
 
 $waNumber = $settings['wa_number'] ?? '6287724039666';
-$serviceNames = $settings['service_names'] ?? [
+$defaultServiceNames = [
     'tryout' => 'Tryout TKA',
     'gadai' => 'Gadai BPKB',
     'kitchen' => 'Alfi Kitchen',
     'parkir' => 'Aplikasi Parkir',
 ];
-$serviceUrls = $settings['service_urls'] ?? [
+$serviceNames = array_merge($defaultServiceNames, isset($settings['service_names']) && is_array($settings['service_names']) ? $settings['service_names'] : []);
+$defaultServiceUrls = [
     'tryout' => 'https://tryout.pojokberkah.online',
     'gadai' => 'https://gadai.pojokberkah.online',
     'kitchen' => 'https://kitchen.pojokberkah.online',
     'parkir' => 'https://parkir.pojokberkah.online',
 ];
-$serviceDescriptions = $settings['service_descriptions'] ?? [
+$serviceUrls = array_merge($defaultServiceUrls, isset($settings['service_urls']) && is_array($settings['service_urls']) ? $settings['service_urls'] : []);
+$defaultServiceDescriptions = [
     'tryout' => 'Latihan soal dan simulasi ujian TKA untuk persiapan seleksi cpns.',
     'gadai' => 'Informasi simulasi gadai BPKB dengan estimasi nilai jaminan.',
     'kitchen' => 'Puding berlapis buah, dessert dalam kemasan praktis, dan salad buah bersaus creamy.',
     'parkir' => 'Sistem manajemen parkir digital untuk lingkungan perkantoran dan perumahan.',
 ];
-$serviceTags = $settings['service_tags'] ?? [
+$serviceDescriptions = array_merge($defaultServiceDescriptions, isset($settings['service_descriptions']) && is_array($settings['service_descriptions']) ? $settings['service_descriptions'] : []);
+$defaultServiceTags = [
     'tryout' => ['TKA', 'CPNS', 'Seleksi'],
     'gadai' => ['BPKB', 'Gadai', 'Simulasi'],
     'kitchen' => ['Dessert', 'Buatan Rumahan', 'Alfi Kitchen'],
     'parkir' => ['Parkir', 'Digital', 'Sistem'],
 ];
-$stats = $settings['stats'] ?? [
+$rawServiceTags = isset($settings['service_tags']) && is_array($settings['service_tags']) ? $settings['service_tags'] : [];
+$serviceTags = $defaultServiceTags;
+foreach ($rawServiceTags as $slot => $tags) {
+    $serviceTags[$slot] = is_array($tags) ? $tags : [];
+}
+$defaultStats = [
     'services' => ['value' => '3', 'label' => 'layanan'],
     'gadai' => ['value' => '29', 'label' => 'cabang gadai aktif'],
     'kitchen' => ['value' => 'Always Fresh', 'label' => 'komitmen Alfi Kitchen'],
 ];
+$rawStats = isset($settings['stats']) && is_array($settings['stats']) ? $settings['stats'] : [];
+$stats = $defaultStats;
+foreach ($rawStats as $slot => $row) {
+    if (is_array($row)) {
+        $stats[$slot] = [
+            'value' => $row['value'] ?? ($defaultStats[$slot]['value'] ?? ''),
+            'label' => $row['label'] ?? ($defaultStats[$slot]['label'] ?? ''),
+        ];
+    }
+}
 $faqItems = $settings['faq'] ?? [
     ['question' => 'Apa itu Pojok Berkah?', 'answer' => 'Pojok Berkah adalah ruang tumbuh untuk belajar dan usaha. Kami mengelola beberapa inisiatif melalui unit-unit khusus dengan standar yang sama.'],
     ['question' => 'Bagaimana cara menghubungi admin?', 'answer' => 'Hubungi kami melalui tombol WhatsApp di halaman ini atau email admin@pojokberkah.online.'],
@@ -174,7 +192,6 @@ if ((isset($_GET['public']) && $_GET['public'] === '1')
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#F4F8FC">
 <title>CMS | Pojok Berkah</title>
-<link rel="canonical" href="https://pojokberkah.online/admin.php">
 <meta name="robots" content="noindex,nofollow,noarchive">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
 <link rel="icon" href="assets/icons/favicon.ico" sizes="any">

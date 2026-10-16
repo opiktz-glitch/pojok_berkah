@@ -2,6 +2,14 @@
 
 Semua perubahan tercatat dalam file ini. Format berdasarkan [Keep a Changelog](https://keepachangelog.com/id/1.0.0/).
 
+## [1.0.8] — 18 Oktober 2026
+
+### 🐛 Perbaikan Panel Statistik & Gambar Kosong di Live
+
+- `admin/index.php`: `$serviceNames/Urls/Descriptions/Tags` + `$stats` kini `array_merge` default + data tersimpan (bukan `??` mentah). Data lama yang tidak lengkap (misal `stats` tanpa kunci, `service_tags` string) tidak lagi bikin `foreach`/view kosong — panel Statistik & Gambar selalu ter-render.
+- `admin/lib/security.php`: `escapeHtml(string)` → `escapeHtml($value)` + cast `(string)` agar nilai non-string (array/int dari data lama) tidak fatal `TypeError` dan menghentikan render di tengah (gejala: HTML live terpotong setelah tab Layanan).
+- `admin/index.php`: hapus `<link rel="canonical" href="https://pojokberkah.online/admin.php">` — halaman CMS `noindex`, canonical tidak dipakai crawler dan hanya menambah noise SEO.
+
 ## [1.0.7] — 17 Oktober 2026
 
 ### ✅ Tab Admin Tanpa-JS (Anti-Blokir)
