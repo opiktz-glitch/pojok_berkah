@@ -2,6 +2,15 @@
 
 Semua perubahan tercatat dalam file ini. Format berdasarkan [Keep a Changelog](https://keepachangelog.com/id/1.0.0/).
 
+## [1.0.7] — 17 Oktober 2026
+
+### ✅ Tab Admin Tanpa-JS (Anti-Blokir)
+
+- `admin/index.php`: tab aktif dirender server via `?tab=` (`$activeTab` + `$validTabs`, default `whatsapp`); link tab jadi `admin.php?tab=...` dengan class `tab-active` dari PHP. Setelah POST, tab relevan dipertahankan via pemetaan `action` → tab (upload `logo` → tab Logo, slot lain → tab Gambar) tanpa input hidden tambahan.
+- `admin/index.php`: blok `<script>` tab jadi enhancement saja (`activate(target, syncUrl)` + `data-tab`, `preventDefault`, `replaceState admin.php?tab=`); tanpa JS, link `?tab=` tetap pindah tab via full reload.
+- `admin/views/tab-faq.php` + `admin/index.php`: tambah FAQ tanpa JS via `?faq_extra=N` (baris kosong, maks 20, hanya saat GET) + tombol link "Tambah baris (tanpa JS)"; hapus item tanpa JS = kosongkan kolom lalu Simpan FAQ. Tombol JS `Tambah pertanyaan`/`Hapus` tetap ada sebagai enhancement.
+- Verifikasi: render `?tab=gambar` OK (link tab, panel gambar aktif, panel WA nonaktif, link FAQ tanpa-JS, komentar enhancement, nol `href="#tab-"`); `php -l` lolos; scan `str_starts_with|str_contains|str_ends_with` di `admin/` bersih (kompatibel PHP 7.4+).
+
 ## [1.0.6] — 17 Oktober 2026
 
 ### 🐛 Perbaikan Tab Admin Macet di Live (PHP 7 di Hosting)

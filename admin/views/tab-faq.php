@@ -15,7 +15,11 @@
         </div>
         <div class="actions">
             <button class="secondary" id="add-faq" type="button">Tambah pertanyaan</button>
+            <?php if (count($faqItems) < 20): ?>
+                <a class="secondary button" href="admin.php?tab=faq&amp;faq_extra=<?= (int)($faqExtra + 1) ?>">Tambah baris (tanpa JS)</a>
+            <?php endif; ?>
             <button class="primary" type="submit">Simpan FAQ</button>
         </div>
+        <p class="hint">Tanpa JavaScript: gunakan "Tambah baris (tanpa JS)". Untuk menghapus item, kosongkan kolom pertanyaan/jawabannya lalu klik Simpan FAQ.</p>
     </form>
 </div>

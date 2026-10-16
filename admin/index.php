@@ -111,6 +111,45 @@ foreach ($imageSlots as $slot => $label) {
     }
 }
 
+// Tab aktif tanpa JS: via ?tab= (full reload). JS hanya enhancement.
+$validTabs = ['whatsapp', 'logo', 'faq', 'password', 'layanan', 'statistik', 'gambar'];
+$activeTab = 'whatsapp';
+if (isset($_GET['tab']) && is_string($_GET['tab']) && in_array($_GET['tab'], $validTabs, true)) {
+    $activeTab = $_GET['tab'];
+}
+// Setelah simpan (POST), tetap di tab yang relevan tanpa perlu input hidden.
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
+    $postAction = $_POST['action'] ?? '';
+    if ($postAction === 'save' || $postAction === 'logout') {
+        $activeTab = 'whatsapp';
+    } elseif ($postAction === 'save_faq') {
+        $activeTab = 'faq';
+    } elseif ($postAction === 'change_password') {
+        $activeTab = 'password';
+    } elseif ($postAction === 'save_stats') {
+        $activeTab = 'statistik';
+    } elseif (strpos((string)$postAction, 'save_service_') === 0) {
+        $activeTab = 'layanan';
+    } elseif ($postAction === 'upload_image' || $postAction === 'remove_image') {
+        $slot = $_POST['image_slot'] ?? '';
+        $activeTab = ($slot === 'logo') ? 'logo' : 'gambar';
+    }
+}
+// Baris kosong tambahan untuk tambah FAQ tanpa JS (via ?faq_extra=N, hanya saat GET).
+$faqExtra = 0;
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST' && isset($_GET['faq_extra'])) {
+    $faqExtra = max(0, (int)$_GET['faq_extra']);
+}
+$faqExtra = min($faqExtra, max(0, 20 - count($faqItems)));
+if ($faqExtra > 0) {
+    if ($activeTab === 'whatsapp') {
+        $activeTab = 'faq';
+    }
+    for ($i = 0; $i < $faqExtra; $i++) {
+        $faqItems[] = ['question' => '', 'answer' => ''];
+    }
+}
+
 // Public JSON endpoint untuk halaman frontend (contoh: tentang-kami.html)
 if ((isset($_GET['public']) && $_GET['public'] === '1')
     || (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] === 'public=1')) {
@@ -183,72 +222,71 @@ if ((isset($_GET['public']) && $_GET['public'] === '1')
     </section>
   <?php else: ?>
     <nav class="tabs" aria-label="Menu pengaturan">
-      <a href="#tab-whatsapp" class="tab-link tab-active">WhatsApp</a>
-      <a href="#tab-logo" class="tab-link">Logo</a>
-      <a href="#tab-faq" class="tab-link">FAQ</a>
-      <a href="#tab-password" class="tab-link tab-archive">Password</a>
-      <a href="#tab-layanan" class="tab-link tab-archive">Layanan</a>
-      <a href="#tab-statistik" class="tab-link tab-archive">Statistik</a>
-      <a href="#tab-gambar" class="tab-link tab-archive">Gambar arsip</a>
+      <a href="admin.php?tab=whatsapp" data-tab="whatsapp" class="tab-link<?= $activeTab === 'whatsapp' ? ' tab-active' : '' ?>">WhatsApp</a>
+      <a href="admin.php?tab=logo" data-tab="logo" class="tab-link<?= $activeTab === 'logo' ? ' tab-active' : '' ?>">Logo</a>
+      <a href="admin.php?tab=faq" data-tab="faq" class="tab-link<?= $activeTab === 'faq' ? ' tab-active' : '' ?>">FAQ</a>
+      <a href="admin.php?tab=password" data-tab="password" class="tab-link tab-archive<?= $activeTab === 'password' ? ' tab-active' : '' ?>">Password</a>
+      <a href="admin.php?tab=layanan" data-tab="layanan" class="tab-link tab-archive<?= $activeTab === 'layanan' ? ' tab-active' : '' ?>">Layanan</a>
+      <a href="admin.php?tab=statistik" data-tab="statistik" class="tab-link tab-archive<?= $activeTab === 'statistik' ? ' tab-active' : '' ?>">Statistik</a>
+      <a href="admin.php?tab=gambar" data-tab="gambar" class="tab-link tab-archive<?= $activeTab === 'gambar' ? ' tab-active' : '' ?>">Gambar arsip</a>
     </nav>
 
     <div class="tab-panels">
-      <section id="tab-whatsapp" class="tab-panel tab-active">
+      <section id="tab-whatsapp" class="tab-panel<?= $activeTab === 'whatsapp' ? ' tab-active' : '' ?>">
         <div><?php include __DIR__ . '/views/tab-whatsapp.php'; ?></div>
       </section>
 
-      <section id="tab-logo" class="tab-panel">
+      <section id="tab-logo" class="tab-panel<?= $activeTab === 'logo' ? ' tab-active' : '' ?>">
         <div><?php include __DIR__ . '/views/tab-logo.php'; ?></div>
       </section>
 
-      <section id="tab-faq" class="tab-panel">
+      <section id="tab-faq" class="tab-panel<?= $activeTab === 'faq' ? ' tab-active' : '' ?>">
         <div><?php include __DIR__ . '/views/tab-faq.php'; ?></div>
       </section>
 
-      <section id="tab-password" class="tab-panel tab-archive">
+      <section id="tab-password" class="tab-panel tab-archive<?= $activeTab === 'password' ? ' tab-active' : '' ?>">
         <div><?php include __DIR__ . '/views/tab-password.php'; ?></div>
       </section>
 
-      <section id="tab-layanan" class="tab-panel tab-archive">
+      <section id="tab-layanan" class="tab-panel tab-archive<?= $activeTab === 'layanan' ? ' tab-active' : '' ?>">
         <div><?php include __DIR__ . '/views/tab-layanan.php'; ?></div>
       </section>
 
-      <section id="tab-statistik" class="tab-panel tab-archive">
+      <section id="tab-statistik" class="tab-panel tab-archive<?= $activeTab === 'statistik' ? ' tab-active' : '' ?>">
         <div><?php include __DIR__ . '/views/tab-statistik.php'; ?></div>
       </section>
 
-      <section id="tab-gambar" class="tab-panel tab-archive">
+      <section id="tab-gambar" class="tab-panel tab-archive<?= $activeTab === 'gambar' ? ' tab-active' : '' ?>">
         <div><?php include __DIR__ . '/views/tab-gambar.php'; ?></div>
       </section>
     </div>
 
     <script>
+    // Enhancement saja: pindah tab tanpa reload. Tanpa JS, link ?tab= tetap jalan (full reload via PHP).
     (function() {
-      var links = document.querySelectorAll('.tab-link');
+      var links = document.querySelectorAll('.tab-link[data-tab]');
       var panels = document.querySelectorAll('.tab-panel');
-      function activate(target, pushHash) {
+      function activate(target, syncUrl) {
         var found = false;
         panels.forEach(function(p) {
-          var on = (p.id === target);
+          var on = (p.id === ('tab-' + target));
           if (on) { found = true; }
           p.classList.toggle('tab-active', on);
         });
         if (!found) { return; }
         links.forEach(function(l) {
-          l.classList.toggle('tab-active', l.getAttribute('href') === '#' + target);
+          l.classList.toggle('tab-active', l.getAttribute('data-tab') === target);
         });
-        if (pushHash && ('#' + target) !== window.location.hash) {
-          try { history.replaceState(null, '', '#' + target); } catch (e) { window.location.hash = target; }
+        if (syncUrl) {
+          try { history.replaceState(null, '', 'admin.php?tab=' + target); } catch (e) {}
         }
       }
       links.forEach(function(link) {
         link.addEventListener('click', function(e) {
           e.preventDefault();
-          activate(this.getAttribute('href').slice(1), true);
+          activate(this.getAttribute('data-tab'), true);
         });
       });
-      var initial = (window.location.hash || '#tab-whatsapp').slice(1);
-      activate(initial, false);
     })();
 
     var faqList = document.getElementById("faq-items");

@@ -203,7 +203,7 @@ Tulis style desktop di awal, lalu override di bawahnya dengan media query.
 ```
 
 - Deklarasikan variabel dengan `var` (untuk kompatibilitas browser lama di shared hosting) atau `const`/`let` jika target modern.
-- JS tab admin memakai pola `activate(target, pushHash)`: satu fungsi untuk klik + deep-link hash saat load (`#tab-gambar` langsung membuka panel Gambar) + `history.replaceState` saat klik. Jangan tulis handler klik tanpa inisialisasi hash.
+- JS tab admin hanya enhancement (17 Okt 2026): server sudah merender tab aktif via `?tab=`, JS hanya `activate(target, syncUrl)` + `data-tab` + `preventDefault` + `history.replaceState('admin.php?tab=...')`. Jangan tulis handler tab yang wajib JS (tanpa fallback link `?tab=`).
 
 ### 4.2 Event Handling
 - Gunakan `addEventListener`, hindari atribut inline `onclick`.

@@ -49,13 +49,15 @@ Semua konten dinamis (nomor WA, nama/URL/deskripsi/tag layanan, statistik, FAQ, 
 ## 5. Cara pakai CMS (admin)
 
 1. Login di `/admin.php` dengan password. Gagal 5x dalam 15 menit → dikunci 15 menit.
-2. Panel yang tersedia:
+2. Panel yang tersedia (7 tab, semua jalan **tanpa JavaScript** via link `admin.php?tab=...`):
    - Nomor WhatsApp (8–15 digit, `0...` otomatis jadi `62...`)
+   - Logo situs (JPG/PNG/WebP, maks 5 MB) — tab `?tab=logo`
    - Alamat layanan (URL penuh `http(s)://`, maks 2048 char)
    - Nama, deskripsi, tag (maks 8 tag/layanan), statistik, FAQ (maks 20 item)
-   - Gambar: logo + 3 layanan (maks 5 MB, dimensi ≤ 12000 px, otomatis hapus file lama)
+   - Gambar arsip: 3 layanan + parkir (maks 5 MB, dimensi ≤ 12000 px, otomatis hapus file lama) — tab `?tab=gambar`
    - Ganti password & Logout
-3. Semua form memakai token CSRF session. Selalu Logout jika di perangkat bersama.
+3. Tambah FAQ tanpa JS: klik **"Tambah baris (tanpa JS)"** (`?faq_extra=N`, maks 20 baris). Hapus tanpa JS: kosongkan kolom pertanyaan/jawabannya lalu klik Simpan FAQ. Tombol JS "Tambah pertanyaan"/"Hapus" tetap ada sebagai enhancement saat JS aktif.
+4. Semua form memakai token CSRF session. Selalu Logout jika di perangkat bersama.
 
 ## 6. Backup & troubleshooting
 
