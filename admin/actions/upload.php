@@ -19,6 +19,7 @@ $imageSlots = [
 
 function handleUploadImage(array $settings, string $storagePath, string $csrf, bool $isAuthenticated, string &$flash): array
 {
+    global $imageSlots;
     if (!$isAuthenticated) {
         return $settings;
     }
@@ -86,6 +87,7 @@ function handleUploadImage(array $settings, string $storagePath, string $csrf, b
 
 function handleRemoveImage(array $settings, string $storagePath, string $csrf, bool $isAuthenticated, string &$flash): array
 {
+    global $imageSlots;
     if (!$isAuthenticated) {
         return $settings;
     }

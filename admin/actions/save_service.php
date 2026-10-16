@@ -39,6 +39,7 @@ $defaultServiceTags = [
 
 function handleSaveServiceNames(array $settings, string $storagePath, string $csrf, bool $isAuthenticated, string &$flash): array
 {
+    global $defaultServiceNames;
     if (!$isAuthenticated) {
         return $settings;
     }
@@ -81,6 +82,7 @@ function handleSaveServiceNames(array $settings, string $storagePath, string $cs
 
 function handleSaveServiceDescriptions(array $settings, string $storagePath, string $csrf, bool $isAuthenticated, string &$flash): array
 {
+    global $defaultServiceDescriptions;
     if (!$isAuthenticated) {
         return $settings;
     }
@@ -122,6 +124,7 @@ function handleSaveServiceDescriptions(array $settings, string $storagePath, str
 }
 function handleSaveServiceUrls(array $settings, string $storagePath, string $csrf, bool $isAuthenticated, string &$flash): array
 {
+    global $defaultServiceUrls;
     if (!$isAuthenticated) {
         return $settings;
     }
@@ -169,6 +172,7 @@ function handleSaveServiceUrls(array $settings, string $storagePath, string $csr
 
 function handleSaveServiceTags(array $settings, string $storagePath, string $csrf, bool $isAuthenticated, string &$flash): array
 {
+    global $defaultServiceTags;
     if (!$isAuthenticated) {
         return $settings;
     }

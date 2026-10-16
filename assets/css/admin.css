@@ -48,7 +48,7 @@ h2{font-family:var(--display);font-size:1.2rem}
 .archive summary{cursor:pointer;list-style:none;display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:18px 22px;font-family:var(--display);font-weight:600}
 .archive summary::-webkit-details-marker{display:none}
 .archive summary::before{content:"+";display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:rgba(16,32,58,.08);font-weight:700}
-.archive[open] summary::before{content:"–"}
+.archive[open] summary::before{content:"ï¿½"}
 .archive .archive-body{padding:0 22px 22px}
 .archive .panel{margin-top:0;border:0;box-shadow:none;background:transparent;padding:0 0 22px}
 .archive .panel:last-child{padding-bottom:0}
@@ -88,3 +88,7 @@ footer{padding:0 0 34px;color:var(--muted);font-size:.86rem}
 .tab-panel{display:none;padding:16px 0;border-top:1px solid var(--line)}
 .tab-panel.tab-active{display:block}
 @media(max-width:700px){.tabs{margin:16px 0 8px}.tab-link{padding:8px 12px;font-size:.86rem}}
+.tab-link.tab-archive{color:#8f9ea8;border-color:transparent;background:#fbfcfd}
+.tab-link.tab-archive:hover{background:#f0f4f7;color:var(--ink)}
+.tab-link.tab-archive.tab-active{color:var(--ink);border-color:var(--line);border-bottom:1px solid #fff;margin-bottom:-1px}
+.tab-panel.tab-archive{border-color:var(--line)}

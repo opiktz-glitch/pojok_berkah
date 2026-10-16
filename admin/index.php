@@ -186,6 +186,10 @@ if ((isset($_GET['public']) && $_GET['public'] === '1')
       <a href="#tab-whatsapp" class="tab-link tab-active">WhatsApp</a>
       <a href="#tab-logo" class="tab-link">Logo</a>
       <a href="#tab-faq" class="tab-link">FAQ</a>
+      <a href="#tab-password" class="tab-link tab-archive">Password</a>
+      <a href="#tab-layanan" class="tab-link tab-archive">Layanan</a>
+      <a href="#tab-statistik" class="tab-link tab-archive">Statistik</a>
+      <a href="#tab-gambar" class="tab-link tab-archive">Gambar arsip</a>
     </nav>
 
     <div class="tab-panels">
@@ -200,77 +204,81 @@ if ((isset($_GET['public']) && $_GET['public'] === '1')
       <section id="tab-faq" class="tab-panel">
         <div><?php include __DIR__ . '/views/tab-faq.php'; ?></div>
       </section>
+
+      <section id="tab-password" class="tab-panel tab-archive">
+        <div><?php include __DIR__ . '/views/tab-password.php'; ?></div>
+      </section>
+
+      <section id="tab-layanan" class="tab-panel tab-archive">
+        <div><?php include __DIR__ . '/views/tab-layanan.php'; ?></div>
+      </section>
+
+      <section id="tab-statistik" class="tab-panel tab-archive">
+        <div><?php include __DIR__ . '/views/tab-statistik.php'; ?></div>
+      </section>
+
+      <section id="tab-gambar" class="tab-panel tab-archive">
+        <div><?php include __DIR__ . '/views/tab-gambar.php'; ?></div>
+      </section>
     </div>
 
-    <div class="archive" style="border:none;background:transparent;margin-top:0;">
-      <div class="archive-body">
-        <section id="tab-password" class="tab-panel">
-          <div><?php include __DIR__ . '/views/tab-password.php'; ?></div>
-        </section>
-      </div>
-    </div>
+    <script>
+    (function() {
+      var links = document.querySelectorAll('.tab-link');
+      var panels = document.querySelectorAll('.tab-panel');
+      links.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          var target = this.getAttribute('href').slice(1);
+          links.forEach(function(l) { l.classList.remove('tab-active'); });
+          panels.forEach(function(p) {
+            p.classList.remove('tab-active');
+            if (p.id === target) {
+              p.classList.add('tab-active');
+            }
+          });
+          this.classList.add('tab-active');
+        });
+      });
+    })();
 
-    <details class="archive">
-      <summary>Layanan — Arsip — tidak tampil di landing, tetap tersimpan untuk Tentang Kami/subdomain</summary>
-      <div class="archive-body">
-        <section id="tab-layanan" class="tab-panel">
-          <div><?php include __DIR__ . '/views/tab-layanan.php'; ?></div>
-        </section>
-      </div>
-    </details>
-
-    <details class="archive">
-      <summary>Statistik — Arsip — tidak tampil di landing, tetap tersimpan untuk Tentang Kami/subdomain</summary>
-      <div class="archive-body">
-        <section id="tab-statistik" class="tab-panel">
-          <div><?php include __DIR__ . '/views/tab-statistik.php'; ?></div>
-        </section>
-      </div>
-    </details>
-
-    <details class="archive">
-      <summary>Gambar arsip (dipakai Tentang Kami dan 404)</summary>
-      <div class="archive-body">
-        <section id="tab-gambar" class="tab-panel">
-          <div><?php include __DIR__ . '/views/tab-gambar.php'; ?></div>
-        </section>
-      </div>
-    </details>
+    var faqList = document.getElementById("faq-items");
+    if (faqList) {
+      document.getElementById("add-faq").addEventListener("click", function() {
+        if (faqList.children.length >= 20) return;
+        var item = document.createElement("div");
+        item.className = "faq-item";
+        var questionLabel = document.createElement("label");
+        questionLabel.textContent = "Pertanyaan";
+        var question = document.createElement("input");
+        question.name = "faq_questions[]";
+        question.maxLength = 160;
+        question.required = true;
+        questionLabel.appendChild(question);
+        var answerLabel = document.createElement("label");
+        answerLabel.textContent = "Jawaban";
+        var answer = document.createElement("textarea");
+        answer.name = "faq_answers[]";
+        answer.maxLength = 2000;
+        answer.required = true;
+        answerLabel.appendChild(answer);
+        var remove = document.createElement("button");
+        remove.className = "remove-faq";
+        remove.type = "button";
+        remove.textContent = "Hapus";
+        item.append(questionLabel, answerLabel, remove);
+        faqList.appendChild(item);
+        question.focus();
+      });
+      faqList.addEventListener("click", function(event) {
+        if (event.target.matches(".remove-faq")) {
+          event.target.closest(".faq-item").remove();
+        }
+      });
+    }
+    </script>
   <?php endif; ?>
 </main>
 <footer class="wrap">CMS Pojok Berkah</footer>
-<script>
-(function(){
-  var links=document.querySelectorAll('.tab-link');
-  var panels=document.querySelectorAll('.tab-panel');
-  links.forEach(function(link){
-    link.addEventListener('click',function(e){
-      e.preventDefault();
-      var target=this.getAttribute('href').slice(1);
-      links.forEach(function(l){l.classList.remove('tab-active');});
-      panels.forEach(function(p){p.classList.remove('tab-active');});
-      this.classList.add('tab-active');
-      document.getElementById(target).classList.add('tab-active');
-    });
-  });
-})();
-
-var faqList=document.getElementById("faq-items");
-if(faqList){
-  document.getElementById("add-faq").addEventListener("click",function(){
-    if(faqList.children.length>=20)return;
-    var item=document.createElement("div");item.className="faq-item";
-    var questionLabel=document.createElement("label");questionLabel.textContent="Pertanyaan";
-    var question=document.createElement("input");question.name="faq_questions[]";question.maxLength=160;question.required=true;questionLabel.appendChild(question);
-    var answerLabel=document.createElement("label");answerLabel.textContent="Jawaban";
-    var answer=document.createElement("textarea");answer.name="faq_answers[]";answer.maxLength=2000;answer.required=true;answerLabel.appendChild(answer);
-    var remove=document.createElement("button");remove.className="remove-faq";remove.type="button";remove.textContent="Hapus";
-    item.append(questionLabel,answerLabel,remove);faqList.appendChild(item);question.focus();
-  });
-  faqList.addEventListener("click",function(event){
-    if(event.target.matches(".remove-faq"))event.target.closest(".faq-item").remove();
-  });
-}
-</script>
 </body>
 </html>

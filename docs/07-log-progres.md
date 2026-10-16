@@ -116,6 +116,10 @@
 - **`admin/views/`** → setup, login-form, tab-whatsapp, tab-password, tab-layanan, tab-statistik, tab-gambar, tab-faq.
 - **BUG FIX:** `session_start()` dipindah ke `admin/index.php` sebelum cek `$_SESSION` — sebelumnya `$isAuthenticated` selalu `false` karena `$_SESSION` diakses sebelum `session_start()`.
 - **BUG FIX:** `handleChangePassword()` menggunakan parameter `$storagePath` bukan path hardcoded.
+- **BUG FIX:** `$imageSlots` di `upload.php` ditambahkan `global` di `handleUploadImage()` dan `handleRemoveImage()` agar tidak `Undefined variable` + `TypeError array_key_exists()`.
+- **BUG FIX:** `$defaultServiceNames`, `$defaultServiceUrls`, `$defaultServiceDescriptions`, `$defaultServiceTags` di `save_service.php` ditambahkan `global` di semua 4 function agar tidak `Undefined variable` + `foreach()` null argument.
 - **CSS** diekstrak ke `assets/css/admin.css` (90 baris), tidak lagi inline di `admin.php`.
-- PHP syntax check: semua 13 file lulus tanpa error.
+- Tab archive (Password, Layanan, Statistik, Gambar arsip) diberi class `tab-archive` di `admin/index.php` + CSS di `admin.css` agar terlihat beda dari tab utama (WhatsApp, Logo, FAQ).
+- Duplikasi `<script>` tab switching dan duplikasi `<section id="tab-password">` di `admin/index.php` dibersihkan — satu script tunggal, satu panel per tab.
+- PHP syntax check: semua file lulus tanpa error.
 - SEO: `admin.php` dan `admin/index.php` tetap `noindex,nofollow,noarchive`; `robots.txt` `Disallow: /admin.php` utuh; `sitemap.xml` tidak berubah.

@@ -2,6 +2,15 @@
 
 Semua perubahan tercatat dalam file ini. Format berdasarkan [Keep a Changelog](https://keepachangelog.com/id/1.0.0/).
 
+## [1.0.4] — 16 Oktober 2026
+
+### 🐛 Perbaikan Scope Variabel & Duplikasi Kode
+
+- `admin/actions/upload.php`: tambah `global $imageSlots` di `handleUploadImage()` dan `handleRemoveImage()` — memperbaiki fatal error `TypeError: array_key_exists()` saat upload/hapus gambar.
+- `admin/actions/save_service.php`: tambah `global $defaultServiceNames/Urls/Descriptions/Tags` di semua 4 function — memperbaiki fatal error `foreach() argument must be array` saat simpan nama/URL/deskripsi/tag layanan.
+- `admin/index.php`: hapus duplikasi `<script>` tab switching dan duplikasi `<section id="tab-password">`; konsolidasi ke satu script + satu panel per tab; tambah class `tab-archive` pada tab Password/Layanan/Statistik/Gambar arsip.
+- `assets/css/admin.css`: tambah aturan CSS untuk `.tab-link.tab-archive` dan `.tab-panel.tab-archive`.
+
 ## [1.0.3] — 16 Oktober 2026
 
 ### ✅ R6 Selesai — Tandai Dokumen API Aktif vs Arsip
