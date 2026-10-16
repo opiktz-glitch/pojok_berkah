@@ -119,6 +119,8 @@
 - **BUG FIX:** `$imageSlots` di `upload.php` ditambahkan `global` di `handleUploadImage()` dan `handleRemoveImage()` agar tidak `Undefined variable` + `TypeError array_key_exists()`.
 - **BUG FIX:** `$defaultServiceNames`, `$defaultServiceUrls`, `$defaultServiceDescriptions`, `$defaultServiceTags` di `save_service.php` ditambahkan `global` di semua 4 function agar tidak `Undefined variable` + `foreach()` null argument.
 - **CSS** diekstrak ke `assets/css/admin.css` (90 baris), tidak lagi inline di `admin.php`.
+- **16 Okt 2026 (live):** path CSS `/pojok_berkah/assets/css/admin.css` → `assets/css/admin.css` + 3 icon absolut → relatif. Penyebab tampilan polos di live: path absolut hanya valid di localhost subfolder.
+- **16 Okt 2026:** encoding 4 file dinormalisasi UTF-16 → UTF-8 tanpa BOM (sebelumnya terdeteksi binary oleh git).
 - Tab archive (Password, Layanan, Statistik, Gambar arsip) diberi class `tab-archive` di `admin/index.php` + CSS di `admin.css` agar terlihat beda dari tab utama (WhatsApp, Logo, FAQ).
 - Duplikasi `<script>` tab switching dan duplikasi `<section id="tab-password">` di `admin/index.php` dibersihkan — satu script tunggal, satu panel per tab.
 - PHP syntax check: semua file lulus tanpa error.

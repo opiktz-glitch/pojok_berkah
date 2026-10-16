@@ -2,6 +2,14 @@
 
 Semua perubahan tercatat dalam file ini. Format berdasarkan [Keep a Changelog](https://keepachangelog.com/id/1.0.0/).
 
+## [1.0.5] — 16 Oktober 2026
+
+### 🐛 Perbaikan Tampilan Admin di Live (CSS 404)
+
+- `admin/index.php`: path CSS `/pojok_berkah/assets/css/admin.css` → `assets/css/admin.css`; 3 icon `/assets/icons/...` → relatif.
+  Penyebab: path absolut `/pojok_berkah/...` hanya benar di localhost subfolder, di live (root domain) menjadi 404 sehingga halaman tampil polos tanpa styling.
+- Normalisasi encoding UTF-16 → UTF-8 tanpa BOM dan newline di `admin/index.php`, `admin/actions/upload.php`, `admin/actions/save_service.php`, `assets/css/admin.css` (sebelumnya terdeteksi binary oleh git).
+
 ## [1.0.4] — 16 Oktober 2026
 
 ### 🐛 Perbaikan Scope Variabel & Duplikasi Kode
