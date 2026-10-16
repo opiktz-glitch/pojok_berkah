@@ -202,7 +202,7 @@ if ((isset($_GET['public']) && $_GET['public'] === '1')
       </section>
     </div>
 
-    <details class="archive">
+    <details class="archive" open>
       <summary>Password</summary>
       <div class="archive-body">
         <section id="tab-password" class="tab-panel">
