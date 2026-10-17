@@ -71,7 +71,7 @@ Upload: nama acak `bin2hex(random_bytes(16)).ext`, file lama di-`unlink` bila ta
 - Rate-limit login: 5 gagal / 900 detik per hash HMAC IP → lock 900 detik.
 - Upload: `getimagesize` + whitelist IMAGETYPE_JPEG/PNG/WEBP, tolak SVG.
 - Header CMS: `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: same-origin`, `X-Robots-Tag: noindex,nofollow,noarchive`.
-- `storage.php` punya guard `POJOK_BERKAH_BOOTSTRAPPED` + aturan `.htaccess` + `Disallow: /data/, /admin.php` di robots.
+- `storage.php` punya guard `POJOK_BERKAH_BOOTSTRAPPED` + aturan `.htaccess` + `Disallow: /data/` di robots (Opsi B: `/admin.php` tidak diblokir agar crawler bisa lihat `noindex`).
 
 ## 5. SEO & performa
 

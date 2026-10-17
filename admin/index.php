@@ -183,11 +183,18 @@ if ($faqExtra > 0) {
     }
 }
 
+// Blokir index untuk endpoint gambar juga (Opsi B — robots izinkan crawl, noindex via header)
+if (isset($_GET['image']) && is_string($_GET['image']) && $_GET['image'] !== '') {
+    header('X-Robots-Tag: noindex, nofollow, noarchive');
+}
+
 // Public JSON endpoint untuk semua halaman publik (index.html, tentang-kami.html, 404.html)
+// Opsi B robots.txt: endpoint publik diizinkan crawl tapi tetap noindex via header
 if ((isset($_GET['public']) && $_GET['public'] === '1')
     || (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] === 'public=1')) {
     header('Content-Type: application/json; charset=utf-8');
     header('Cache-Control: no-store');
+    header('X-Robots-Tag: noindex, nofollow, noarchive');
     $publicFaq = [];
     foreach ($faqItems as $item) {
         if (!is_array($item)) {
@@ -211,6 +218,12 @@ if ((isset($_GET['public']) && $_GET['public'] === '1')
     ]);
     exit;
 }
+
+// Opsi B: admin HTML boleh di-crawl (robots.txt tidak blok) tapi wajib noindex via header + meta
+header('X-Robots-Tag: noindex, nofollow, noarchive');
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: DENY');
+header('Referrer-Policy: same-origin');
 
 ?><!DOCTYPE html>
 <html lang="id">

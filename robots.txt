@@ -1,7 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /admin/
-Disallow: /admin.php
 Disallow: /data/
 Disallow: /_arsip/
 

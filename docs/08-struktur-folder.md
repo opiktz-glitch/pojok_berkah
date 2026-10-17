@@ -51,7 +51,7 @@ pojok_berkah/
 │   16 Okt 2026 agar auto-deploy FTP tetap jalan — jangan arsipkan lagi.
 │
 ├── .htaccess                   # HTTPS + redirect www + blokir data/_arsip + redirect aset lama
-├── robots.txt                  # Allow / + Disallow data, admin, _arsip
+├── robots.txt                  # Allow / + Disallow data, _arsip (Opsi B: admin tidak diblokir agar crawler lihat noindex)
 └── sitemap.xml                 # 4 URL utama
 ```
 

@@ -45,7 +45,7 @@ Contoh response (dipersingkat). Setiap kolom ditandai **[LIVE]** (masih dipakai 
 }
 ```
 
-Header: `Content-Type: application/json; charset=utf-8`, `Cache-Control: no-store`, `X-Robots-Tag: noindex, nofollow`.
+Header: `Content-Type: application/json; charset=utf-8`, `Cache-Control: no-store`, `X-Robots-Tag: noindex, nofollow, noarchive` (Opsi B).
 Fallback: jika nomor tidak valid, homepage tetap memakai default `6287724039666`; jika gambar upload ada, nilainya menjadi `admin.php?image={slot}&v={12-char}`.
 
 ## 2. GET gambar upload — `GET admin.php?image={slot}`
