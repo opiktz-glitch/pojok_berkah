@@ -8,6 +8,11 @@ ErrorDocument 404 /404.html
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  # Artikel diterbitkan dari CMS, tanpa membuat file HTML manual.
+  RewriteRule ^artikel/?$ artikel.php [QSA,L]
+  RewriteRule ^artikel/([a-z0-9-]+)\.html$ artikel.php?slug=$1 [QSA,L,NC]
+  RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
   # Redirect www to non-www first, straight to HTTPS non-www (single hop).
   # Placed before the HTTPS rule so http://www goes directly to
   # https://non-www instead of http-www -> https-www -> https-non-www.
@@ -23,11 +28,16 @@ ErrorDocument 404 /404.html
   RewriteCond %{HTTP:X-Forwarded-Proto} !https
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
+  # Halaman publik disajikan lewat render.php supaya data CMS (WhatsApp, gambar,
+  # layanan, FAQ, artikel terbaru) diterapkan di server, tanpa JavaScript.
+  RewriteRule ^$ render.php?page=index [L]
+  RewriteRule ^(index|tentang-kami|kebijakan-privasi|syarat-ketentuan|404)\.html$ render.php?page=$1 [L]
+
   # Never serve the CMS settings file or uploads folder directly.
   RewriteRule ^data/ - [R=404,L]
 
   # Hide the local archive folder.
-  RewriteRule ^_arsip(/|$) - [R=404,L]
+  RewriteRule ^(docs|_arsip)(/|$) - [R=404,L]
 
   # Redirect lama -> lokasi baru assets/ (favicon & og-image pindah folder).
   RewriteRule ^favicon\.ico$ assets/icons/favicon.ico [R=301,L]

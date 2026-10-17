@@ -1,0 +1,56 @@
+/*
+ * Efek halaman publik tanpa JavaScript.
+ * Semua efek bersifat progressive enhancement: browser yang belum mendukung
+ * scroll-driven animation tetap menampilkan konten normal (tanpa efek).
+ */
+
+/* Menu mobile: checkbox tersembunyi + label (state lewat :checked) */
+.nav-check{position:absolute;width:1px;height:1px;margin:0;opacity:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.nav-check:focus-visible~.nav-toggle{outline:2px solid #4f46e5;outline-offset:2px}
+
+:root{--bar-shadow:rgba(16,32,58,.25)}
+@media (prefers-color-scheme:dark){:root{--bar-shadow:rgba(0,0,0,.55)}}
+
+@keyframes bar-shadow{
+  from{box-shadow:0 0 0 0 transparent}
+  to{box-shadow:0 8px 24px -12px var(--bar-shadow)}
+}
+@keyframes reveal-in{
+  from{opacity:0;transform:translateY(18px)}
+  to{opacity:1;transform:none}
+}
+@keyframes wa-hide{
+  0%{opacity:1;transform:none}
+  1%,99%{opacity:0;transform:translateY(14px);pointer-events:none}
+  100%{opacity:1;transform:none}
+}
+
+/* Bayangan header muncul setelah halaman digulir sedikit */
+@supports (animation-timeline:scroll()){
+  header.bar,.article-header{
+    animation:bar-shadow linear both;
+    animation-timeline:scroll(root);
+    animation-range:0 24px;
+  }
+}
+
+@supports (animation-timeline:view()){
+  /* Elemen .reveal muncul halus saat masuk layar */
+  @media (prefers-reduced-motion:no-preference){
+    .reveal{
+      animation:reveal-in linear both;
+      animation-timeline:view();
+      animation-range:entry 0% entry 40%;
+    }
+  }
+  /* Tombol WhatsApp melayang bersembunyi saat bagian kontak terlihat */
+  @media (max-width:860px){
+    body{timeline-scope:--wa-zone}
+    [data-wa-zone]{view-timeline:--wa-zone block}
+    .wa-sticky{
+      animation:wa-hide linear both;
+      animation-timeline:--wa-zone;
+      animation-range:entry 35% exit 65%;
+    }
+  }
+}

@@ -6,7 +6,7 @@ define('POJOK_BERKAH_BOOTSTRAPPED', true);
 session_start();
 
 $storagePath = __DIR__ . '/../data/storage.php';
-$settings = is_file($storagePath) ? require $storagePath : [];
+$settings = is_file($storagePath) ? require $storagePath : require __DIR__ . '/../data/storage.example.php';
 if (!is_array($settings)) {
     $settings = ['wa_number' => '6287724039666', 'password_hash' => ''];
 }
@@ -19,6 +19,8 @@ require_once __DIR__ . '/actions/save.php';
 require_once __DIR__ . '/actions/save_service.php';
 require_once __DIR__ . '/actions/upload.php';
 require_once __DIR__ . '/actions/save_faq.php';
+require_once __DIR__ . '/actions/save_artikel.php';
+require_once __DIR__ . '/actions/import_artikel.php';
 
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(16));
@@ -42,6 +44,9 @@ $settings = handleSaveServiceTags($settings, $storagePath, $csrf, $isAuthenticat
 $settings = handleUploadImage($settings, $storagePath, $csrf, $isAuthenticated, $flash);
 $settings = handleRemoveImage($settings, $storagePath, $csrf, $isAuthenticated, $flash);
 $settings = handleSaveFaq($settings, $storagePath, $csrf, $isAuthenticated, $flash);
+$settings = handleImportArtikel($settings, $csrf, $isAuthenticated, $flash);
+$settings = handleSaveArtikel($settings, $storagePath, $csrf, $isAuthenticated, $flash);
+$settings = handleDeleteArtikel($settings, $storagePath, $csrf, $isAuthenticated, $flash);
 
 $logout = handleLogout($isAuthenticated);
 if ($logout) {
@@ -144,8 +149,8 @@ foreach ($imageSlots as $slot => $label) {
     }
 }
 
-// Tab aktif tanpa JS: via ?tab= (full reload). JS hanya enhancement.
-$validTabs = ['whatsapp', 'logo', 'faq', 'password', 'layanan', 'statistik', 'gambar'];
+// Tab aktif ditentukan server lewat ?tab= (tanpa JavaScript).
+$validTabs = ['whatsapp', 'logo', 'faq', 'artikel', 'password', 'layanan', 'statistik', 'gambar'];
 $activeTab = 'whatsapp';
 if (isset($_GET['tab']) && is_string($_GET['tab']) && in_array($_GET['tab'], $validTabs, true)) {
     $activeTab = $_GET['tab'];
@@ -157,6 +162,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
         $activeTab = 'whatsapp';
     } elseif ($postAction === 'save_faq') {
         $activeTab = 'faq';
+    } elseif ($postAction === 'save_artikel' || $postAction === 'delete_artikel' || $postAction === 'import_artikel') {
+        $activeTab = 'artikel';
     } elseif ($postAction === 'change_password') {
         $activeTab = 'password';
     } elseif ($postAction === 'save_stats') {
@@ -168,14 +175,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
         $activeTab = ($slot === 'logo') ? 'logo' : 'gambar';
     }
 }
-// Baris kosong tambahan untuk tambah FAQ tanpa JS (via ?faq_extra=N, hanya saat GET).
-$faqExtra = 0;
+// Baris kosong tambahan untuk FAQ: 1 baris selalu tersedia, tambah lagi via ?faq_extra=N (hanya saat GET).
+$faqExtra = (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') ? 1 : 0;
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST' && isset($_GET['faq_extra'])) {
     $faqExtra = max(0, (int)$_GET['faq_extra']);
 }
 $faqExtra = min($faqExtra, max(0, 20 - count($faqItems)));
 if ($faqExtra > 0) {
-    if ($activeTab === 'whatsapp') {
+    if ($activeTab === 'whatsapp' && isset($_GET['faq_extra'])) {
         $activeTab = 'faq';
     }
     for ($i = 0; $i < $faqExtra; $i++) {
@@ -183,9 +190,33 @@ if ($faqExtra > 0) {
     }
 }
 
-// Blokir index untuk endpoint gambar juga (Opsi B — robots izinkan crawl, noindex via header)
-if (isset($_GET['image']) && is_string($_GET['image']) && $_GET['image'] !== '') {
-    header('X-Robots-Tag: noindex, nofollow, noarchive');
+
+
+
+// Serve featured images only for published articles; the original data stays in protected storage.
+if (isset($_GET['article_image']) && is_string($_GET['article_image']) && $_GET['article_image'] !== '') {
+    header('X-Content-Type-Options: nosniff');
+    $requestedArticleSlug = $_GET['article_image'];
+    if (preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $requestedArticleSlug)) {
+        foreach (($settings['articles'] ?? []) as $articleImageRow) {
+            if (!is_array($articleImageRow) || ($articleImageRow['slug'] ?? '') !== $requestedArticleSlug || ($articleImageRow['status'] ?? '') !== 'published') {
+                continue;
+            }
+            $dataUri = (string)($articleImageRow['image'] ?? '');
+            if (preg_match('~^data:(image/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$~', $dataUri, $imageMatch)) {
+                $binaryImage = base64_decode($imageMatch[2], true);
+                if ($binaryImage !== false) {
+                    header('Content-Type: ' . $imageMatch[1]);
+                    header('Cache-Control: public, max-age=86400');
+                    echo $binaryImage;
+                    exit;
+                }
+            }
+            break;
+        }
+    }
+    http_response_code(404);
+    exit;
 }
 
 // Public JSON endpoint untuk semua halaman publik (index.html, tentang-kami.html, 404.html)
@@ -206,9 +237,35 @@ if ((isset($_GET['public']) && $_GET['public'] === '1')
             $publicFaq[] = ['question' => (string)($item['question'] ?? ''), 'answer' => (string)($item['answer'] ?? '')];
         }
     }
+    $publicArticles = [];
+    $articleItems = isset($settings['articles']) && is_array($settings['articles']) ? $settings['articles'] : [];
+    foreach ($articleItems as $article) {
+        if (!is_array($article) || ($article['status'] ?? '') !== 'published') {
+            continue;
+        }
+        $articleSlug = (string)($article['slug'] ?? '');
+        $articleTitle = trim((string)($article['title'] ?? ''));
+        $articleExcerpt = trim((string)($article['excerpt'] ?? ''));
+        if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $articleSlug) || $articleTitle === '' || $articleExcerpt === '') {
+            continue;
+        }
+        $publicArticles[] = [
+            'slug' => $articleSlug,
+            'title' => $articleTitle,
+            'excerpt' => $articleExcerpt,
+            'updated_at' => (string)($article['updated_at'] ?? $article['created_at'] ?? ''),
+            'image_url' => !empty($article['image']) ? 'admin.php?article_image=' . rawurlencode($articleSlug) . '&v=' . substr(sha1((string)$article['image']), 0, 12) : '',
+            'image_alt' => (string)($article['image_alt'] ?? ''),
+        ];
+    }
+    usort($publicArticles, static function ($a, $b): int {
+        return strcmp((string)($b['updated_at'] ?? ''), (string)($a['updated_at'] ?? ''));
+    });
+    $publicArticles = array_slice($publicArticles, 0, 3);
     echo json_encode([
         'wa_number' => $waNumber,
         'faq' => $publicFaq,
+        'articles' => $publicArticles,
         'service_names' => $serviceNames,
         'service_urls' => $serviceUrls,
         'service_descriptions' => $serviceDescriptions,
@@ -252,7 +309,7 @@ header('Referrer-Policy: same-origin');
 <main class="wrap">
   <span class="kicker">Pengaturan situs</span>
   <h1>Pengaturan situs</h1>
-  <p class="lead">Kelola nomor WhatsApp, logo, dan pertanyaan umum. Konten & gambar layanan di bawah digunakan di halaman Karya, Tentang Kami, dan subdomain.</p>
+  <p class="lead">Kelola nomor WhatsApp, logo, FAQ, dan artikel situs. Pengaturan layanan serta gambar juga tersedia untuk halaman Karya, Tentang Kami, dan subdomain.</p>
 
   <?php if ($flash !== ''): ?>
     <p class="flash" role="status"><?= escapeHtml($flash) ?></p>
@@ -282,6 +339,7 @@ header('Referrer-Policy: same-origin');
       <a href="admin.php?tab=whatsapp" data-tab="whatsapp" class="tab-link<?= $activeTab === 'whatsapp' ? ' tab-active' : '' ?>">WhatsApp</a>
       <a href="admin.php?tab=logo" data-tab="logo" class="tab-link<?= $activeTab === 'logo' ? ' tab-active' : '' ?>">Logo</a>
       <a href="admin.php?tab=faq" data-tab="faq" class="tab-link<?= $activeTab === 'faq' ? ' tab-active' : '' ?>">FAQ</a>
+      <a href="admin.php?tab=artikel" data-tab="artikel" class="tab-link<?= $activeTab === 'artikel' ? ' tab-active' : '' ?>">Artikel</a>
       <a href="admin.php?tab=password" data-tab="password" class="tab-link tab-archive<?= $activeTab === 'password' ? ' tab-active' : '' ?>">Password</a>
       <a href="admin.php?tab=layanan" data-tab="layanan" class="tab-link tab-archive<?= $activeTab === 'layanan' ? ' tab-active' : '' ?>">Layanan</a>
       <a href="admin.php?tab=statistik" data-tab="statistik" class="tab-link tab-archive<?= $activeTab === 'statistik' ? ' tab-active' : '' ?>">Statistik</a>
@@ -301,6 +359,10 @@ header('Referrer-Policy: same-origin');
         <div><?php include __DIR__ . '/views/tab-faq.php'; ?></div>
       </section>
 
+      <section id="tab-artikel" class="tab-panel<?= $activeTab === 'artikel' ? ' tab-active' : '' ?>">
+        <div><?php include __DIR__ . '/views/tab-artikel.php'; ?></div>
+      </section>
+
       <section id="tab-password" class="tab-panel tab-archive<?= $activeTab === 'password' ? ' tab-active' : '' ?>">
         <div><?php include __DIR__ . '/views/tab-password.php'; ?></div>
       </section>
@@ -318,69 +380,6 @@ header('Referrer-Policy: same-origin');
       </section>
     </div>
 
-    <script>
-    // Enhancement saja: pindah tab tanpa reload. Tanpa JS, link ?tab= tetap jalan (full reload via PHP).
-    (function() {
-      var links = document.querySelectorAll('.tab-link[data-tab]');
-      var panels = document.querySelectorAll('.tab-panel');
-      function activate(target, syncUrl) {
-        var found = false;
-        panels.forEach(function(p) {
-          var on = (p.id === ('tab-' + target));
-          if (on) { found = true; }
-          p.classList.toggle('tab-active', on);
-        });
-        if (!found) { return; }
-        links.forEach(function(l) {
-          l.classList.toggle('tab-active', l.getAttribute('data-tab') === target);
-        });
-        if (syncUrl) {
-          try { history.replaceState(null, '', 'admin.php?tab=' + target); } catch (e) {}
-        }
-      }
-      links.forEach(function(link) {
-        link.addEventListener('click', function(e) {
-          e.preventDefault();
-          activate(this.getAttribute('data-tab'), true);
-        });
-      });
-    })();
-
-    var faqList = document.getElementById("faq-items");
-    if (faqList) {
-      document.getElementById("add-faq").addEventListener("click", function() {
-        if (faqList.children.length >= 20) return;
-        var item = document.createElement("div");
-        item.className = "faq-item";
-        var questionLabel = document.createElement("label");
-        questionLabel.textContent = "Pertanyaan";
-        var question = document.createElement("input");
-        question.name = "faq_questions[]";
-        question.maxLength = 160;
-        question.required = true;
-        questionLabel.appendChild(question);
-        var answerLabel = document.createElement("label");
-        answerLabel.textContent = "Jawaban";
-        var answer = document.createElement("textarea");
-        answer.name = "faq_answers[]";
-        answer.maxLength = 2000;
-        answer.required = true;
-        answerLabel.appendChild(answer);
-        var remove = document.createElement("button");
-        remove.className = "remove-faq";
-        remove.type = "button";
-        remove.textContent = "Hapus";
-        item.append(questionLabel, answerLabel, remove);
-        faqList.appendChild(item);
-        question.focus();
-      });
-      faqList.addEventListener("click", function(event) {
-        if (event.target.matches(".remove-faq")) {
-          event.target.closest(".faq-item").remove();
-        }
-      });
-    }
-    </script>
   <?php endif; ?>
 </main>
 <footer class="wrap">CMS Pojok Berkah</footer>

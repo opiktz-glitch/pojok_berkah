@@ -33,3 +33,74 @@ function normalizeServiceUrl(string $value): ?string
     }
     return $value;
 }
+
+function slugify(string $text): string
+{
+    $text = trim($text);
+    // Transliterate ke ASCII jika ada ext-iconv
+    if (function_exists('iconv')) {
+        $converted = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $text);
+        if (is_string($converted) && $converted !== '') {
+            $text = $converted;
+        }
+    }
+    $text = strtolower($text);
+    $text = preg_replace('/[^a-z0-9]+/', '-', $text);
+    if (!is_string($text)) {
+        return '';
+    }
+    $text = trim($text, '-');
+    $text = preg_replace('/-+/', '-', $text);
+    if (!is_string($text)) {
+        return '';
+    }
+    // Batasi 60 karakter, potong di batas kata (-)
+    if (strlen($text) > 60) {
+        $text = substr($text, 0, 60);
+        $text = rtrim($text, '-');
+        $pos = strrpos($text, '-');
+        if ($pos !== false && $pos > 20) {
+            $text = substr($text, 0, $pos);
+        }
+    }
+    return $text;
+}
+
+function normalizeArticleSlug(string $value): ?string
+{
+    $slug = slugify($value);
+    if ($slug === '' || strlen($slug) < 3) {
+        return null;
+    }
+    if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug)) {
+        return null;
+    }
+    return $slug;
+}
+
+function uniqueArticleSlug(string $desired, array $existingSlugs, string $currentSlug = ''): string
+{
+    $base = normalizeArticleSlug($desired);
+    if ($base === null) {
+        $base = 'artikel';
+    }
+    // Jika edit dan slug tidak berubah, pakai slug lama
+    if ($currentSlug !== '' && $base === $currentSlug) {
+        return $currentSlug;
+    }
+    $slug = $base;
+    $i = 2;
+    while (in_array($slug, $existingSlugs, true)) {
+        // Jika edit, abaikan slug sendiri
+        if ($slug === $currentSlug) {
+            break;
+        }
+        $slug = $base . '-' . $i;
+        $i++;
+        if ($i > 99) {
+            $slug = $base . '-' . bin2hex(random_bytes(2));
+            break;
+        }
+    }
+    return $slug;
+}

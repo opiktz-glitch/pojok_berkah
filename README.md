@@ -3,27 +3,32 @@
 Landing site and PHP CMS for the Pojok Berkah service directory.
 
 > ⚠️ **INI ADALAH README ROOT** — untuk pengguna & admin (Bahasa Inggris).
-> Dokumentasi lengkap (Bahasa Indonesia) ada di [`docs/INDEX-DOKUMEN.md`](docs/INDEX-DOKUMEN.md):
-> - [Panduan Pengguna & Instalasi](docs/01-panduan-pengguna.md)
-> - [Dokumentasi API](docs/02-dokumentasi-api.md)
-> - [Spesifikasi Teknis](docs/03-spesifikasi-teknis.md)
-> - [Panduan Kontribusi](docs/04-panduan-kontribusi.md)
+> Full documentation (Indonesian) is available in [`docs/INDEX-DOKUMEN.md`](docs/INDEX-DOKUMEN.md):
+> - [01 — System Guide & Architecture](docs/01-panduan-sistem.md)
+> - [02 — CMS User Guide & API Documentation](docs/02-panduan-pengguna-cms.md)
+> - [03 — Contribution & Coding Standards](docs/03-panduan-kontribusi-style.md)
+> - [04 — Development Roadmap](docs/04-roadmap.md)
+> - [CHANGELOG](docs/CHANGELOG.md)
 
 ## Requirements
 
-- PHP 8.0 or newer
-- A PHP-capable Apache host (for example, InfinityFree)
-- Writable `data/` directory for CMS settings and uploaded images
+- PHP 8.0 or newer (production InfinityFree uses PHP 8.3)
+- Apache with `mod_rewrite` for `.htaccess`
+- Writable `data/` directory for CMS settings, article images and uploaded images
 - HTTPS enabled for the production domain
 
 ## Local setup
 
 1. Copy `data/storage.example.php` to `data/storage.php`.
 2. Serve this directory through PHP; do not open the HTML files with `file://` when testing the CMS.
-3. Open `admin.php` from localhost and create the admin password.
-4. Set the WhatsApp number and review the service FAQ and images.
+3. Open `admin.php` from localhost (`http://localhost/pojok_berkah/admin.php`) and create the admin password.
+4. Set the WhatsApp number, review the service FAQ and images, then create or publish articles from the **Artikel** tab.
 
-The CMS setup screen is intentionally limited to localhost while no password hash exists. After login, the CMS can manage the WhatsApp number, service names, URLs, descriptions and tags, service images, homepage statistics, and FAQ.
+The CMS setup screen is intentionally limited to localhost while no password hash exists. After login, the CMS can manage the WhatsApp number, service names, URLs, descriptions and tags (4 slots: tryout/gadai/kitchen/parkir), service images, homepage statistics, FAQ, and articles. Published articles are available at `/artikel/` and `/artikel/{slug}.html`; drafts remain private.
+
+The site is built with a **Zero-JavaScript architecture**: public pages are rendered on the server (SSR) via `render.php` and `admin/lib/public_render.php`, while interactive components (mobile drawer navigation, header scroll shadow, reveal transitions, floating WhatsApp button) are handled purely by CSS. Complete SEO features are implemented across all pages, including robots directives with `max-image-preview:large`, Open Graph, Twitter Cards, rich Schema.org structured data (Organization, WebSite, AboutPage, WebPage, Article, and auto-synchronized FAQPage), BreadcrumbList, and dynamic XML sitemaps.
+
+The public top navigation is consistent on the homepage, About page, and article pages. It contains Beranda, Tentang, Keunggulan, Layanan, Artikel, FAQ, and Kontak. WhatsApp remains available in page CTAs and the mobile floating button, not in the top navigation.
 
 ## Production deployment (InfinityFree)
 
@@ -36,7 +41,7 @@ Free hosting runs PHP 8.3, which satisfies the PHP 8.0 requirement, and the CMS 
 5. Keep `data/` writable by PHP so settings and images can be saved. If saving settings or uploading images fails, set `data/` to 755 and `data/storage.php` to 644, falling back to 777 and 666 only if the host requires it.
 6. Verify `/admin.php` loads over HTTPS, direct requests to `data/storage.php` and other `data/` paths return 404, and the homepage shows the WhatsApp number stored in the CMS.
 
-The `.htaccess` file in this repository redirects HTTP to HTTPS, serves `404.html` for missing pages, and blocks direct requests to `data/`. The HTTPS redirect skips `localhost` and `127.0.0.1` so local testing over HTTP keeps working, and it must not go live before the SSL certificate is active, otherwise the site will not load. The CMS logo and service images are limited to JPEG, PNG, or WebP and 5 MB each. A transparent PNG is recommended for the logo.
+The `.htaccess` file in this repository redirects HTTP to HTTPS, serves `404.html` for missing pages, maps `/artikel/` and `/artikel/{slug}.html` to `artikel.php`, maps `sitemap.xml` to `sitemap.php` (dynamic, includes published articles), and blocks direct requests to `data/` and `_arsip/`. The HTTPS redirect skips `localhost` and `127.0.0.1` so local testing over HTTP keeps working, and it must not go live before the SSL certificate is active, otherwise the site will not load. The CMS logo and service images are limited to JPEG, PNG, or WebP and 5 MB each. A transparent PNG is recommended for the logo.
 
 ## Automatic deployment from GitHub
 

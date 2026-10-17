@@ -34,12 +34,22 @@ function handleSaveFaq(array $settings, string $storagePath, string $csrf, bool 
     $questions = $_POST['faq_questions'] ?? [];
     $answers = $_POST['faq_answers'] ?? [];
 
+    $removeRaw = $_POST['faq_remove'] ?? [];
+    $remove = is_array($removeRaw) ? array_map('intval', $removeRaw) : [];
+    if (!is_array($questions) || !is_array($answers)) {
+        $questions = [];
+        $answers = [];
+    }
+
     $faq = [];
     $maxItems = min(count($questions), count($answers), 20);
 
     for ($i = 0; $i < $maxItems; $i++) {
-        $question = trim($questions[$i] ?? '');
-        $answer = trim($answers[$i] ?? '');
+        if (in_array($i, $remove, true)) {
+            continue;
+        }
+        $question = trim((string)($questions[$i] ?? ''));
+        $answer = trim((string)($answers[$i] ?? ''));
         if ($question !== '' && $answer !== '') {
             $faq[] = ['question' => $question, 'answer' => $answer];
         }

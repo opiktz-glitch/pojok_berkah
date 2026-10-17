@@ -2,6 +2,33 @@
 
 Semua perubahan tercatat dalam file ini. Format berdasarkan [Keep a Changelog](https://keepachangelog.com/id/1.0.0/).
 
+## [1.1.0] — 17–18 Oktober 2026
+
+### 🚀 Optimasi SEO Komprehensif & Pembersihan Kode
+
+- **Peta Situs (Sitemap):** Menambahkan URL katalog `/artikel/` dan artikel terbit ke `sitemap.php` dinamis serta `sitemap.xml` statis dengan prioritas dan tanggal terbaru.
+- **Robots.txt & Proteksi Server:** Menerapkan `robots.txt` ultra-clean (Allow: / + deklarasi sitemap) sesuai panduan Google Search Console agar crawler dapat membaca header `X-Robots-Tag: noindex` pada admin dan merayapi gambar unggulan artikel secara mulus, sementara folder privat (`data/`, `docs/`, `_arsip/`) diblokir keras dengan HTTP 404 via `.htaccess`.
+- **Konsolidasi Dokumentasi:** Menyederhanakan 15 file markdown menjadi 5 dokumen inti terstruktur (`01-panduan-sistem.md`, `02-panduan-pengguna-cms.md`, `03-panduan-kontribusi-style.md`, `04-roadmap.md`, `CHANGELOG.md`) dan mengarsipkan proposal lama ke `_arsip/docs_lama/`.
+- **Meta Robots:** Menambahkan `<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">` di semua halaman publik (`index.html`, `tentang-kami.html`, `kebijakan-privasi.html`, `syarat-ketentuan.html`, `artikel.php`) dan `noindex, follow` pada artikel 404.
+- **Open Graph & Twitter Cards:** Melengkapi Open Graph dan Twitter Cards pada `artikel.php` (`summary_large_image`, fallback gambar `assets/img/og-image.jpg`, dan teks alt).
+- **Data Terstruktur (Schema.org JSON-LD):**
+  - Mengoreksi URL `Organization` dan `WebSite` agar merujuk ke root domain.
+  - Menerapkan skema `AboutPage` di `tentang-kami.html`, `WebPage` di halaman legal, `Article` di detail artikel, serta `CollectionPage` di katalog artikel.
+  - Menambahkan skema **`BreadcrumbList`** di seluruh subhalaman untuk breadcrumb SERP Google.
+  - Memperbarui `pbApplyFaq` di `admin/lib/public_render.php` agar schema `FAQPage` di `<head>` ikut ter-update otomatis di server saat admin mengubah FAQ di CMS.
+- **Kompatibilitas PHP 7.4+:** Mengganti operator nullsafe `?->` di `admin/actions/import_artikel.php` dengan pengecekan `if ($node->parentNode !== null)` agar aman dijalankan di hosting PHP lama.
+- **Pembersihan Kode & File Sampah:**
+  - Menghapus file sampah dan dead code: `.admin.css` (root), `admin/image.php`, `admin/lib/images.php`, dan `docs/artikel-pengenalan-parkir-kamera-otomatis.txt`.
+  - Menghapus blok dead code penanganan `$_GET['image']` di `admin/index.php`.
+- **Aksesibilitas:** Menambahkan alt text deskriptif `Logo Pojok Berkah` pada brand logo header halaman legal.
+
+### 🚫 Arsitektur Zero-JavaScript (100% Bebas JS Klien)
+
+- Dihapus: seluruh `<script>` eksekusi JS klien (satu-satunya tag `<script>` yang ada hanyalah JSON-LD untuk SEO mesin pencari).
+- Data CMS diterapkan di server: `render.php` + `admin/lib/public_render.php`. URL tetap `*.html` lewat `.htaccess`.
+- `assets/css/effects.css` menggantikan efek JS: menu mobile (checkbox + label), bayangan header, animasi reveal, dan sticky WhatsApp.
+- Admin CMS berjalan tanpa JavaScript: navigasi tab server-side (`?tab=`), penambahan FAQ via query parameter, dan konfirmasi hapus artikel via checkbox.
+
 ## [1.0.10] — 16 Oktober 2026
 
 ### 🔍 Audit Penuh Fase 2 + 🐛 Fix FAQ Publik (SEO Tidak Diubah)

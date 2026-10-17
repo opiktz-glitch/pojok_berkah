@@ -71,3 +71,4 @@ jobs:
             data/uploads/*.jpeg
             data/uploads/*.png
             data/uploads/*.webp
+            _arsip/**
