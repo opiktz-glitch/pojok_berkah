@@ -48,7 +48,7 @@ $settings = handleImportArtikel($settings, $csrf, $isAuthenticated, $flash);
 $settings = handleSaveArtikel($settings, $storagePath, $csrf, $isAuthenticated, $flash);
 $settings = handleDeleteArtikel($settings, $storagePath, $csrf, $isAuthenticated, $flash);
 
-$logout = handleLogout($isAuthenticated);
+$logout = handleLogout($isAuthenticated, $csrf);
 if ($logout) {
     header('Location: admin.php');
     exit;

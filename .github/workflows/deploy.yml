@@ -67,8 +67,4 @@ jobs:
             README.md
             data/storage.php
             data/storage.example.php
-            data/uploads/*.jpg
-            data/uploads/*.jpeg
-            data/uploads/*.png
-            data/uploads/*.webp
             _arsip/**

@@ -65,7 +65,7 @@ function pbIsSafeUrl(string $url): bool
 
 function pbIsSafeImage(string $src): bool
 {
-    return preg_match('~^(?:https?://[^\s"\'<>]+|data:image/(?:jpeg|png|webp|gif);base64,[A-Za-z0-9+/=]+)$~i', $src) === 1;
+    return preg_match('~^(?:https?://[^\s"\'<>]+|data:image/(?:jpeg|png|webp|gif);base64,[A-Za-z0-9+/=]+|data/uploads/service_[a-z]+\.(?:jpg|png|webp)\?v=[a-f0-9]+)$~i', $src) === 1;
 }
 
 /** Gabungkan default dengan isi CMS (sama seperti endpoint ?public=1). */

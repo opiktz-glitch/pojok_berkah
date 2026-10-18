@@ -52,29 +52,52 @@ function handleUploadImage(array $settings, string $storagePath, string $csrf, b
     }
 
     $file = $_FILES['service_image'];
-    $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    if (!in_array($file['type'], $allowedTypes, true)) {
-        $flash = 'Format gambar tidak didukung. Gunakan JPEG, PNG, atau WebP.';
+    if (!is_uploaded_file((string)($file['tmp_name'] ?? ''))) {
+        $flash = 'Gagal mengunggah gambar.';
         return $settings;
     }
 
-    if ($file['size'] > 5 * 1024 * 1024) {
+    if (($file['size'] ?? 0) > 5 * 1024 * 1024) {
         $flash = 'Ukuran gambar maksimal 5 MB.';
         return $settings;
     }
 
-    $imageData = file_get_contents($file['tmp_name']);
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mime = $finfo->file((string)$file['tmp_name']);
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!in_array($mime, $allowedTypes, true) || @getimagesize((string)$file['tmp_name']) === false) {
+        $flash = 'Format gambar tidak didukung. Gunakan JPEG, PNG, atau WebP yang valid.';
+        return $settings;
+    }
+
+    $extMap = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
+    $ext = $extMap[$mime] ?? 'jpg';
+    $uploadDir = dirname($storagePath) . '/uploads';
+    if (!is_dir($uploadDir) && !mkdir($uploadDir, 0755, true) && !is_dir($uploadDir)) {
+        $flash = 'Folder upload tidak bisa dibuat.';
+        return $settings;
+    }
+    foreach (['jpg', 'png', 'webp'] as $oldExt) {
+        $oldFile = $uploadDir . '/service_' . $imageSlot . '.' . $oldExt;
+        if (is_file($oldFile) && $oldExt !== $ext) {
+            @unlink($oldFile);
+        }
+    }
+    $destFile = $uploadDir . '/service_' . $imageSlot . '.' . $ext;
+    $imageData = file_get_contents((string)$file['tmp_name']);
     if ($imageData === false) {
         $flash = 'Gagal membaca file gambar.';
         return $settings;
     }
-
-    $base64 = 'data:' . $file['type'] . ';base64,' . base64_encode($imageData);
+    if (file_put_contents($destFile, $imageData, LOCK_EX) === false) {
+        $flash = 'Gagal menyimpan file gambar.';
+        return $settings;
+    }
 
     if (!isset($settings['images'])) {
         $settings['images'] = [];
     }
-    $settings['images'][$imageSlot] = $base64;
+    $settings['images'][$imageSlot] = 'data/uploads/service_' . $imageSlot . '.' . $ext . '?v=' . substr(sha1($imageData), 0, 8);
 
     if (saveSettings($storagePath, $settings)) {
         $flash = 'Gambar berhasil diunggah.';
@@ -118,6 +141,13 @@ function handleRemoveImage(array $settings, string $storagePath, string $csrf, b
         $settings['images'] = [];
     }
     unset($settings['images'][$imageSlot]);
+    $uploadDir = dirname($storagePath) . '/uploads';
+    foreach (['jpg', 'png', 'webp'] as $ext) {
+        $oldFile = $uploadDir . '/service_' . $imageSlot . '.' . $ext;
+        if (is_file($oldFile)) {
+            @unlink($oldFile);
+        }
+    }
 
     if (saveSettings($storagePath, $settings)) {
         $flash = 'Gambar kembali ke bawaan.';
