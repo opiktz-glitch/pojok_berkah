@@ -33,7 +33,8 @@ ErrorDocument 404 /404.html
   RewriteRule ^$ render.php?page=index [L]
   RewriteRule ^(index|tentang-kami|kebijakan-privasi|syarat-ketentuan|404)\.html$ render.php?page=$1 [L]
 
-  # Never serve the CMS settings file or uploads folder directly.
+  # Allow uploaded service images, block everything else in data/.
+  RewriteRule ^data/uploads/service_[a-z]+\.(jpg|png|webp)$ - [L,NC]
   RewriteRule ^data/ - [R=404,L]
 
   # Hide the local archive folder.

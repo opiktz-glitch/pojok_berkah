@@ -28,3 +28,40 @@ function verifyCsrf(string $submitted, string $expected): bool
 {
     return hash_equals($expected, $submitted);
 }
+
+function checkLoginRateLimit(string &$flash): bool
+{
+    $attempts = $_SESSION['login_attempts'] ?? 0;
+    $lastAttempt = $_SESSION['login_last_attempt'] ?? 0;
+    $lockUntil = $_SESSION['login_lock_until'] ?? 0;
+
+    if ($lockUntil > time()) {
+        $remaining = (int)ceil(($lockUntil - time()) / 60);
+        $flash = 'Terlalu banyak percobaan gagal. Coba lagi dalam ' . $remaining . ' menit.';
+        return false;
+    }
+
+    if ($lastAttempt > 0 && (time() - $lastAttempt) > 900) {
+        $_SESSION['login_attempts'] = 0;
+        $_SESSION['login_lock_until'] = 0;
+    }
+
+    return true;
+}
+
+function recordLoginAttempt(bool $success): void
+{
+    if ($success) {
+        $_SESSION['login_attempts'] = 0;
+        $_SESSION['login_lock_until'] = 0;
+        $_SESSION['login_last_attempt'] = 0;
+        return;
+    }
+
+    $_SESSION['login_attempts'] = ($_SESSION['login_attempts'] ?? 0) + 1;
+    $_SESSION['login_last_attempt'] = time();
+
+    if ($_SESSION['login_attempts'] >= 5) {
+        $_SESSION['login_lock_until'] = time() + 900;
+    }
+}

@@ -76,13 +76,22 @@ function handleLogin(array $settings, string $csrf, bool $isAuthenticated, strin
         return $settings;
     }
 
+    if (!checkLoginRateLimit($flash)) {
+        return $settings;
+    }
+
     $password = $_POST['password'] ?? '';
     $storedHash = $settings['password_hash'] ?? '';
 
     if ($storedHash === '' || !password_verify($password, $storedHash)) {
-        $flash = 'Password salah.';
+        recordLoginAttempt(false);
+        if (empty($flash)) {
+            $flash = 'Password salah.';
+        }
         return $settings;
     }
+
+    recordLoginAttempt(true);
 
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
@@ -146,7 +155,7 @@ function handleChangePassword(array $settings, string $storagePath, string $csrf
     return $settings;
 }
 
-function handleLogout(bool $isAuthenticated): bool
+function handleLogout(bool $isAuthenticated, string $csrf = ''): bool
 {
     if (!$isAuthenticated) {
         return false;
@@ -162,10 +171,22 @@ function handleLogout(bool $isAuthenticated): bool
         return false;
     }
 
+    if ($csrf !== '') {
+        $submittedCsrf = $_POST['csrf'] ?? '';
+        if (!verifyCsrf((string)$submittedCsrf, $csrf)) {
+            http_response_code(403);
+            exit;
+        }
+    }
+
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
     $_SESSION = [];
+    if (ini_get('session.use_cookies')) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+    }
     session_destroy();
 
     return true;
